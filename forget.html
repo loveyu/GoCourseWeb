@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+	<meta charset="UTF-8">
+	<title>用户登录 - GO Course</title>
+	<link type="text/css" rel="stylesheet" href="asset/bootstrap/css/bootstrap.css"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="asset/vue/vue.js"></script>
+</head>
+<body>
+<header id="Header" class="navbar navbar-default">
+	<div class="container">
+		<div class="navbar-header">
+			<button class="navbar-toggle collapsed" type="button" data-toggle="collapse"
+					data-target=".bs-navbar-collapse">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a href="{{site_url}}" class="navbar-brand">{{site_title}}</a>
+		</div>
+		<nav class="collapse navbar-collapse bs-navbar-collapse">
+			<div class="container">
+				<ul class="nav navbar-nav">
+					<li v-repeat="nav_main" v-class="active?'active':''"><a v-attr="title:title" href="{{link}}">{{name}}</a>
+					</li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li v-repeat="nav_right" v-class="active?'active':''"><a v-attr="title:title" href="{{link}}">{{name}}</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+	</div>
+</header>
+
+<div id="Login">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-6">
+				<div class="page-header">
+					<h3>登录登录登录登录登录</h3>
+				</div>
+				<p>登录登录登录登录登录登录登录登录登录登录登录登录登录登录登录登录</p>
+			</div>
+			<div class="col-sm-4 col-sm-offset-2">
+				<form action="" method="post">
+					<fieldset>
+						<legend>用户登录</legend>
+						<div class="form-group">
+							<div class="input-group">
+								<span class="input-group-addon">用户名</span>
+								<input type="text" name="username" class="form-control" placeholder="Username">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="input-group">
+								<span class="input-group-addon">密　码</span>
+								<input type="password" name="password" class="form-control" placeholder="Password">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="input-group">
+								<span class="input-group-addon">类　型</span>
+
+								<div class="form-control">
+									<label class="radio-inline">
+										<input type="radio" name="type" id="TypeStudent" value="student">
+										学生
+									</label>
+									<label class="radio-inline">
+										<input type="radio" name="type" id="TypeTeacher" value="teacher">
+										教师
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<button class="btn btn-primary form-control">登录</button>
+						</div>
+					</fieldset>
+					<p class="help-block"><a href="forget.html">忘记密码？</a></p>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<footer>
+	<div class="container">
+		<p class="text-center">&copy;Go Course 2015</p>
+	</div>
+</footer>
+</body>
+<script src="script.php"></script>
+<script src="asset/jquery/jquery.js"></script>
+<script src="asset/bootstrap/js/bootstrap.js"></script>
+</html>
