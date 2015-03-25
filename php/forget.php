@@ -1,41 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head lang="zh-CN">
-	<meta charset="UTF-8">
-	<title>找回密码 - GO Course</title>
-	<link type="text/css" rel="stylesheet" href="asset/bootstrap/css/bootstrap.css"/>
-	<link type="text/css" rel="stylesheet" href="asset/style/style.css"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<script src="asset/vue/vue.js"></script>
-</head>
-<body>
-<header id="Header" class="navbar navbar-default">
-	<div class="container">
-		<div class="navbar-header">
-			<button class="navbar-toggle collapsed" type="button" data-toggle="collapse"
-					data-target=".bs-navbar-collapse">
-				<span class="sr-only">Toggle navigation</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			<a href="{{site_url}}" class="navbar-brand">{{site_title}}</a>
-		</div>
-		<nav class="collapse navbar-collapse bs-navbar-collapse">
-			<div class="container">
-				<ul class="nav navbar-nav">
-					<li v-repeat="nav_main" v-class="active?'active':''"><a v-attr="title:title" href="{{link}}">{{name}}</a>
-					</li>
-				</ul>
-				<ul class="nav navbar-nav navbar-right">
-					<li v-repeat="nav_right" v-class="active?'active':''"><a v-attr="title:title" href="{{link}}">{{name}}</a>
-					</li>
-				</ul>
-			</div>
-		</nav>
-	</div>
-</header>
-
+<?php
+require_once("common/common.php");
+get_header("找回密码");
+?>
 <div id="ForgetPassword">
 	<div class="container">
 		<div class="row">
@@ -89,16 +55,4 @@
 	</div>
 </div>
 
-<footer id="Footer">
-	<div class="container">
-		<p class="text-center">&copy;Go Course 2015</p>
-	</div>
-</footer>
-</body>
-<script src="script.php"></script>
-<script src="asset/jquery/jquery.js"></script>
-<script src="asset/bootstrap/js/bootstrap.js"></script>
-<script>
-	APP.runPage('forget');
-</script>
-</html>
+<?php get_footer("forget")?>

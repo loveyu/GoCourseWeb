@@ -1,0 +1,6 @@
+RewriteEngine On
+RewriteBase /
+
+RewriteRule ^([a-zA-Z0-9-]+).html$ /php/$1.php
+RewriteRule ^api/([a-zA-Z-_]+)$ /api/index.php/$1?%{QUERY_STRING}
+RewriteRule ^asset/style/js/go.js$ /script.php

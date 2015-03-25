@@ -5,11 +5,14 @@
  * Time: 23:32
  */
 header( "Content-Type: application/javascript; charset=utf-8" );
-$page = [ 'page/login','page/forget' ];
-foreach ( array_merge( [ 'config', 'func' ], $page, [ 'home' ] ) as $v ) {
-	if ( ! is_file( "script/{$v}.js" ) ) {
+$page = [];
+foreach(glob("script/page/*.js") as $v){
+	$page[] = "page/".basename($v);
+}
+foreach ( array_merge( [ 'config.js', 'func.js' ], $page, [ 'home.js' ] ) as $v ) {
+	if ( ! is_file( "script/{$v}" ) ) {
 		continue;
 	}
-	echo file_get_contents( "script/{$v}.js" );
+	echo file_get_contents( "script/{$v}" );
 	echo "\n\n\n";
 }
