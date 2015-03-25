@@ -6,5 +6,18 @@ var FUNC = {
 		return {
 			active: active, name: name, link: link, title: title
 		};
+	}, ajax: function (url, method, data, success_callback) {
+		jQuery.ajax({
+			url: url,
+			dataType: "json",
+			data: data,
+			method: method,
+			xhrFields: {
+				withCredentials: true
+			},
+			success:success_callback
+		});
+	}, redirect: function (url) {
+		window.location.href = url;
 	}
 };

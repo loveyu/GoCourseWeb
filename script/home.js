@@ -9,13 +9,13 @@ var APP = {
 		return APP.object_title.page_title = t;
 	},
 	runPage: function(page){
-		switch (page){
-			case "login":
-				APP.page.login = Page.login();
-				break;
-			default :
-				console.error("Page:" + page+", not found.");
-				break;
+		if(typeof Page[page] == "function"){
+			if(!APP.page.hasOwnProperty(page)){
+				APP.page[page] = Page[page]();
+			}
+			return APP.page[page];
+		}else{
+			console.error("Page:" + page+", not found.");
 		}
 	},
 	object_title: new Vue({

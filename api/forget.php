@@ -7,4 +7,4 @@
 require_once( "common.php" );
 $api = new api();
 $api->_set_data( $_POST );
-$api->_set_status( true, 0 );
+$api->_set_status( false, 0 );

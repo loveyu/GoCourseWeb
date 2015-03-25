@@ -5,7 +5,7 @@
  * Time: 23:32
  */
 header( "Content-Type: application/javascript; charset=utf-8" );
-$page = [ 'page/login' ];
+$page = [ 'page/login','page/forget' ];
 foreach ( array_merge( [ 'config', 'func' ], $page, [ 'home' ] ) as $v ) {
 	if ( ! is_file( "script/{$v}.js" ) ) {
 		continue;

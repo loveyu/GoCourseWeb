@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<title>用户登录 - GO Course</title>
 	<link type="text/css" rel="stylesheet" href="asset/bootstrap/css/bootstrap.css"/>
+	<link type="text/css" rel="stylesheet" href="asset/style/style.css"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<script src="asset/vue/vue.js"></script>
 </head>
@@ -48,16 +49,21 @@
 				<form method="get" v-on="submit: onLoginFormSubmit">
 					<fieldset>
 						<legend>用户登录</legend>
+						<div class="alert alert-danger" role="alert" v-if="error_msg">
+							<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+							<span class="sr-only">Error:</span>
+							{{error_msg}}
+						</div>
 						<div class="form-group">
 							<div class="input-group">
 								<span class="input-group-addon">用户名</span>
-								<input type="text" name="username" class="form-control" placeholder="Username">
+								<input type="text" v-model="username" name="username" class="form-control" placeholder="Username">
 							</div>
 						</div>
 						<div class="form-group">
 							<div class="input-group">
 								<span class="input-group-addon">密　码</span>
-								<input type="password" name="password" class="form-control" placeholder="Password">
+								<input type="password" v-model="password" name="password" class="form-control" placeholder="Password">
 							</div>
 						</div>
 						<div class="form-group">
@@ -66,11 +72,11 @@
 
 								<div class="form-control">
 									<label class="radio-inline">
-										<input type="radio" name="type" checked="checked" id="TypeStudent" value="student">
+										<input type="radio" name="type" v-model="type" checked="checked" id="TypeStudent" value="student">
 										学生
 									</label>
 									<label class="radio-inline">
-										<input type="radio" name="type" id="TypeTeacher" value="teacher">
+										<input type="radio" name="type" v-model="type" id="TypeTeacher" value="teacher">
 										教师
 									</label>
 								</div>
@@ -87,7 +93,7 @@
 	</div>
 </div>
 
-<footer>
+<footer id="Footer">
 	<div class="container">
 		<p class="text-center">&copy;Go Course 2015</p>
 	</div>

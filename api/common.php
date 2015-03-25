@@ -13,7 +13,7 @@ class api{
 	 *
 	 * @param array $result
 	 */
-	protected function _set( $result ) {
+	public function _set( $result ) {
 		$this->result = array_merge( $this->result, $result );
 	}
 
@@ -24,7 +24,7 @@ class api{
 	 * @param int $code
 	 * @param string $msg
 	 */
-	protected function _set_status( $status, $code, $msg = null ) {
+	public function _set_status( $status, $code, $msg = null ) {
 		$this->result['status'] = $status ? true : false;
 		$this->result['code'] = intval( $code );
 		if ( $msg !== null ) {
@@ -38,7 +38,7 @@ class api{
 	 * @param string $msg
 	 * @param mixed $data
 	 */
-	protected function _set_msg( $msg, $data ) {
+	public function _set_msg( $msg, $data ) {
 		$this->result['msg'] = trim( $msg );
 		$this->result['data'] = $data;
 	}
@@ -48,7 +48,7 @@ class api{
 	 *
 	 * @param mixed $data
 	 */
-	protected function _set_data( $data ) {
+	public function _set_data( $data ) {
 		$this->result['data'] = $data;
 	}
 
