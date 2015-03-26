@@ -12,7 +12,7 @@ switch ( $type ) {
 		$api->_set_status( false, 0 );
 		break;
 	case "member":
-		$api->_set_data( [ 'name' => 'NO', 'avatar' => '/image/captcha.jpg', 'id' => 1000 ] );
+		$api->_set_data( [ 'name' => 'NO', 'avatar' => '/image/avatar.jpg', 'id' => 1000 ] );
 		$api->_set_status( true, 0 );
 		break;
 	case "login":

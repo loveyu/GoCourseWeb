@@ -9,7 +9,7 @@ $page = [];
 foreach(glob("script/page/*.js") as $v){
 	$page[] = "page/".basename($v);
 }
-foreach ( array_merge( [ 'config.js', 'func.js' ], $page, [ 'home.js' ] ) as $v ) {
+foreach ( array_merge( [ 'hook.js','config.js', 'func.js' ], $page, [ 'home.js' ] ) as $v ) {
 	if ( ! is_file( "script/{$v}" ) ) {
 		continue;
 	}

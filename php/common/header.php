@@ -3,9 +3,9 @@
 <head lang="zh-CN">
 	<meta charset="UTF-8">
 	<title><?php
-		if(isset($title) && !empty($title)) {
-			echo $title," - Go Course";
-		}else{
+		if ( isset( $title ) && ! empty( $title ) ) {
+			echo $title, " - Go Course";
+		} else {
 			echo "Go Course";
 		}
 		?></title>
@@ -24,7 +24,7 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a href="{{site_url}}" class="navbar-brand">{{site_title}}</a>
+			<a href="/" class="navbar-brand">Go Course</a>
 		</div>
 		<nav class="collapse navbar-collapse bs-navbar-collapse">
 			<div class="container">
@@ -37,7 +37,16 @@
 					</li>
 				</ul>
 				<ul v-if="login_status" class="nav navbar-nav navbar-right">
-					<li><a href="{{home_url}}"><img v-attr="src: data.avatar" alt="avatar">{{data.name}}</a></li>
+					<li class="dropdown">
+						<a href="{{home_url}}" class="dropdown-toggle" data-toggle="dropdown" role="button"
+						   aria-expanded="false">
+							<img class="user-avatar" v-attr="src: avatar" alt="avatar">{{name}} <span class="caret"></span></a>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="home.html">个人中心</a></li>
+							<li class="divider"></li>
+							<li><a href="#" v-on="click: logout">退出登录</a></li>
+						</ul>
+					</li>
 				</ul>
 			</div>
 		</nav>

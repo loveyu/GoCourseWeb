@@ -17,6 +17,8 @@ Page.header = function(){
 				FUNC.nav('登录','login.html','登录用户中心')
 			],
 			data: null,
+			avatar: null,
+			name:null,
 			home_url: CONFIG.site_url + "home.html"
 		},
 		methods: {
@@ -28,7 +30,15 @@ Page.header = function(){
 					Member.id = data.data.id;
 					Member.data = data.data;
 					this.data = data.data;
+					this.name = data.data.name;
+					this.avatar = data.data.avatar;
+					Hook.apply('login.finish');
 				}
+			},
+			logout: function(event){
+				//退出登录
+				event.preventDefault();
+				return false;
 			}
 		},
 		created: function(){
