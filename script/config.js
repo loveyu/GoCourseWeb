@@ -11,7 +11,9 @@ var CONFIG = {
 		member_info:'member',
 		login:'login',
 		forget:'forget',
-		reset_password:'reset_password'
+		reset_password:'reset_password',
+		student_info:'student_info',
+		update_avatar:'update_avatar'
 	},
 	captcha_url:"http://go.course.org/image/captcha.jpg"
 };

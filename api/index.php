@@ -19,6 +19,14 @@ switch ( $type ) {
 		$api->_set_data( $_GET );
 		$api->_set_status( true, 0 );
 		break;
+	case "student_info":
+		$api->_set_data( [ 'user_id' => 11, "school" => '长江大学', 'college' => "计算机科学", "zy" => "专业", ] );
+		$api->_set_status( true, 0 );
+		break;
+	case 'update_avatar':
+		$api->_set_data($_FILES );
+		$api->_set_status( true, 0 );
+		break;
 	default:
 		$api->_set_status( false, 0 );
 		break;
