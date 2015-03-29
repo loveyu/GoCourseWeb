@@ -4,33 +4,16 @@
 Page.home = function () {
     var menus = {
         student: {
-            student_info: {
-                url: '/',
-                name: '个人信息',
-                active: false
-            },
-            edit_profile_student: {
-                url: '/edit_profile_student',
-                name: '编辑资料',
-                active: false
-            },
-            edit_avatar: {
-                url: '/edit_avatar',
-                name: '更改头像',
-                active: false
-            },
-            edit_password: {
-                url: '/edit_password',
-                name: '修改密码',
-                active: false
-            }
+            student_info: {url: '/', name: '个人信息', active: false},
+            edit_profile_student: {url: '/edit_profile_student', name: '编辑资料', active: false},
+            edit_avatar: {url: '/edit_avatar', name: '更改头像', active: false},
+            edit_password: {url: '/edit_password', name: '修改密码', active: false}
         },
         teacher: {
-            teacher_info: {
-                url: '/',
-                name: '个人信息',
-                active: true
-            }
+            teacher_info: {url: '/', name: '个人信息', active: true},
+            edit_profile_student: {url: '/edit_profile_student', name: '编辑资料', active: false},
+            edit_avatar: {url: '/edit_avatar', name: '更改头像', active: false},
+            edit_password: {url: '/edit_password', name: '修改密码', active: false}
         }
     };
     var home_vm = new Vue({
@@ -47,6 +30,10 @@ Page.home = function () {
             m_student_info: function (result) {
                 home_vm.result = result.data;
                 home_vm.currentView = "student_info";
+            },
+            m_teacher_info: function (result) {
+                home_vm.result = result.data;
+                home_vm.currentView = "teacher_info";
             },
             m_edit_avatar: function () {
                 home_vm.result = {
@@ -73,6 +60,7 @@ Page.home = function () {
         },
         components: {
             student_info: {__require: 'home/student_info.html'},
+            teacher_info: {__require: 'home/teacher_info.html'},
             edit_avatar: {__require: 'home/edit_avatar.html'},
             edit_password: {__require: 'home/edit_password.html'},
             edit_profile_student: {__require: 'home/edit_profile_student.html'},
@@ -89,8 +77,13 @@ Page.home = function () {
     };
     var routes = {
         '/': function () {
-            change_menus_active("student_info");
-            FUNC.ajax(CONFIG.api.student_info, "get", {}, home_vm.m_student_info);
+            if (home_vm.is_student) {
+                change_menus_active("student_info");
+                FUNC.ajax(CONFIG.api.student_info, "get", {}, home_vm.m_student_info);
+            } else if (home_vm.is_teacher) {
+                change_menus_active("teacher_info");
+                FUNC.ajax(CONFIG.api.teacher_info, "get", {}, home_vm.m_teacher_info);
+            }
         },
         '/edit_avatar': function () {
             change_menus_active("edit_avatar");

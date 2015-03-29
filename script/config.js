@@ -16,9 +16,11 @@ var CONFIG = {
         forget: 'forget',
         reset_password: 'reset_password',
         student_info: 'student_info',
+        teacher_info: 'teacher_info',
         update_avatar: 'update_avatar',
         update_password: "update_password",
-        update_student_info: "update_student_info"
+        update_student_info: "update_student_info",
+        update_teacher_info: "update_teacher_info"
     }, captcha_url: DOMAIN + "image/captcha.jpg"
 };
 //初始化API完整地址

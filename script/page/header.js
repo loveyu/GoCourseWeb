@@ -29,6 +29,7 @@ Page.header = function () {
                 if (data.status) {
                     Member.id = data.data.id;
                     Member.data = data.data;
+                    Member.user_type = data.data.user_type;
                     this.data = data.data;
                     this.name = data.data.name;
                     this.avatar = data.data.avatar;
