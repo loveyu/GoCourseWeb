@@ -29,7 +29,7 @@ Page.home = function(){
 				home_vm.currentView = "student_info";
 			},
 			m_edit_avatar:function(){
-				home_vm.result = {now_avatar:Member.data.avatar,file:null,error:null};
+				home_vm.result = {now_avatar:Member.data.avatar,file:null,error:null,success:false};
 				home_vm.currentView = "edit_avatar";
 			},
 			m_edit_password:function(){

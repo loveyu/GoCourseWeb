@@ -4,9 +4,15 @@ _methods_ = {
 		if(this.file) {
 			var fd = new FormData(); //创建表单
 			fd.append("file", this.file);
+			var obj = this;
 			FUNC.fileUpload(CONFIG.api.update_avatar, fd, function () {
 				var data = FUNC.parseJSON(this.response);
-				console.log(data);
+				if(data.status){
+					obj.error = "";
+					obj.success = true;
+				}else{
+					obj.error = data.msg;
+				}
 			});
 		}else{
 			this.error = "未选择正确的图片";

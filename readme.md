@@ -7,3 +7,5 @@ php make.php
 ```
 
 * 然后将asset目录文件复制到html_out目录，对应的即可用的静态目录
+
+* 在线演示 : [http://gocourse.coding.io/](http://gocourse.coding.io/)

@@ -3,6 +3,7 @@
 	<img class="img-circle img-responsive" v-attr="src: now_avatar">
 	<h4>上传新头像:</h4>
 	<div class="alert-danger alert" v-if="error">{{error}}</div>
+	<div class="alert-success alert" v-if="success">头像更换成功</div>
 	<form method="post" v-on="submit: onSubmitAvatar">
 		<div class="form-group">
 			<label for="InputFile">选择图片</label>
