@@ -10,8 +10,8 @@ Page.header = function () {
             site_url: CONFIG.site_url,
             login_status: false,
             nav_main: [
-                FUNC.nav('项目介绍', 'about', '关于项目的部分介绍'),
-                FUNC.nav('APP下载', 'download', '下载APP到移动端')
+                //FUNC.nav('项目介绍', 'about', '关于项目的部分介绍'),
+                //FUNC.nav('APP下载', 'download', '下载APP到移动端')
             ],
             nav_right: [
                 FUNC.nav('登录', 'login.html', '登录用户中心')
