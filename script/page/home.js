@@ -17,7 +17,6 @@ Page.home = function(){
 		data: {
 			is_student: false,
 			is_teacher: false,
-			loading : true,
 			currentView: "loading",
 			currentName: "loading",
 			result:null,
@@ -34,7 +33,6 @@ Page.home = function(){
 			},
 			m_edit_password:function(){
 				home_vm.currentView = "edit_password";
-
 			}
 		},
 		components: {
@@ -72,7 +70,10 @@ Page.home = function(){
 		home_vm.is_teacher = !home_vm.is_student;
 		home_vm.menus = home_vm.is_student ? menus.student : menus.teacher;
 		router.init();//加载路由配置
-		home_vm.loading = false;
+		if(document.location.hash==""){
+			//初始化路由
+			routes['/']();
+		}
 		return arg;
 	};
 	if(!Member.login_status) {
