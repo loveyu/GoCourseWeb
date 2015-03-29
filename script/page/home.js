@@ -5,6 +5,7 @@ Page.home = function(){
 	var menus ={
 		student: {
 			student_info: {url: '/', name: '个人信息',active:false},
+			edit_profile_student: {url: '/edit_profile_student', name: '编辑资料',active:false},
 			edit_avatar: {url: '/edit_avatar', name: '更改头像',active:false},
 			edit_password: {url: '/edit_password', name: '修改密码',active:false}
 		},
@@ -34,12 +35,16 @@ Page.home = function(){
 			m_edit_password:function(){
 				home_vm.result = {old:"",new_pwd:"",error:null,success:false};
 				home_vm.currentView = "edit_password";
+			},
+			m_edit_profile_student: function(){
+				home_vm.currentView = "edit_profile_student";
 			}
 		},
 		components: {
 			student_info:{__require: 'home/student_info.html'},
 			edit_avatar:{__require: 'home/edit_avatar.html'},
 			edit_password:{__require: 'home/edit_password.html'},
+			edit_profile_student:{__require: 'home/edit_profile_student.html'},
 			loading:{__require: 'home/loading.html'}
 		}
 	});
@@ -63,6 +68,10 @@ Page.home = function(){
 		'/edit_password': function(){
 			change_menus_active("edit_password");
 			home_vm.m_edit_password();
+		},
+		'/edit_profile_student': function(){
+			change_menus_active("edit_profile_student");
+			home_vm.m_edit_profile_student();
 		}
 	};
 	var router = Router(routes);

@@ -2,11 +2,14 @@
  * Created by loveyu on 2015/3/24.
  */
 Vue.config.debug = true;
+var DOMAIN = (function(){
+	return "http://"+document.location.host+"/";
+})();
 var CONFIG = {
 	site_title: 'GO Course',
 	site_description: '让课程变得更简单',
-	site_url: 'http://go.course.org/',
-	api_url:'http://go.course.org/api/',
+	site_url: DOMAIN,
+	api_url:DOMAIN+'api/',
 	api:{
 		member_info:'member',
 		login:'login',
@@ -14,9 +17,8 @@ var CONFIG = {
 		reset_password:'reset_password',
 		student_info:'student_info',
 		update_avatar:'update_avatar',
-		update_password:"update_password",
-	},
-	captcha_url:"http://go.course.org/image/captcha.jpg"
+		update_password:"update_password"
+	}, captcha_url: DOMAIN +"image/captcha.jpg"
 };
 //初始化API完整地址
 for (var name in CONFIG.api) {

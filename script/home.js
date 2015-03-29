@@ -19,15 +19,6 @@ var APP = {
 		}
 		return null;
 	}
-	//标题更新对象
-	//object_title: new Vue({
-	//	el: 'title',
-	//	data: {
-	//		page_title: '',
-	//		site_description: CONFIG.site_description,
-	//		site_title: CONFIG.site_title
-	//	}
-	//}),
 };
 
 APP.runPage('header');

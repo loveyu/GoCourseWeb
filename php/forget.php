@@ -27,7 +27,7 @@ get_header("找回密码");
 								<span class="input-group-addon">验证字符</span>
 								<input type="text" v-model="captcha" name="captcha" class="form-control" placeholder="不区分大小写">
 							</div>
-							<span class="captcha"><img src="http://go.course.org/image/captcha.jpg" v-on="click: onClickCaptcha"></span>
+							<span class="captcha"><img src="/image/captcha.jpg" v-on="click: onClickCaptcha"></span>
 						</div>
 						<div class="form-group">
 							<div class="input-group">
