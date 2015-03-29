@@ -1,6 +1,7 @@
 _methods_ = {
     onSubmitAvatar: function (event) {
         this.error = null;
+        this.success = false;
         if (this.file) {
             var fd = new FormData(); //创建表单
             fd.append("file", this.file);

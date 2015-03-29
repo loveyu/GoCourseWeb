@@ -67,7 +67,7 @@ Page.home = function () {
                 home_vm.currentView = "edit_password";
             },
             m_edit_profile_student: function (result) {
-                home_vm.result = result.data;
+                home_vm.result = FUNC.objMerge(result.data, {status: {error: null, success: false}});
                 home_vm.currentView = "edit_profile_student";
             }
         },
