@@ -27,6 +27,10 @@ switch ( $type ) {
 		$api->_set_data($_FILES );
 		$api->_set_status( true, 0 );
 		break;
+	case 'update_password':
+		$api->_set_data($_FILES );
+		$api->_set_status( true, 0 );
+		break;
 	default:
 		$api->_set_status( false, 0 );
 		break;

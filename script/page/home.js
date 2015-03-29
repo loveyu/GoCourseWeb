@@ -32,6 +32,7 @@ Page.home = function(){
 				home_vm.currentView = "edit_avatar";
 			},
 			m_edit_password:function(){
+				home_vm.result = {old:"",new_pwd:"",error:null,success:false};
 				home_vm.currentView = "edit_password";
 			}
 		},
@@ -61,7 +62,7 @@ Page.home = function(){
 		},
 		'/edit_password': function(){
 			change_menus_active("edit_password");
-			FUNC.ajax(CONFIG.api.student_info,"get",{},home_vm.m_edit_password);
+			home_vm.m_edit_password();
 		}
 	};
 	var router = Router(routes);
