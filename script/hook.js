@@ -22,14 +22,14 @@ var Hook = (function(){
 			return arg;
 		}
 		var actions = _queue[name];
-		arguments  = Array.prototype.slice.call(arguments);
-		if(arguments.length>2){
-			arguments.shift();
+		var args  = Array.prototype.slice.call(arguments, 0);
+		if(args.length>2){
+            args.shift();
 		}
 		for (var i in actions) {
-			arguments.shift();
-			arguments.unshift(arg);
-			arg = actions[i].action.apply(this, arguments);
+            args.shift();
+            args.unshift(arg);
+			arg = actions[i].action.apply(this, args);
 		}
 		return arg;
 	};
