@@ -35,5 +35,7 @@ var FUNC = {
             }
         }
         return des;
+    }, alertOnElem: function (elem, msg) {
+        $(elem).html("<div class='container'><div class='alert-danger alert'>" + msg + "</div></div>");
     }
 };
