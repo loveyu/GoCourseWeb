@@ -10,8 +10,8 @@ Page.header = function () {
             site_url: CONFIG.site_url,
             login_status: false,
             nav_main: [
-                //FUNC.nav('项目介绍', 'about', '关于项目的部分介绍'),
-                //FUNC.nav('APP下载', 'download', '下载APP到移动端')
+                FUNC.nav('项目介绍', 'about', '关于项目的部分介绍'),
+                FUNC.nav('APP下载', 'download', '下载APP到移动端')
             ],
             nav_right: [
                 FUNC.nav('登录', 'login.html', '登录用户中心')
@@ -34,8 +34,16 @@ Page.header = function () {
                     this.data = data.data;
                     this.name = data.data.name;
                     this.avatar = data.data.avatar;
+                    if (this.user_type == "student") {
+                        this.nav_main = [
+                            FUNC.nav('课程测验', 'quiz.html#/', '开始进行课程测验')
+                        ];
+                    } else if (this.user_type == "teacher") {
+                        this.nav_main = [];
+                    }
                     Hook.apply('login.finish');
                 }
+                Hook.apply('login.status');
             },
             logout: function (event) {
                 //退出登录
