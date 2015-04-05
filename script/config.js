@@ -20,13 +20,27 @@ var CONFIG = {
         update_avatar: 'update_avatar',
         update_password: "update_password",
         update_student_info: "update_student_info",
-        update_teacher_info: "update_teacher_info"
+        update_teacher_info: "update_teacher_info",
+        quiz: {
+            list:"quiz/list"
+        }
     }, captcha_url: DOMAIN + "image/captcha.jpg"
 };
 //初始化API完整地址
 for (var name in CONFIG.api) {
     if (CONFIG.api.hasOwnProperty(name)) {
-        CONFIG.api[name] = CONFIG.api_url + CONFIG.api[name];
+        switch (typeof CONFIG.api[name]) {
+            case "string":
+                CONFIG.api[name] = CONFIG.api_url + CONFIG.api[name];
+                break;
+            case "object":
+                for (var name2 in CONFIG.api[name]) {
+                    if (CONFIG.api[name].hasOwnProperty(name2)) {
+                        CONFIG.api[name][name2] = CONFIG.api_url + CONFIG.api[name][name2];
+                    }
+                }
+                break;
+        }
     }
 }
 //用户基本信息

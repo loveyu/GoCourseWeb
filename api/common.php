@@ -60,3 +60,5 @@ class api{
 		echo json_encode( $this->result, JSON_UNESCAPED_UNICODE );
 	}
 }
+
+require_once(__DIR__."/obj.php");

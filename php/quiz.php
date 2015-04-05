@@ -3,7 +3,7 @@ require_once( "common/common.php" );
 get_header( "课程测验" );
 ?>
 
-<div id="Home">
+<div id="Quiz">
 	<div class="container">
 		<div style="margin-bottom: 15px">
 			<ul class="nav nav-pills">
