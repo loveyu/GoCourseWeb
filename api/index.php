@@ -37,7 +37,7 @@ switch ($type) {
         break;
     case 'quiz/list':
         $api->_set_status(true,0);
-        $api->_set_data(new TbQuizes());
+        $api->_set_data([new TbQuizes(),new TbQuizes(),new TbQuizes(),new TbQuizes(),new TbQuizes(),new TbQuizes()]);
         break;
     default:
         $api->_set_status(false, 0, "未知错误:".$type);

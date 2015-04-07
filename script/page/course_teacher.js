@@ -5,8 +5,8 @@ Page.course_teacher = function () {
     var ct_vm = new Vue({
         el: "#CourseTeacher",
         data: {
-            currentView: "loading",
-            currentName: "loading",
+            currentView: "base-loading",
+            currentName: "base-loading",
             result: null,
             menus: {
                 my: {url: '/', name: '我的课表', active: false},
@@ -23,15 +23,14 @@ Page.course_teacher = function () {
         },
         components: {
             my: {__require: 'course_teacher/my.html'},
-            add: {__require: 'course_teacher/add.html'},
-            loading: {__require: 'home/loading.html'}
+            add: {__require: 'course_teacher/add.html'}
         }
     });
     var change_menus_active = function (view) {
         if (ct_vm.menus.hasOwnProperty(ct_vm.currentName)) {
             ct_vm.menus[ct_vm.currentName].active = false;
         }
-        ct_vm.currentView = "loading";
+        ct_vm.currentView = "base-loading";
         ct_vm.currentName = view;
         ct_vm.menus[view].active = true;
     };

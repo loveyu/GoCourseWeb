@@ -21,8 +21,8 @@ Page.home = function () {
         data: {
             is_student: false,
             is_teacher: false,
-            currentView: "loading",
-            currentName: "loading",
+            currentView: "base-loading",
+            currentName: "base-loading",
             result: null,
             menus: []
         },
@@ -63,15 +63,14 @@ Page.home = function () {
             teacher_info: {__require: 'home/teacher_info.html'},
             edit_avatar: {__require: 'home/edit_avatar.html'},
             edit_password: {__require: 'home/edit_password.html'},
-            edit_profile_student: {__require: 'home/edit_profile_student.html'},
-            loading: {__require: 'home/loading.html'}
+            edit_profile_student: {__require: 'home/edit_profile_student.html'}
         }
     });
     var change_menus_active = function (view) {
         if (home_vm.menus.hasOwnProperty(home_vm.currentName)) {
             home_vm.menus[home_vm.currentName].active = false;
         }
-        home_vm.currentView = "loading";
+        home_vm.currentView = "base-loading";
         home_vm.currentName = view;
         home_vm.menus[view].active = true;
     };

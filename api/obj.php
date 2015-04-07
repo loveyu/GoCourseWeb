@@ -18,13 +18,13 @@ class TbQuizes
     public $scheduleId = 1000;
     public $status = 1;
     public $releaseDate = "2015-4-4 12:44:33";
-    public $title = "";
+    public $title = "一个最简单的测验";
     public $numResponses = 4554;
     public $options = [];
 
     function __construct()
     {
-        $this->options = [new TbQuizOptions(), new TbQuizOptions(), new TbQuizOptions(), new TbQuizOptions(), new TbQuizOptions()];
+        $this->options = [new TbQuizOptions(), new TbQuizOptions(), new TbQuizOptions(), new TbQuizOptions()];
     }
 }
 
