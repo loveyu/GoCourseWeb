@@ -44,7 +44,7 @@ var FUNC = {
         $(elem).html("<div class='container'><div class='alert-danger alert'>" + msg + "</div></div>");
     }, verify: {
         email: function (email) {
-            return /^[A-Za-zd]+([-_.][A-Za-zd]+)*@([A-Za-zd]+[-.])+[A-Za-zd]{1,8}$/.test(email);
+            return /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{1,8}$/.test(email);
         }
     }
 };

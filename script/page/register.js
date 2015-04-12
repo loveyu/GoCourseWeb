@@ -21,6 +21,10 @@ Page.register = function () {
                     this.error_msg = "邮箱格式不正确";
                     return false;
                 }
+                if (this.form.password.length > 32 || this.form.password.length < 6) {
+                    this.error_msg = "密码长度为6-32个字符";
+                    return false;
+                }
                 this.error_msg = "";
                 FUNC.ajax(CONFIG.api.user.register, 'post', this.form, this.regCallback);
                 return false;
