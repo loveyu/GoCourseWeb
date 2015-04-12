@@ -6,11 +6,16 @@ var FUNC = {
         return {
             active: active, name: name, link: link, title: title
         };
-    }, ajax: function (url, method, data, success_callback) {
+    }, ajax: function (url, method, data, success_callback, error) {
         jQuery.ajax({
-            url: url, dataType: "json", data: data, method: method, xhrFields: {
+            url: url,
+            dataType: "json",
+            data: data,
+            method: method,
+            xhrFields: {
                 withCredentials: true
-            }, success: success_callback
+            }, success: success_callback,
+            error: error
         });
     }, redirect: function (url) {
         window.location.href = url;
@@ -37,5 +42,9 @@ var FUNC = {
         return des;
     }, alertOnElem: function (elem, msg) {
         $(elem).html("<div class='container'><div class='alert-danger alert'>" + msg + "</div></div>");
+    }, verify: {
+        email: function (email) {
+            return /^[A-Za-zd]+([-_.][A-Za-zd]+)*@([A-Za-zd]+[-.])+[A-Za-zd]{1,8}$/.test(email);
+        }
     }
 };

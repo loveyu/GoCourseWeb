@@ -14,7 +14,8 @@ Page.header = function () {
                 FUNC.nav('APP下载', 'download', '下载APP到移动端')
             ],
             nav_right: [
-                FUNC.nav('登录', 'login.html', '登录用户中心')
+                FUNC.nav('登录', 'login.html', '登录用户中心'),
+                FUNC.nav('注册', 'register.html', '注册新用户')
             ],
             data: null,
             avatar: null,
@@ -54,7 +55,7 @@ Page.header = function () {
         created: function () {
             //查询登录状态
             Member.login_request = false;
-            FUNC.ajax(CONFIG.api.member_info, 'get', {}, this.loginRequest)
+            FUNC.ajax(CONFIG.api.user.info, 'get', {}, this.loginRequest)
         }
     });
 };

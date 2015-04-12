@@ -7,8 +7,9 @@ _methods_ = {
             flag = false;
         }
         if (flag) {
-            FUNC.ajax(CONFIG.api.login, 'post', {
-                username: this.username, password: this.password, type: this.type
+            FUNC.ajax(CONFIG.api.user.login, 'post', {
+                username: this.username, password: this.password
+                //, type: this.type
             }, this.onLoginResult);
         }
         return false;

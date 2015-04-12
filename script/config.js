@@ -3,16 +3,22 @@
  */
 Vue.config.debug = true;
 var DOMAIN = (function () {
+    if (document.location.host == "go.course.org") {
+        return "http://127.0.0.1:8080/";
+    }
     return "http://" + document.location.host + "/";
 })();
 var CONFIG = {
     site_title: 'GO Course',
     site_description: '让课程变得更简单',
     site_url: DOMAIN,
-    api_url: DOMAIN + 'api/',
+    api_url: DOMAIN + 'go/',
     api: {
-        member_info: 'member',
-        login: 'login',
+        user: {
+            login: "user_action/login",
+            register: "user_action/register",
+            info: "user/info"
+        },
         forget: 'forget',
         reset_password: 'reset_password',
         student_info: 'student_info',
@@ -22,7 +28,7 @@ var CONFIG = {
         update_student_info: "update_student_info",
         update_teacher_info: "update_teacher_info",
         quiz: {
-            list:"quiz/list"
+            list: "quiz/list"
         }
     }, captcha_url: DOMAIN + "image/captcha.jpg"
 };
