@@ -3,8 +3,11 @@
  */
 Vue.config.debug = true;
 var DOMAIN = (function () {
-    if (document.location.host == "go.course.org") {
-        return "http://127.0.0.1:8080/";
+    switch (document.location.host) {
+        case "go.course.org":
+            return "http://127.0.0.1:8080/";
+        case "10.109.0.10":
+            return "http://10.109.0.10:8080/";
     }
     return "http://" + document.location.host + "/";
 })();
@@ -12,7 +15,7 @@ var CONFIG = {
     site_title: 'GO Course',
     site_description: '让课程变得更简单',
     site_url: DOMAIN,
-    api_url: DOMAIN + 'go/',
+    api_url: DOMAIN + 'gocourse/',
     api: {
         user: {
             login: "user_action/login",

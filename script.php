@@ -6,6 +6,9 @@
  */
 header("Content-Type: application/javascript; charset=utf-8");
 $page = [];
+foreach (glob("script/utils/*.js") as $v) {
+    $page[] = "utils/" . basename($v);
+}
 foreach (glob("script/*.js") as $v) {
     $v = basename($v);
     if ($v == "home.js") {
@@ -49,7 +52,7 @@ function get_template($path)
     }
     if (is_file($path . ".js")) {
         $content = file_get_contents($path . ".js");
-        foreach (['methods', 'paramAttributes','data'] as $v) {
+        foreach (['methods', 'paramAttributes', 'data'] as $v) {
             $match = [];
             if (preg_match("/_{$v}_[ ]*=[ ]*([\\s\\S]+?)[;]*\\/\\/_{$v}_/", $content, $match)) {
                 if (isset($match[1])) {
