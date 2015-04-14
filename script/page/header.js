@@ -49,6 +49,8 @@ Page.header = function () {
             logout: function (event) {
                 //退出登录
                 event.preventDefault();
+                FUNC.delToken();
+                location.href="login.html";
                 return false;
             }
         },
