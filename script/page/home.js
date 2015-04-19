@@ -78,7 +78,7 @@ Page.home = function () {
         '/': function () {
             if (home_vm.is_student) {
                 change_menus_active("student_info");
-                FUNC.ajax(CONFIG.api.student_info, "get", {}, home_vm.m_student_info);
+                FUNC.ajax(CONFIG.api.student.info, "get", {}, home_vm.m_student_info);
             } else if (home_vm.is_teacher) {
                 change_menus_active("teacher_info");
                 FUNC.ajax(CONFIG.api.teacher_info, "get", {}, home_vm.m_teacher_info);
@@ -94,7 +94,7 @@ Page.home = function () {
         },
         '/edit_profile_student': function () {
             change_menus_active("edit_profile_student");
-            FUNC.ajax(CONFIG.api.student_info, "get", {}, home_vm.m_edit_profile_student);
+            FUNC.ajax(CONFIG.api.student.info, "get", {}, home_vm.m_edit_profile_student);
         }
     };
     var router = Router(routes);//初始化一个路由器

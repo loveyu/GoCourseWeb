@@ -20,14 +20,17 @@ var CONFIG = {
         user: {
             login: "user_action/login",
             register: "user_action/register",
-            info: "user/info"
+            logout: "user_action/logout",
+            info: "user/info",
+            change_password: "user/change_password"
+        },
+        student:{
+            info:"student/info"
         },
         forget: 'forget',
         reset_password: 'reset_password',
-        student_info: 'student_info',
         teacher_info: 'teacher_info',
         update_avatar: 'update_avatar',
-        update_password: "update_password",
         update_student_info: "update_student_info",
         update_teacher_info: "update_teacher_info",
         quiz: {

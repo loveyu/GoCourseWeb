@@ -7,7 +7,7 @@ var FUNC = {
                 active: active, name: name, link: link, title: title
             };
         }, ajax: function (url, method, data, success_callback, error) {
-            var token = FUNC.getToken();
+            //var token = FUNC.getToken();
             var option = {
                 url: url,
                 dataType: "json",
@@ -18,10 +18,10 @@ var FUNC = {
                 }, success: success_callback,
                 error: error
             };
-            if (token != null) {
-                //添加Token
-                option.data.__token = token.token;
-            }
+            //if (token != null) {
+            //    //添加Token
+            //    option.data.__token = token.token;
+            //}
             jQuery.ajax(option);
         },
         redirect: function (url) {
@@ -76,6 +76,7 @@ var FUNC = {
         delToken: function () {
             localStorage.removeItem("token.token");
             localStorage.removeItem("token.expire");
+            FUNC.ajax(CONFIG.api.user.logout, "GET", {});
         },
         verify: {
             email: function (email) {
