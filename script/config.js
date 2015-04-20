@@ -27,6 +27,9 @@ var CONFIG = {
         student:{
             info:"student/info"
         },
+        college:{
+            get_universities:"college/get_universities"
+        },
         forget: 'forget',
         reset_password: 'reset_password',
         teacher_info: 'teacher_info',

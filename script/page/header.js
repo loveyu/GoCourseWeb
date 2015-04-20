@@ -42,7 +42,7 @@ Page.header = function () {
                     } else if (this.user_type == "teacher") {
                         this.nav_main = [];
                     }
-                    Hook.apply('login.finish');
+                    Hook.apply('login.finish', data.data);
                 }
                 Hook.apply('login.status');
             },

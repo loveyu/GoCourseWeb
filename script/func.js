@@ -78,6 +78,16 @@ var FUNC = {
             localStorage.removeItem("token.expire");
             FUNC.ajax(CONFIG.api.user.logout, "GET", {});
         },
+        mapToObjArr:function(data,keyName,valueName){
+            var rt = [],obj;
+            for(var i in data){
+                obj = {};
+                obj[keyName] = i;
+                obj[valueName] = data[i];
+                rt.push(obj);
+            }
+            return rt;
+        },
         verify: {
             email: function (email) {
                 return /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{1,8}$/.test(email);
