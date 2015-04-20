@@ -1,3 +1,4 @@
 .idea/
 html_out/*.html
 test/
+avatar/[0-9]*
