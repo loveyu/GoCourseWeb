@@ -32,3 +32,28 @@ Param: `none`
     }
 }
 ```
+
+### /student/bind_info
+Desc: 绑定学生基本信息,用于信息不完全时的补充，描述条件就是姓名为空
+Method: POST
+Param: 
+```
+{
+    name: "",  //姓名
+    sid: "",   //学号
+    sex: "",   //性别，0男，1女
+    university: "",   //学校ID
+    college: "",      //学院ID
+    department: "",   //专业ID
+    class: ""         //班级ID
+}
+```
+Return:
+```
+{
+    "status": true,
+    "code": 0,
+    "msg": "",
+    "data": null
+}
+```

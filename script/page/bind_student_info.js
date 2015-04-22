@@ -138,7 +138,7 @@ Page.bind_student_info = (function () {
                 departmentChange: function (event) {
                     //清除下级
                     this.classes = [];
-                    if (this.form.college != "") {
+                    if (this.form.department != "") {
                         FUNC.ajax(CONFIG.api.college.get_classes, "get", {dept_id: this.form.department}, this.getClassesCall);
                     }
                 },
