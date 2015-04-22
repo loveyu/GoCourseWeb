@@ -18,7 +18,7 @@ foreach (glob($path . "*.md") as $v) {
     $name = preg_replace("/\\.md$/", ".html", basename($v));
     $name2 = preg_replace("/\\.md$/", "", basename($v));
     $match[1] = trim($match[1]);
-    echo "{$i}. [{$match[1]}]({$name}), `/{$name2}`\r\n";
+    echo "{$i}. [{$match[1]}]({$name}), `/{$name2}/`\r\n";
     ++$i;
 }
 
