@@ -39,8 +39,8 @@ Token用于用户登录过程中的验证问题，长度为64位，如果涉及�
 [链接: status_code.html](status_code.html)
 
 ## API列表导航
-1. [获取专业等各种信息](college.html), `/college`
-2. [获取服务器状态信息](server_status.html), `/server_status`
-3. [学生信息获取](student.html), `/student`
-4. [用户信息相关操作](user.html), `/user`
-5. [用户未登陆过程中的操作](user_action.html), `/user_action`
+1. [获取专业等各种信息](college.html), `/college/`
+2. [获取服务器状态信息](server_status.html), `/server_status/`
+3. [学生信息获取](student.html), `/student/`
+4. [用户信息相关操作](user.html), `/user/`
+5. [用户未登陆过程中的操作](user_action.html), `/user_action/`

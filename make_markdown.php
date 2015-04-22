@@ -16,8 +16,12 @@ foreach (glob("doc/*.md") as $v) {
     }
     $title = mb_convert_encoding(trim($match[1]), "GB2312", "UTF-8");
     echo "T:{$title}.\n";
-    $name = preg_replace("/\\.md$/", ".html", basename($v));
-    system("ghmd --title \"{$title}\" --dest doc/{$name} {$v}");
+    $base_n = basename($v);
+    $name = preg_replace("/\\.md$/", ".html", $base_n);
+    file_put_contents("test/{$base_n}", "_文档生成时间: " .
+        date("Y-m-d H:i:s") . "_\r\n\r\n" . file_get_contents($v));
+    system("ghmd --title \"{$title}\" --dest doc/{$name} test/{$base_n}");
+    unlink("test/{$base_n}");
     echo "finish $name\n";
 }
 
