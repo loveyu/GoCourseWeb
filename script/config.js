@@ -25,10 +25,14 @@ var CONFIG = {
             change_password: "user/change_password"
         },
         student:{
-            info:"student/info"
+            info:"student/info",
+            bind_info:"student/bind_info"
         },
         college:{
-            get_universities:"college/get_universities"
+            get_universities:"college/get_universities",
+            get_colleges:"college/get_colleges",
+            get_departments:"college/get_departments",
+            get_classes:"college/get_classes"
         },
         forget: 'forget',
         reset_password: 'reset_password',
