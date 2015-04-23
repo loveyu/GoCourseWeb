@@ -99,23 +99,23 @@ var CONFIG = {
             register: "user_action/register",
             logout: "user_action/logout",
             info: "user/info",
-            change_password: "user/change_password"
+            change_password: "user/change_password",
+            upload_avatar: 'user/upload_avatar'
         },
-        student:{
-            info:"student/info",
-            bind_info:"student/bind_info",
-            update_info:"student/update_info"
+        student: {
+            info: "student/info",
+            bind_info: "student/bind_info",
+            update_info: "student/update_info"
         },
-        college:{
-            get_universities:"college/get_universities",
-            get_colleges:"college/get_colleges",
-            get_departments:"college/get_departments",
-            get_classes:"college/get_classes"
+        college: {
+            get_universities: "college/get_universities",
+            get_colleges: "college/get_colleges",
+            get_departments: "college/get_departments",
+            get_classes: "college/get_classes"
         },
         forget: 'forget',
         reset_password: 'reset_password',
         teacher_info: 'teacher_info',
-        update_avatar: 'update_avatar',
         update_teacher_info: "update_teacher_info",
         quiz: {
             list: "quiz/list"
@@ -182,6 +182,7 @@ var FUNC = {
         fileUpload: function (url, formData, callback) {
             var xhr = new XMLHttpRequest(); //创建请求对象
             xhr.open("POST", url, true);
+            xhr.withCredentials = true;
             xhr.addEventListener("load", callback, false);
             xhr.send(formData);
         },
@@ -755,7 +756,7 @@ Page.home = function () {
             },
             m_edit_avatar: function () {
                 home_vm.result = {
-                    now_avatar: Member.data.avatar,
+                    now_avatar: Member.data.avatar_more.lager,
                     file: null,
                     error: null,
                     success: false
@@ -779,19 +780,26 @@ Page.home = function () {
         components: {
             student_info: {template:"<div class=\"home-student-info\"><h3>我的个人信息<\/h3><dl class=\"dl-horizontal\"><dt>用户名<\/dt><dd>{{user.uid}}<\/dd><dt>姓名<\/dt><dd>{{user.name}}<\/dd><dt>性别<\/dt><dd>{{user.sex}}<\/dd><dt>学校<\/dt><dd>{{college.uniName}}<\/dd><dt>学院<\/dt><dd>{{college.collegeName}}<\/dd><dt>专业<\/dt><dd>{{college.deptName}}<\/dd><dt>班级<\/dt><dd>{{college.className}}<\/dd><dt>个人简介<\/dt><dd>{{user.description}}<\/dd><\/dl><\/div>"},
             teacher_info: {template:"<div class=\"home-student-info\"><h3>教师信息<\/h3><dl class=\"dl-horizontal\"><dt>用户名<\/dt><dd>{{user_id}}<\/dd><dt>姓名<\/dt><dd>{{name}}<\/dd><dt>学校<\/dt><dd>{{school}}<\/dd><dt>学院<\/dt><dd>{{college}}<\/dd><dt>专业<\/dt><dd>{{zy}}<\/dd><\/dl><\/div>"},
-            edit_avatar: {template:"<div><h4>当前头像:<\/h4><img class=\"img-circle img-responsive\" v-attr=\"src: now_avatar\"><h4>上传新头像:<\/h4><div class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/div><div class=\"alert-success alert\" v-if=\"success\">头像更换成功<\/div><form method=\"post\" v-on=\"submit: onSubmitAvatar\"><div class=\"form-group\"><label for=\"InputFile\">选择图片<\/label><input type=\"file\" id=\"InputFile\" v-on=\"change: fileChange\"><p class=\"help-block\">从这里选择你要上传的图片，将会默认居中裁剪为200x200的方形。<\/p><\/div><div class=\"form-group\"><button type=\"submit\" class=\"btn btn-primary\">上传新的头像<\/button><\/div><\/form><\/div>",methods:{
+            edit_avatar: {template:"<div><h4>当前头像:<\/h4><img class=\"img-circle img-responsive\" v-attr=\"src: now_avatar\"><h4>上传新头像:<\/h4><div class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/div><div class=\"alert-success alert\" v-if=\"success\">头像更换成功<\/div><form method=\"post\" v-on=\"submit: onSubmitAvatar\"><div class=\"form-group\"><label for=\"InputFile\">选择图片<\/label><input type=\"file\" id=\"InputFile\" v-on=\"change: fileChange\"><p class=\"help-block\">从这里选择你要上传的图片，最大2MB，将会默认居中裁剪为200x200的方形。<\/p><\/div><div class=\"form-group\"><button type=\"submit\" class=\"btn btn-primary\">上传新的头像<\/button><\/div><\/form><\/div>",methods:{
     onSubmitAvatar: function (event) {
+        event.preventDefault();
         this.error = null;
         this.success = false;
         if (this.file) {
             var fd = new FormData(); //创建表单
-            fd.append("file", this.file);
+            fd.append("avatar", this.file);
             var obj = this;
-            FUNC.fileUpload(CONFIG.api.update_avatar, fd, function () {
+            FUNC.fileUpload(CONFIG.api.user.upload_avatar, fd, function () {
                 var data = FUNC.parseJSON(this.response);
                 if (data.status) {
                     obj.error = "";
                     obj.success = true;
+                    var rand = Math.random();
+                    obj.now_avatar = data.data.avatar_more.lager + "?_=" + rand;//更新当前头像
+                    Member.data = data.data;//更新数据
+                    if (APP.page.hasOwnProperty("header")) {
+                        APP.page.header.avatar = data.data.avatar + "?_=" + rand;
+                    }
                 } else {
                     obj.error = data.msg;
                 }
@@ -799,11 +807,22 @@ Page.home = function () {
         } else {
             this.error = "未选择正确的图片";
         }
-        event.preventDefault();
         return false;
     }, fileChange: function (event) {
         this.file = event.target.files[0];
         this.error = null;
+        if (this.file.size > 1024 * 2 * 1024) {
+            this.error = "当前文件大于2MB";
+            this.file = null;
+        } else if (this.file.type.indexOf("image/") != 0) {
+            this.error = "当前文件非图片文件";
+            this.file = null;
+        } else if (this.file == null) {
+            this.error = "文件为空，不存在";
+        }
+        if (this.error !== null) {
+            $("#InputFile").val("");
+        }
     }
 }},
             edit_password: {template:"<div><form v-on=\"submit: onSubmit\" style=\"max-width: 500px;margin: 15px auto\" action=\"\" method=\"post\"><h3>修改我的密码<\/h3><p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p><p class=\"alert-success alert\" v-if=\"success\">成功修改密码<\/p><div class=\"form-group\"><label class=\"sr-only\" for=\"InputOld\">旧密码<\/label><div class=\"input-group\"><div class=\"input-group-addon\">旧密码<\/div><input type=\"password\" name=\"old\" v-model=\"old\" class=\"form-control\" id=\"InputOld\" placeholder=\"输入旧密码\"><\/div><\/div><div class=\"form-group\"><label class=\"sr-only\" for=\"InputNew\">新密码<\/label><div class=\"input-group\"><div class=\"input-group-addon\">新密码<\/div><input type=\"password\" name=\"new\" v-model=\"new_pwd\" class=\"form-control\" id=\"InputNew\" placeholder=\"输入新密码\"><\/div><\/div><div class=\"form-group\"><button type=\"submit\" class=\"btn btn-warning\">确认修改<\/button><\/div><\/form><\/div>",methods:{

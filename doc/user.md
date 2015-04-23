@@ -86,11 +86,12 @@ Param: **上传必须使用HTML文件类型表单**
     * avatar(require) 文件字段名
 
 ```
-{   //此处返回信息和用户基本信息是一致的
+//此处返回信息和用户基本信息是一致的
+{
 	"status": true,
 	"code": 0,
 	"msg": "",
-	"data": {               //此时，返回新的用户基本信息
+	"data": {
 		"id": 31,
 		"user_type": "student",
 		"name": "发个",
