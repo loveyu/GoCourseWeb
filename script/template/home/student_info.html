@@ -1,10 +1,13 @@
 <div class="home-student-info">
 <h3>我的个人信息</h3>
 	<dl class="dl-horizontal">
-		<dt>用户名</dt><dd>{{user_id}}</dd>
-		<dt>姓名</dt><dd>{{name}}</dd>
-		<dt>学校</dt><dd>{{school}}</dd>
-		<dt>学院</dt><dd>{{college}}</dd>
-		<dt>专业</dt><dd>{{zy}}</dd>
+		<dt>用户名</dt><dd>{{user.uid}}</dd>
+		<dt>姓名</dt><dd>{{user.name}}</dd>
+		<dt>性别</dt><dd>{{user.sex}}</dd>
+		<dt>学校</dt><dd>{{college.uniName}}</dd>
+		<dt>学院</dt><dd>{{college.collegeName}}</dd>
+		<dt>专业</dt><dd>{{college.deptName}}</dd>
+		<dt>班级</dt><dd>{{college.className}}</dd>
+		<dt>个人简介</dt><dd>{{user.description}}</dd>
 	</dl>
 </div>

@@ -4,14 +4,10 @@ _methods_ = {
         this.status.success = false;
         this.status.error = null;
         var obj = {
-            user_id: this.user_id,
-            name: this.name,
-            school: this.school,
-            college: this.college,
-            zy: this.zy
+            user_description:this.user.description
         };
         var em_obj = this;
-        FUNC.ajax(CONFIG.api.update_student_info, "post", obj, function (data) {
+        FUNC.ajax(CONFIG.api.student.update_info, "post", obj, function (data) {
             if (data.status) {
                 em_obj.status.success = true;
             } else {

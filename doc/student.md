@@ -12,9 +12,14 @@ Param: `none`
     "msg": "",
     "data": {
         "user": {
-            "id": 32,
+            "id": 32,                     //系统ID
             "user_type": "student",
-            "name": null,
+            "name": null,                 //用户真实名称，如果值为空，注意要求绑定信息
+            "uid": 201210001,             //学号或者唯一ID
+            "email": "xxx@xx.com",        //邮箱地址
+            "sex": "男",                  //性别
+            "sex_flag": 0,                //性别标记，0男，1女
+            "description": "xxxx",        //用户描述信息
             "avatar": "http://xxx/avatar/default.jpg"
         },
         "college": {
@@ -49,6 +54,21 @@ Param:
 }
 ```
 Return:
+```
+{
+    "status": true,
+    "code": 0,
+    "msg": "",
+    "data": null
+}
+```
+
+### /student/update_info
+Desc: 更新学生基本信息
+Method: POST
+Param:
+* user_description(require) 用户描述信息
+
 ```
 {
     "status": true,

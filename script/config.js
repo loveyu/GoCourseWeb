@@ -26,7 +26,8 @@ var CONFIG = {
         },
         student:{
             info:"student/info",
-            bind_info:"student/bind_info"
+            bind_info:"student/bind_info",
+            update_info:"student/update_info"
         },
         college:{
             get_universities:"college/get_universities",
@@ -38,7 +39,6 @@ var CONFIG = {
         reset_password: 'reset_password',
         teacher_info: 'teacher_info',
         update_avatar: 'update_avatar',
-        update_student_info: "update_student_info",
         update_teacher_info: "update_teacher_info",
         quiz: {
             list: "quiz/list"

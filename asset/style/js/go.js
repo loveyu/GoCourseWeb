@@ -103,7 +103,8 @@ var CONFIG = {
         },
         student:{
             info:"student/info",
-            bind_info:"student/bind_info"
+            bind_info:"student/bind_info",
+            update_info:"student/update_info"
         },
         college:{
             get_universities:"college/get_universities",
@@ -115,7 +116,6 @@ var CONFIG = {
         reset_password: 'reset_password',
         teacher_info: 'teacher_info',
         update_avatar: 'update_avatar',
-        update_student_info: "update_student_info",
         update_teacher_info: "update_teacher_info",
         quiz: {
             list: "quiz/list"
@@ -777,7 +777,7 @@ Page.home = function () {
             }
         },
         components: {
-            student_info: {template:"<div class=\"home-student-info\"><h3>我的个人信息<\/h3><dl class=\"dl-horizontal\"><dt>用户名<\/dt><dd>{{user_id}}<\/dd><dt>姓名<\/dt><dd>{{name}}<\/dd><dt>学校<\/dt><dd>{{school}}<\/dd><dt>学院<\/dt><dd>{{college}}<\/dd><dt>专业<\/dt><dd>{{zy}}<\/dd><\/dl><\/div>"},
+            student_info: {template:"<div class=\"home-student-info\"><h3>我的个人信息<\/h3><dl class=\"dl-horizontal\"><dt>用户名<\/dt><dd>{{user.uid}}<\/dd><dt>姓名<\/dt><dd>{{user.name}}<\/dd><dt>性别<\/dt><dd>{{user.sex}}<\/dd><dt>学校<\/dt><dd>{{college.uniName}}<\/dd><dt>学院<\/dt><dd>{{college.collegeName}}<\/dd><dt>专业<\/dt><dd>{{college.deptName}}<\/dd><dt>班级<\/dt><dd>{{college.className}}<\/dd><dt>个人简介<\/dt><dd>{{user.description}}<\/dd><\/dl><\/div>"},
             teacher_info: {template:"<div class=\"home-student-info\"><h3>教师信息<\/h3><dl class=\"dl-horizontal\"><dt>用户名<\/dt><dd>{{user_id}}<\/dd><dt>姓名<\/dt><dd>{{name}}<\/dd><dt>学校<\/dt><dd>{{school}}<\/dd><dt>学院<\/dt><dd>{{college}}<\/dd><dt>专业<\/dt><dd>{{zy}}<\/dd><\/dl><\/div>"},
             edit_avatar: {template:"<div><h4>当前头像:<\/h4><img class=\"img-circle img-responsive\" v-attr=\"src: now_avatar\"><h4>上传新头像:<\/h4><div class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/div><div class=\"alert-success alert\" v-if=\"success\">头像更换成功<\/div><form method=\"post\" v-on=\"submit: onSubmitAvatar\"><div class=\"form-group\"><label for=\"InputFile\">选择图片<\/label><input type=\"file\" id=\"InputFile\" v-on=\"change: fileChange\"><p class=\"help-block\">从这里选择你要上传的图片，将会默认居中裁剪为200x200的方形。<\/p><\/div><div class=\"form-group\"><button type=\"submit\" class=\"btn btn-primary\">上传新的头像<\/button><\/div><\/form><\/div>",methods:{
     onSubmitAvatar: function (event) {
@@ -839,20 +839,16 @@ Page.home = function () {
         return false;
     }
 }},
-            edit_profile_student: {template:"<h3>编辑个人信息<\/h3><form style=\"max-width: 600px;margin: 0 auto\" method=\"post\" v-on=\"submit:onSubmit\"> <p class=\"alert-danger alert\" v-if=\"status.error\">{{status.error}}<\/p> <p class=\"alert-success alert\" v-if=\"status.success\">成功更新个人信息<\/p> <div class=\"form-group\"> <label class=\"control-label\" for=\"input01\">姓名<\/label> <div> <input type=\"text\" id=\"input01\" v-model=\"name\" placeholder=\"\" class=\"form-control\"> <p class=\"help-block\">输入你的姓名<\/p> <\/div> <\/div> <div class=\"form-group\"> <label class=\"control-label\" for=\"input02\">学校<\/label> <div> <input type=\"text\" id=\"input02\" v-model=\"school\" placeholder=\"\" class=\"form-control\"> <p class=\"help-block\">输入你的姓名<\/p> <\/div> <\/div> <div class=\"form-group\"> <label class=\"control-label\" for=\"input03\">学院<\/label> <div> <input type=\"text\" id=\"input03\" v-model=\"college\" placeholder=\"\" class=\"form-control\"> <p class=\"help-block\">输入你的姓名<\/p> <\/div> <\/div> <div> <label class=\"control-label\" for=\"input04\">专业<\/label> <div> <input type=\"text\" id=\"input04\" v-model=\"zy\" placeholder=\"\" class=\"form-control\"> <p class=\"help-block\">输入你的姓名<\/p> <\/div> <\/div> <div class=\"form-group\"> <div> <button type=\"submit\" class=\"btn btn-primary\">更新个人信息<\/button> <\/div> <\/div><\/form>",methods:{
+            edit_profile_student: {template:"<h3>编辑个人信息<\/h3><form style=\"max-width: 600px;margin: 0 auto\" method=\"post\" v-on=\"submit:onSubmit\"> <p class=\"alert-danger alert\" v-if=\"status.error\">{{status.error}}<\/p> <p class=\"alert-success alert\" v-if=\"status.success\">成功更新个人信息<\/p> <div class=\"form-group\"> <label class=\"control-label\" for=\"inputDesc\">个人描述<\/label> <div> <p class=\"help-block\">你的个人简单介绍<\/p> <textarea id=\"inputDesc\" class=\"form-control\" v-model=\"user.description\"><\/textarea> <\/div> <\/div> <div class=\"form-group\"> <div> <button type=\"submit\" class=\"btn btn-primary\">更新个人信息<\/button> <\/div> <\/div><\/form>",methods:{
     onSubmit: function (event) {
         event.preventDefault();
         this.status.success = false;
         this.status.error = null;
         var obj = {
-            user_id: this.user_id,
-            name: this.name,
-            school: this.school,
-            college: this.college,
-            zy: this.zy
+            user_description:this.user.description
         };
         var em_obj = this;
-        FUNC.ajax(CONFIG.api.update_student_info, "post", obj, function (data) {
+        FUNC.ajax(CONFIG.api.student.update_info, "post", obj, function (data) {
             if (data.status) {
                 em_obj.status.success = true;
             } else {
