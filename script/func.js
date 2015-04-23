@@ -30,6 +30,7 @@ var FUNC = {
         fileUpload: function (url, formData, callback) {
             var xhr = new XMLHttpRequest(); //创建请求对象
             xhr.open("POST", url, true);
+            xhr.withCredentials = true;
             xhr.addEventListener("load", callback, false);
             xhr.send(formData);
         },

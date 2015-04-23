@@ -1,5 +1,7 @@
 .idea/
 html_out/*.html
 test/
-avatar/[0-9]*
+avatar/large/
+avatar/small/
+avatar/middle/
 doc/*.html

@@ -22,23 +22,23 @@ var CONFIG = {
             register: "user_action/register",
             logout: "user_action/logout",
             info: "user/info",
-            change_password: "user/change_password"
+            change_password: "user/change_password",
+            upload_avatar: 'user/upload_avatar'
         },
-        student:{
-            info:"student/info",
-            bind_info:"student/bind_info",
-            update_info:"student/update_info"
+        student: {
+            info: "student/info",
+            bind_info: "student/bind_info",
+            update_info: "student/update_info"
         },
-        college:{
-            get_universities:"college/get_universities",
-            get_colleges:"college/get_colleges",
-            get_departments:"college/get_departments",
-            get_classes:"college/get_classes"
+        college: {
+            get_universities: "college/get_universities",
+            get_colleges: "college/get_colleges",
+            get_departments: "college/get_departments",
+            get_classes: "college/get_classes"
         },
         forget: 'forget',
         reset_password: 'reset_password',
         teacher_info: 'teacher_info',
-        update_avatar: 'update_avatar',
         update_teacher_info: "update_teacher_info",
         quiz: {
             list: "quiz/list"

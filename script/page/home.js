@@ -37,7 +37,7 @@ Page.home = function () {
             },
             m_edit_avatar: function () {
                 home_vm.result = {
-                    now_avatar: Member.data.avatar,
+                    now_avatar: Member.data.avatar_more.lager,
                     file: null,
                     error: null,
                     success: false
