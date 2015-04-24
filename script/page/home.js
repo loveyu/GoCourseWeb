@@ -7,12 +7,14 @@ Page.home = function () {
             student_info: {url: '/', name: '个人信息', active: false},
             edit_profile_student: {url: '/edit_profile_student', name: '编辑资料', active: false},
             edit_avatar: {url: '/edit_avatar', name: '更改头像', active: false},
+            email_bind: {url: '/email_bind', name: '邮箱绑定', active: false},
             edit_password: {url: '/edit_password', name: '修改密码', active: false}
         },
         teacher: {
             teacher_info: {url: '/', name: '个人信息', active: true},
             edit_profile_student: {url: '/edit_profile_student', name: '编辑资料', active: false},
             edit_avatar: {url: '/edit_avatar', name: '更改头像', active: false},
+            email_bind: {url: '/email_bind', name: '邮箱绑定', active: false},
             edit_password: {url: '/edit_password', name: '修改密码', active: false}
         }
     };
@@ -56,6 +58,30 @@ Page.home = function () {
             m_edit_profile_student: function (result) {
                 home_vm.result = FUNC.objMerge(result.data, {status: {error: null, success: false}});
                 home_vm.currentView = "edit_profile_student";
+            },
+            m_email_bind: function (result) {
+                if (result.status) {
+                    home_vm.result = {
+                        email: result.data.email,
+                        email_status: result.data.status,
+                        error: null,
+                        email_send_notice: "",//初始化邮件重发值
+                        email_send_status: "",
+                        success: false,
+                        set_new_email: false,
+                        new_email: "",
+                        captcha: "",
+                        timer: 0
+                    };
+                } else {
+                    home_vm.result = {
+                        email: null,//逻辑判断空值，进行显示判断
+                        email_status: null,
+                        error: result.msg,
+                        success: false
+                    };
+                }
+                home_vm.currentView = "email_bind";
             }
         },
         components: {
@@ -63,7 +89,8 @@ Page.home = function () {
             teacher_info: {__require: 'home/teacher_info.html'},
             edit_avatar: {__require: 'home/edit_avatar.html'},
             edit_password: {__require: 'home/edit_password.html'},
-            edit_profile_student: {__require: 'home/edit_profile_student.html'}
+            edit_profile_student: {__require: 'home/edit_profile_student.html'},
+            email_bind: {__require: 'home/email_bind.html'}
         }
     });
     var change_menus_active = function (view) {
@@ -91,6 +118,10 @@ Page.home = function () {
         '/edit_password': function () {
             change_menus_active("edit_password");
             home_vm.m_edit_password();
+        },
+        '/email_bind': function () {
+            change_menus_active("email_bind");
+            FUNC.ajax(CONFIG.api.user.email_status, "get", {}, home_vm.m_email_bind);
         },
         '/edit_profile_student': function () {
             change_menus_active("edit_profile_student");

@@ -1,0 +1,47 @@
+<div>
+    <h4>绑定邮箱账号</h4>
+
+    <div class="alert-danger alert" v-if="error">{{error}}</div>
+    <div class="alert-success alert" v-if="success">{{success}}</div>
+    <div v-if="email!=null">
+        <blockquote>
+            <p>当前邮箱: <code>{{email}}</code></p>
+
+            <p>状态:
+                <span class="label label-success" v-if="email_status==1">已验证</span>
+                <span class="label label-warning" v-if="email_status==0">未验证</span>
+            </p>
+
+            <div v-if="email_status==0" class="form-inline">
+                <div class="form-group">
+                    <label for="InputCaptcha">验证码:</label>
+                    <input type="text" v-model="captcha" class="form-control" id="InputCaptcha"/>
+                    <button class="btn btn-primary">验证</button>
+                </div>
+            </div>
+        </blockquote>
+        <div v-if="email_status==1">
+            <h4>更换绑定邮箱</h4>
+        </div>
+        <div v-if="email_status==0">
+            <div v-if="set_new_email" class="form-inline">
+                <div class="form-group">
+                    <label for="InputNewEmail">新邮箱:</label>
+                    <input type="text" v-model="new_email" class="form-control" id="InputNewEmail"/>
+                    <button class="btn btn-primary" v-on="click: no_bind_change">确认</button>
+                </div>
+            </div>
+            <div v-if="!set_new_email">
+                <h5>无法发送接收到邮件么？
+                    <a href="#" v-on="click: send_email_again"
+                       class="btn btn-sm btn-{{email_send_status?email_send_status:'warning'}}">
+                        {{email_send_notice?email_send_notice:"再次发送邮件"}}
+                    </a>
+                </h5>
+                <h5>还是邮箱地址不正确？<a href="#" v-on="click: edit_email" class="btn  btn-sm btn-danger">修改邮件地址</a>
+                </h5>
+            </div>
+            <p class="help-block"><strong class="text-danger">提示：</strong>验证码有效期仅为当前浏览器有效期内，请尽快通过验证</p>
+        </div>
+    </div>
+</div>

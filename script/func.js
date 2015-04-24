@@ -79,15 +79,18 @@ var FUNC = {
             localStorage.removeItem("token.expire");
             FUNC.ajax(CONFIG.api.user.logout, "GET", {});
         },
-        mapToObjArr:function(data,keyName,valueName){
-            var rt = [],obj;
-            for(var i in data){
+        mapToObjArr: function (data, keyName, valueName) {
+            var rt = [], obj;
+            for (var i in data) {
                 obj = {};
                 obj[keyName] = i;
                 obj[valueName] = data[i];
                 rt.push(obj);
             }
             return rt;
+        },
+        targetSet: function (target, value) {
+            jQuery(target).html(value);
         },
         verify: {
             email: function (email) {
