@@ -64,13 +64,17 @@ Page.home = function () {
                     home_vm.result = {
                         email: result.data.email,
                         email_status: result.data.status,
+                        ajax_lock: false,//防止多次提交
                         error: null,
                         email_send_notice: "",//初始化邮件重发值
                         email_send_status: "",
                         success: false,
                         set_new_email: false,
+                        input_new_bind_captcha: false,
                         new_email: "",
+                        new_email_set_on_no_bind: "",
                         captcha: "",
+                        captcha_new: "",
                         timer: 0
                     };
                 } else {
