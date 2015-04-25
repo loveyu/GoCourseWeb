@@ -27,6 +27,7 @@ var CONFIG = {
             email_status: 'user/email/status',//当前邮箱状态
             email_bind: 'user/email/bind',//绑定邮箱，当前邮箱未验证的状态下的情况下
             email_unbind: 'user/email/unbind',//解绑邮箱
+            email_unbind_confirm: 'user/email/unbind_confirm',//解绑邮箱后，向服务器发送请求，确认新邮箱
             email_new: 'user/email/new',//设置一个新邮箱，必须在未绑定情形下
             email_send: 'user/email/send'//向邮箱发送邮件
         },

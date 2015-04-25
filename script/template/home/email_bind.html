@@ -16,12 +16,13 @@
 
             <div v-if="email_status==1" class="form-inline">
                 <button class="btn btn-danger btn-sm" v-on="click: bind_change_btn">更换新邮箱</button>
+                <button class="btn btn-warning btn-sm" v-on="click: bind_change_btn_have_code">已有验证码</button>
             </div>
             <div v-if="email_status==0" class="form-inline">
                 <div class="form-group">
                     <label for="InputCaptcha">验证码:</label>
                     <input type="text" v-model="captcha" class="form-control" id="InputCaptcha"/>
-                    <button class="btn btn-primary">验证</button>
+                    <button class="btn btn-primary" v-on="click: submit_unbind">验证</button>
                 </div>
             </div>
         </blockquote>

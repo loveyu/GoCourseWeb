@@ -100,7 +100,13 @@ var CONFIG = {
             logout: "user_action/logout",
             info: "user/info",
             change_password: "user/change_password",
-            upload_avatar: 'user/upload_avatar'
+            upload_avatar: 'user/upload_avatar',
+            email_status: 'user/email/status',//当前邮箱状态
+            email_bind: 'user/email/bind',//绑定邮箱，当前邮箱未验证的状态下的情况下
+            email_unbind: 'user/email/unbind',//解绑邮箱
+            email_unbind_confirm: 'user/email/unbind_confirm',//解绑邮箱后，向服务器发送请求，确认新邮箱
+            email_new: 'user/email/new',//设置一个新邮箱，必须在未绑定情形下
+            email_send: 'user/email/send'//向邮箱发送邮件
         },
         student: {
             info: "student/info",
@@ -231,15 +237,18 @@ var FUNC = {
             localStorage.removeItem("token.expire");
             FUNC.ajax(CONFIG.api.user.logout, "GET", {});
         },
-        mapToObjArr:function(data,keyName,valueName){
-            var rt = [],obj;
-            for(var i in data){
+        mapToObjArr: function (data, keyName, valueName) {
+            var rt = [], obj;
+            for (var i in data) {
                 obj = {};
                 obj[keyName] = i;
                 obj[valueName] = data[i];
                 rt.push(obj);
             }
             return rt;
+        },
+        targetSet: function (target, value) {
+            jQuery(target).html(value);
         },
         verify: {
             email: function (email) {
@@ -726,12 +735,14 @@ Page.home = function () {
             student_info: {url: '/', name: '个人信息', active: false},
             edit_profile_student: {url: '/edit_profile_student', name: '编辑资料', active: false},
             edit_avatar: {url: '/edit_avatar', name: '更改头像', active: false},
+            email_bind: {url: '/email_bind', name: '邮箱绑定', active: false},
             edit_password: {url: '/edit_password', name: '修改密码', active: false}
         },
         teacher: {
             teacher_info: {url: '/', name: '个人信息', active: true},
             edit_profile_student: {url: '/edit_profile_student', name: '编辑资料', active: false},
             edit_avatar: {url: '/edit_avatar', name: '更改头像', active: false},
+            email_bind: {url: '/email_bind', name: '邮箱绑定', active: false},
             edit_password: {url: '/edit_password', name: '修改密码', active: false}
         }
     };
@@ -775,6 +786,34 @@ Page.home = function () {
             m_edit_profile_student: function (result) {
                 home_vm.result = FUNC.objMerge(result.data, {status: {error: null, success: false}});
                 home_vm.currentView = "edit_profile_student";
+            },
+            m_email_bind: function (result) {
+                if (result.status) {
+                    home_vm.result = {
+                        email: result.data.email,
+                        email_status: result.data.status,
+                        ajax_lock: false,//防止多次提交
+                        error: null,
+                        email_send_notice: "",//初始化邮件重发值
+                        email_send_status: "",
+                        success: false,
+                        set_new_email: false,
+                        input_new_bind_captcha: false,
+                        new_email: "",
+                        new_email_set_on_no_bind: "",
+                        captcha: "",
+                        captcha_new: "",
+                        timer: 0
+                    };
+                } else {
+                    home_vm.result = {
+                        email: null,//逻辑判断空值，进行显示判断
+                        email_status: null,
+                        error: result.msg,
+                        success: false
+                    };
+                }
+                home_vm.currentView = "email_bind";
             }
         },
         components: {
@@ -876,6 +915,196 @@ Page.home = function () {
         });
         return false;
     }
+}},
+            email_bind: {template:"<div> <h3>绑定邮箱账号<\/h3> <div class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/div> <div class=\"alert-success alert\" v-if=\"success\">{{success}}<\/div> <div v-if=\"email!=null\"> <blockquote> <p>当前邮箱: <code>{{email}}<\/code><\/p> <p v-if=\"new_email_set_on_no_bind\" class=\"text-warning\">新的邮箱: <code>{{new_email_set_on_no_bind}}<\/code><\/p> <p>状态: <span class=\"label label-success\" v-if=\"email_status==1\">已验证<\/span> <span class=\"label label-warning\" v-if=\"email_status==0\">未验证<\/span> <\/p> <div v-if=\"email_status==1\" class=\"form-inline\"> <button class=\"btn btn-danger btn-sm\" v-on=\"click: bind_change_btn\">更换新邮箱<\/button> <button class=\"btn btn-warning btn-sm\" v-on=\"click: bind_change_btn_have_code\">已有验证码<\/button> <\/div> <div v-if=\"email_status==0\" class=\"form-inline\"> <div class=\"form-group\"> <label for=\"InputCaptcha\">验证码:<\/label> <input type=\"text\" v-model=\"captcha\" class=\"form-control\" id=\"InputCaptcha\"\/> <button class=\"btn btn-primary\" v-on=\"click: submit_unbind\">验证<\/button> <\/div> <\/div> <\/blockquote> <div v-if=\"email_status==1\"> <div v-if=\"set_new_email\" class=\"form-inline\"> <p> <label for=\"InputNewBindEmail\">输入新的邮箱:<\/label> 该操作会发送两封邮件分别到你的邮箱，<span class=\"text-danger\">如果旧邮箱无法验证，请联系老师。<\/span> <\/p> <div class=\"form-group\"> <input type=\"email\" v-model=\"new_email\" class=\"form-control\" id=\"InputNewBindEmail\"\/> <button class=\"btn btn-primary\" v-on=\"click: bind_change_with_email\">确认<\/button> <\/div> <\/div> <\/div> <div v-if=\"email_status==1 && input_new_bind_captcha\" class=\"form-inline\"> <div class=\"form-group\"> <p><label for=\"InputOldEmailCaptcha\">输入原邮箱验证码：<\/label> <input type=\"email\" v-model=\"captcha\" class=\"form-control\" id=\"InputOldEmailCaptcha\"\/> <\/p> <p> <label for=\"InputNewEmailCaptcha\">输入新邮箱验证码：<\/label> <input type=\"email\" v-model=\"captcha_new\" class=\"form-control\" id=\"InputNewEmailCaptcha\"\/> <\/p> <button class=\"btn btn-primary\" v-on=\"click: bind_captcha\">确认<\/button> <\/div> <\/div> <div v-if=\"email_status==0\"> <div v-if=\"set_new_email\" class=\"form-inline\"> <div class=\"form-group\"> <label for=\"InputNewEmail\">新邮箱:<\/label> <input type=\"email\" v-model=\"new_email\" class=\"form-control\" id=\"InputNewEmail\"\/> <button class=\"btn btn-primary\" v-on=\"click: no_bind_change\">确认<\/button> <\/div> <\/div> <div v-if=\"!set_new_email\"> <h5>无法发送接收到邮件么？ <a href=\"#\" v-on=\"click: send_email_again\" class=\"btn btn-sm btn-{{email_send_status?email_send_status:'warning'}}\"> {{email_send_notice?email_send_notice:\"再次发送邮件\"}} <\/a> <\/h5> <h5>还是邮箱地址不正确？<a href=\"#\" v-on=\"click: edit_email\" class=\"btn btn-sm btn-danger\">修改邮件地址<\/a> <\/h5> <\/div> <p class=\"help-block\"><strong class=\"text-danger\">提示：<\/strong>验证码有效期仅为当前浏览器有效期内，请尽快通过验证<\/p> <\/div> <\/div><\/div>",methods:{
+    send_email_again: function (event) {
+        event.preventDefault();
+        var obj = this;
+        obj.error = "";
+        if (obj.ajax_lock) {
+            obj.error = "请等待当前操作结束";
+            return false;
+        }
+        if (obj.timer > 0) {
+            obj.error = "必须等待“" + obj.timer + "”后才能重新发送邮件";
+            return false;
+        }
+        obj.error = "";
+        obj.email_send_notice = "邮件发送中，请稍等....";
+        obj.email_send_status = "danger";
+        obj.ajax_lock = true;
+        FUNC.ajax(CONFIG.api.user.email_send, "POST", {type: "old_send_again"}, function (result) {
+            obj.error = "";
+            obj.ajax_lock = false;
+            obj.email_send_notice = "";
+            if (result.status) {
+                obj.timer_on_send_again();
+            } else {
+                obj.error = result.msg;
+            }
+        });
+        return false;
+    },
+    timer_on_send_again: function () {
+        var obj = this;
+        obj.timer = 59;
+        var timer_hand;
+        var timer_call = function () {
+            if (obj == null || obj.$data == null) {
+                //处理异常，当对象不存在时直接结束掉
+                if (timer_hand !== null) {
+                    clearTimeout(timer_hand);
+                }
+                return;
+            }
+            if (obj != null && --obj.timer > 0) {
+                obj.email_send_status = "success";
+                obj.email_send_notice = obj.timer + " 秒后可重试";
+                timer_hand = setTimeout(timer_call, 1000);
+            } else {
+                obj.email_send_status = "";
+                obj.email_send_notice = "";
+            }
+        };
+        timer_hand = setTimeout(timer_call, 0);
+    },
+    edit_email: function (event) {
+        event.preventDefault();
+        this.set_new_email = true;
+        return false;
+    },
+    check_the_email: function () {
+        var obj = this;
+        if (obj.new_email == "") {
+            obj.error = "新邮箱不允许为空";
+            return false;
+        }
+        if (!FUNC.verify.email(obj.new_email)) {
+            obj.error = "请输入正确的邮箱";
+            return false;
+        }
+        if (obj.new_email == obj.email) {
+            obj.error = "新旧邮箱不允许相同";
+            return false;
+        }
+        return true;
+    },
+    no_bind_change: function (event) {
+        event.preventDefault();
+        var obj = this;
+        obj.error = "";
+        if (obj.ajax_lock) {
+            obj.error = "请等待当前操作结束";
+            return false;
+        }
+        if (!this.check_the_email()) {
+            return false;
+        }
+        FUNC.targetSet(event.target, "修改中....");
+        obj.ajax_lock = true;
+        FUNC.ajax(CONFIG.api.user.email_new, "post", {email: obj.new_email}, function (result) {
+            obj.ajax_lock = false;
+            obj.error = "";
+            if (result.status) {
+                FUNC.targetSet(event.target, "修改成功");
+                obj.success = "更新成功，邮件已发送，注意查收";
+                obj.email = obj.new_email;
+                obj.set_new_email = false;
+                obj.new_email = "";
+                obj.email_status = false;
+                setTimeout(function () {
+                    obj.success = "";
+                }, 2000);
+                obj.timer_on_send_again();
+            } else {
+                FUNC.targetSet(event.target, "重试");
+                obj.error = result.msg;
+            }
+        });
+        return false;
+    },
+    bind_change_btn: function () {
+        this.set_new_email = true;
+        this.input_new_bind_captcha = false;
+    },
+    bind_change_with_email: function (event) {
+        var obj = this;
+        obj.error = "";
+        if (obj.ajax_lock) {
+            obj.error = "请等待当前操作结束";
+            return false;
+        }
+        if (!this.check_the_email()) {
+            return false;
+        }
+        FUNC.targetSet(event.target, "请求提交中,请稍等....");
+        obj.ajax_lock = true;
+        FUNC.ajax(CONFIG.api.user.email_unbind, "post", {new_email: obj.new_email}, function (result) {
+            obj.error = "";
+            obj.ajax_lock = false;
+            if (result.status) {
+                FUNC.targetSet(event.target, "提交请求成功");
+                obj.success = "更新成功，两封邮件已发送，注意查收";
+                obj.new_email_set_on_no_bind = obj.new_email;//设置需要显示的新邮箱
+                obj.new_email = "";
+                obj.set_new_email = false;
+                setTimeout(function () {
+                    obj.success = "";
+                }, 4000);
+                obj.input_new_bind_captcha = true;
+            } else {
+                FUNC.targetSet(event.target, "重试");
+                obj.error = result.msg;
+            }
+        });
+        return false;
+    },
+    bind_captcha: function (event) {
+        var obj = this;
+        obj.error = "";
+        if (obj.captcha == "" || obj.captcha_new == "") {
+            obj.error = "验证码均不能为空";
+            return;
+        }
+        FUNC.ajax(CONFIG.api.user.email_unbind_confirm, "post", {
+            new_captcha: obj.captcha_new,
+            old_captcha: obj.captcha
+        }, function (result) {
+            if (result.status) {
+                obj.error = "";
+                obj.input_new_bind_captcha = false;
+                obj.success = "邮箱更换成功，页面即将刷新";
+                setTimeout(function () {
+                    window.location.reload();
+                }, 1500);
+            } else {
+                obj.error = result.msg;
+            }
+        });
+    },
+    /**
+     * 提交未绑定的账号的绑定信息
+     */
+    submit_unbind: function () {
+        var obj = this;
+        obj.error = "";
+        if (obj.captcha == "") {
+            obj.error = "当前验证码不能为空";
+            return;
+        }
+        FUNC.ajax(CONFIG.api.user.email_bind, "post", {captcha: obj.captcha}, function (result) {
+            obj.error = "";
+            if (result.status) {
+                obj.captcha = "";
+                obj.email_status = 1;
+            } else {
+                obj.error = result.msg;
+            }
+        });
+    },
+    bind_change_btn_have_code: function () {
+        this.input_new_bind_captcha = true;
+    }
 }}
         }
     });
@@ -904,6 +1133,10 @@ Page.home = function () {
         '/edit_password': function () {
             change_menus_active("edit_password");
             home_vm.m_edit_password();
+        },
+        '/email_bind': function () {
+            change_menus_active("email_bind");
+            FUNC.ajax(CONFIG.api.user.email_status, "get", {}, home_vm.m_email_bind);
         },
         '/edit_profile_student': function () {
             change_menus_active("edit_profile_student");

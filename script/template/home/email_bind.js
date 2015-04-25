@@ -3,7 +3,7 @@ _methods_ = {
         event.preventDefault();
         var obj = this;
         obj.error = "";
-        if(obj.ajax_lock){
+        if (obj.ajax_lock) {
             obj.error = "请等待当前操作结束";
             return false;
         }
@@ -75,7 +75,7 @@ _methods_ = {
         event.preventDefault();
         var obj = this;
         obj.error = "";
-        if(obj.ajax_lock){
+        if (obj.ajax_lock) {
             obj.error = "请等待当前操作结束";
             return false;
         }
@@ -107,11 +107,12 @@ _methods_ = {
     },
     bind_change_btn: function () {
         this.set_new_email = true;
+        this.input_new_bind_captcha = false;
     },
-    bind_change_with_email: function () {
+    bind_change_with_email: function (event) {
         var obj = this;
         obj.error = "";
-        if(obj.ajax_lock){
+        if (obj.ajax_lock) {
             obj.error = "请等待当前操作结束";
             return false;
         }
@@ -140,7 +141,50 @@ _methods_ = {
         });
         return false;
     },
-    bind_captcha: function () {
-        console.log("OJ");
+    bind_captcha: function (event) {
+        var obj = this;
+        obj.error = "";
+        if (obj.captcha == "" || obj.captcha_new == "") {
+            obj.error = "验证码均不能为空";
+            return;
+        }
+        FUNC.ajax(CONFIG.api.user.email_unbind_confirm, "post", {
+            new_captcha: obj.captcha_new,
+            old_captcha: obj.captcha
+        }, function (result) {
+            if (result.status) {
+                obj.error = "";
+                obj.input_new_bind_captcha = false;
+                obj.success = "邮箱更换成功，页面即将刷新";
+                setTimeout(function () {
+                    window.location.reload();
+                }, 1500);
+            } else {
+                obj.error = result.msg;
+            }
+        });
+    },
+    /**
+     * 提交未绑定的账号的绑定信息
+     */
+    submit_unbind: function () {
+        var obj = this;
+        obj.error = "";
+        if (obj.captcha == "") {
+            obj.error = "当前验证码不能为空";
+            return;
+        }
+        FUNC.ajax(CONFIG.api.user.email_bind, "post", {captcha: obj.captcha}, function (result) {
+            obj.error = "";
+            if (result.status) {
+                obj.captcha = "";
+                obj.email_status = 1;
+            } else {
+                obj.error = result.msg;
+            }
+        });
+    },
+    bind_change_btn_have_code: function () {
+        this.input_new_bind_captcha = true;
     }
 };//_methods_
