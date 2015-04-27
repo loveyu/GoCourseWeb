@@ -50,3 +50,53 @@ Param:
     "data": null
 }
 ```
+
+### /user_action/forget_password/send_mail
+Desc: 发送密码重置邮件
+Session: true
+Method: POST
+Param:
+* email(require) 邮箱地址
+* captcha(require) 验证码值
+* captcha_id(可选) 验证码的ID，用于区分多个验证码，不提交为默认ID
+
+```
+{
+	"status": true,
+	"code": 0,
+	"msg": "",
+	"data": "xxxxxxxxxxxxxxx" //返回当前的SESSION ID, 如果该值存在
+}
+```
+
+### /user_action/forget_password/check_code
+Desc: 检查当前验证码是否正确
+Session: true
+Method: POST
+Param:
+* code(require) 验证码
+
+```
+{
+	"status": true,
+	"code": 0,
+	"msg": "",
+	"data": "xxxxxxxxxxxxxxx" //返回当前的SESSION ID, 如果该值存在
+}
+```
+
+### /user_action/forget_password/reset
+Desc:  重置密码
+Session: true
+Method: POST
+Param:
+* code(password) 新的密码
+
+```
+{
+	"status": true,
+	"code": 0,
+	"msg": "",
+	"data": "xxxxxxxxxxxxxxx" //返回当前的SESSION ID, 如果该值存在
+}
+```

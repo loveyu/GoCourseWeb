@@ -5,6 +5,7 @@
 Desc: 读取登录用户基本信息
 Method: Default
 Param: `none`
+
 ```
 {
 	"status": true,
@@ -83,7 +84,7 @@ Param: `none`
 Desc: 上传用户头像给当前用户
 Method: Post
 Param: **上传必须使用HTML文件类型表单**
-    * avatar(require) 文件字段名
+* avatar(require) 文件字段名
 
 ```
 //此处返回信息和用户基本信息是一致的
@@ -107,5 +108,110 @@ Param: **上传必须使用HTML文件类型表单**
 		"sex_flag": 0,
 		"description": "gtrhfhd"
 	}
+}
+```
+
+### /user/email/status
+Desc: 用户当前邮箱的状态
+Method: default
+Param: `none`
+
+```
+{
+	"status": true,
+	"code": 0,
+	"msg": "",
+	"data": {
+		"email": "xxxx",
+		"status": 0       //0表示未验证，1表示已验证
+	}
+}
+```
+
+### /email/send
+Desc: 邮件的发送操作
+Method: POST
+SESSION: true
+Param: 
+* type (require),可选值如下:
+```
+{
+	"old_send_again"	//从新发送激活邮件，如果账户为激活
+	//其他值待定
+}
+```
+Return:
+```
+{
+	"status": true,
+	"code": 0,
+	"msg": "",
+	"data": "xxxxxxxxxxxxxxx" //返回当前的SESSION ID, 如果该值存在
+}
+```
+
+### /user/email/bind
+Desc: 绑定用户的邮箱
+Session: true
+Method: POST
+Param:
+* captcha (require) 验证码，长度为10位
+
+Return:
+```
+{
+	"status": true,
+	"code": 0,
+	"msg": "",
+	"data": "xxxxxxxxxxxxxxx" //返回当前的SESSION ID, 如果该值存在
+}
+```
+
+### /user/email/new
+Desc: 在未绑定邮箱的状态下，设置一个新的邮箱
+Session: true
+Method: POST
+Param: 
+* email (require) 用户新的邮箱
+
+```
+{
+	"status": true,
+	"code": 0,
+	"msg": "",
+	"data": "xxxxxxxxxxxxxxx" //返回当前的SESSION ID, 如果该值存在
+}
+```
+
+### /user/email/unbind
+Desc: 在已经绑定邮箱的状态下，设置一个新的邮箱，会同时发送邮件到新的邮箱和旧的邮箱
+Session: true
+Method: POST
+Param: 
+* new_email(require) 新的邮箱地址
+
+```
+{
+	"status": true,
+	"code": 0,
+	"msg": "",
+	"data": "xxxxxxxxxxxxxxx" //返回当前的SESSION ID, 如果该值存在
+}
+```
+
+### /user/email/unbind_confirm
+Desc: 在解绑时，将两个两个新的验证码发送到服务器
+Session: true
+Method: POST
+Param:
+* old_captcha(require)旧邮箱的验证码
+* new_captcha(require)新邮箱的验证码
+
+```
+{
+	"status": true,
+	"code": 0,
+	"msg": "",
+	"data": "xxxxxxxxxxxxxxx" //返回当前的SESSION ID, 如果该值存在
 }
 ```
