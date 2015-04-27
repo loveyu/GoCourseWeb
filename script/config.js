@@ -25,6 +25,7 @@ var CONFIG = {
             info: "user/info",
             change_password: "user/change_password",
             upload_avatar: 'user/upload_avatar',
+            set_token_cookie:'user/set_token_cookie',
             email_status: 'user/email/status',//当前邮箱状态
             email_bind: 'user/email/bind',//绑定邮箱，当前邮箱未验证的状态下的情况下
             email_unbind: 'user/email/unbind',//解绑邮箱

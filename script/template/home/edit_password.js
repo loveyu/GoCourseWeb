@@ -17,11 +17,13 @@ _methods_ = {
             {
                 old_pwd: this.old, new_pwd: this.new_pwd
             }, function (data) {
+                obj.success = false;
+                obj.error = "";
                 if (data.status) {
                     obj.old = "";
                     obj.new_pwd = "";
+                    FUNC.saveToken(data.data);
                     obj.success = true;
-                    FUNC.saveToken(data.data)
                 } else {
                     obj.success = false;
                     obj.error = data.msg;
