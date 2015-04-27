@@ -77,7 +77,6 @@ var FUNC = {
         delToken: function () {
             localStorage.removeItem("token.token");
             localStorage.removeItem("token.expire");
-            FUNC.ajax(CONFIG.api.user.logout, "GET", {});
         },
         mapToObjArr: function (data, keyName, valueName) {
             var rt = [], obj;
@@ -91,6 +90,12 @@ var FUNC = {
         },
         targetSet: function (target, value) {
             jQuery(target).html(value);
+        },
+        eventBind: function (obj, on, call) {
+            jQuery(obj).bind(on, call);
+        },
+        eventTrigger: function (obj, action, data, elem, onlyHandlers) {
+            jQuery(obj).trigger(action, data, elem, onlyHandlers);
         },
         verify: {
             email: function (email) {

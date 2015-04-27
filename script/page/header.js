@@ -50,7 +50,13 @@ Page.header = function () {
                 //退出登录
                 event.preventDefault();
                 FUNC.delToken();
-                location.href="login.html";
+                FUNC.ajax(CONFIG.api.user.logout, "GET", {}, function (result) {
+                    if (result.status) {
+                        location.href = "login.html";
+                    } else {
+                        alert("退出登录失败:" + result.msg);
+                    }
+                });
                 return false;
             }
         },

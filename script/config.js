@@ -16,6 +16,7 @@ var CONFIG = {
     site_description: '让课程变得更简单',
     site_url: DOMAIN,
     api_url: DOMAIN + 'gocourse/',
+    captcha_url: DOMAIN + "gocourse/tools/captcha",
     api: {
         user: {
             login: "user_action/login",
@@ -29,7 +30,10 @@ var CONFIG = {
             email_unbind: 'user/email/unbind',//解绑邮箱
             email_unbind_confirm: 'user/email/unbind_confirm',//解绑邮箱后，向服务器发送请求，确认新邮箱
             email_new: 'user/email/new',//设置一个新邮箱，必须在未绑定情形下
-            email_send: 'user/email/send'//向邮箱发送邮件
+            email_send: 'user/email/send',//向邮箱发送邮件
+            forget_send_mail:'user_action/forget_password/send_mail',
+            forget_check_code:'user_action/forget_password/check_code',
+            forget_reset:'user_action/forget_password/reset'
         },
         student: {
             info: "student/info",
@@ -42,14 +46,12 @@ var CONFIG = {
             get_departments: "college/get_departments",
             get_classes: "college/get_classes"
         },
-        forget: 'forget',
-        reset_password: 'reset_password',
         teacher_info: 'teacher_info',
         update_teacher_info: "update_teacher_info",
         quiz: {
             list: "quiz/list"
         }
-    }, captcha_url: DOMAIN + "image/captcha.jpg"
+    }
 };
 //初始化API完整地址
 for (var name in CONFIG.api) {

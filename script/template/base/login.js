@@ -9,6 +9,7 @@ _methods_ = {
             flag = false;
         }
         if (flag) {
+            this.error_msg = "";
             FUNC.ajax(CONFIG.api.user.login, 'post', {
                 username: this.username, password: this.password
                 //, type: this.type

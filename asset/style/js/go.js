@@ -44,7 +44,7 @@ if (!('localStorage' in window)) {
 /**
  * Created by loveyu on 2015/4/1.
  */
-Vue.component('base-login-form',{template:"<form method=\"get\" v-on=\"submit: onLoginFormSubmit\"> <fieldset> <legend>用户登录<\/legend> <div class=\"alert alert-danger\" role=\"alert\" v-if=\"error_msg\"> <span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"><\/span> <span class=\"sr-only\">Error:<\/span> {{error_msg}} <\/div> <div class=\"form-group\"> <div class=\"input-group\"> <span class=\"input-group-addon\">用户名<\/span> <input type=\"text\" v-model=\"username\" name=\"username\" class=\"form-control\" placeholder=\"Username\"> <\/div> <\/div> <div class=\"form-group\"> <div class=\"input-group\"> <span class=\"input-group-addon\">密　码<\/span> <input type=\"password\" v-model=\"password\" name=\"password\" class=\"form-control\" placeholder=\"Password\"> <\/div> <\/div> <!--<div class=\"form-group\">--> <!--<div class=\"input-group\">--> <!--<span class=\"input-group-addon\">类　型<\/span>--> <!--<div class=\"form-control\">--> <!--<label class=\"radio-inline\">--> <!--<input type=\"radio\" name=\"type\" v-model=\"type\" checked=\"checked\"--> <!--id=\"TypeStudent\" value=\"student\">--> <!--学生--> <!--<\/label>--> <!--<label class=\"radio-inline\">--> <!--<input type=\"radio\" name=\"type\" v-model=\"type\" id=\"TypeTeacher\"--> <!--value=\"teacher\">--> <!--教师--> <!--<\/label>--> <!--<\/div>--> <!--<\/div>--> <!--<\/div>--> <div class=\"form-group\"> <button class=\"btn btn-primary form-control\" type=\"submit\">登录<\/button> <\/div> <\/fieldset> <p><a class=\"text-info\" href=\"forget.html\">忘记密码？<\/a><\/p><\/form>",methods:{
+Vue.component('base-login-form',{template:"<form method=\"get\" v-on=\"submit: onLoginFormSubmit\"> <fieldset> <legend>用户登录<\/legend> <div class=\"alert alert-danger\" role=\"alert\" v-if=\"error_msg\"> <span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"><\/span> <span class=\"sr-only\">Error:<\/span> {{error_msg}} <\/div> <div class=\"form-group\"> <div class=\"input-group\"> <span class=\"input-group-addon\">用户名<\/span> <input type=\"text\" v-model=\"username\" name=\"username\" class=\"form-control\" placeholder=\"Username\"> <\/div> <\/div> <div class=\"form-group\"> <div class=\"input-group\"> <span class=\"input-group-addon\">密　码<\/span> <input type=\"password\" v-model=\"password\" name=\"password\" class=\"form-control\" placeholder=\"Password\"> <\/div> <\/div> <div class=\"form-group\"> <button class=\"btn btn-primary form-control\" type=\"submit\">登录<\/button> <\/div> <\/fieldset> <p><a class=\"text-info\" href=\"forget.html\">忘记密码？<\/a><\/p><\/form>",methods:{
     onLoginFormSubmit: function (event) {
         event.preventDefault();
         var flag = true;
@@ -55,6 +55,7 @@ Vue.component('base-login-form',{template:"<form method=\"get\" v-on=\"submit: o
             flag = false;
         }
         if (flag) {
+            this.error_msg = "";
             FUNC.ajax(CONFIG.api.user.login, 'post', {
                 username: this.username, password: this.password
                 //, type: this.type
@@ -93,6 +94,7 @@ var CONFIG = {
     site_description: '让课程变得更简单',
     site_url: DOMAIN,
     api_url: DOMAIN + 'gocourse/',
+    captcha_url: DOMAIN + "gocourse/tools/captcha",
     api: {
         user: {
             login: "user_action/login",
@@ -106,7 +108,10 @@ var CONFIG = {
             email_unbind: 'user/email/unbind',//解绑邮箱
             email_unbind_confirm: 'user/email/unbind_confirm',//解绑邮箱后，向服务器发送请求，确认新邮箱
             email_new: 'user/email/new',//设置一个新邮箱，必须在未绑定情形下
-            email_send: 'user/email/send'//向邮箱发送邮件
+            email_send: 'user/email/send',//向邮箱发送邮件
+            forget_send_mail:'user_action/forget_password/send_mail',
+            forget_check_code:'user_action/forget_password/check_code',
+            forget_reset:'user_action/forget_password/reset'
         },
         student: {
             info: "student/info",
@@ -119,14 +124,12 @@ var CONFIG = {
             get_departments: "college/get_departments",
             get_classes: "college/get_classes"
         },
-        forget: 'forget',
-        reset_password: 'reset_password',
         teacher_info: 'teacher_info',
         update_teacher_info: "update_teacher_info",
         quiz: {
             list: "quiz/list"
         }
-    }, captcha_url: DOMAIN + "image/captcha.jpg"
+    }
 };
 //初始化API完整地址
 for (var name in CONFIG.api) {
@@ -235,7 +238,6 @@ var FUNC = {
         delToken: function () {
             localStorage.removeItem("token.token");
             localStorage.removeItem("token.expire");
-            FUNC.ajax(CONFIG.api.user.logout, "GET", {});
         },
         mapToObjArr: function (data, keyName, valueName) {
             var rt = [], obj;
@@ -249,6 +251,12 @@ var FUNC = {
         },
         targetSet: function (target, value) {
             jQuery(target).html(value);
+        },
+        eventBind: function (obj, on, call) {
+            jQuery(obj).bind(on, call);
+        },
+        eventTrigger: function (obj, action, data, elem, onlyHandlers) {
+            jQuery(obj).trigger(action, data, elem, onlyHandlers);
         },
         verify: {
             email: function (email) {
@@ -624,40 +632,119 @@ Page.course_teacher = function () {
  * Created by loveyu on 2015/3/25.
  */
 Page.forget = function () {
-    return new Vue({
+    var vm = new Vue({
         el: "#ForgetPassword",
         data: {
             error_msg: '',
             email: '',
             captcha: '',
-            type: ''
+            type: '',
+            pwd_1: '',
+            pwd_2: '',
+            code: "",
+            setup: 'send_mail',//默认步骤
+            captcha_url: CONFIG.captcha_url,
+            lock: false
         }, methods: {
             onClickCaptcha: function (event) {
                 event.target.src = CONFIG.captcha_url + "?rand=" + Math.random();
             },
-            onFormSubmit: function (event) {
-                var flag = true;
-                if (this.email == '' || this.captcha == '' || this.type == '') {
-                    this.error_msg = "表单不允许有空值";
-                    flag = false;
-                }
-                if (flag) {
-                    FUNC.ajax(CONFIG.api.forget, 'post', {
-                        email: this.email, captcha: this.captcha, type: this.type
-                    }, this.FormResult);
-                }
+            onSendMail: function (event) {
                 event.preventDefault();
+                var obj = this;
+                if (obj.lock) {
+                    obj.error_msg = "请等待操作结束";
+                    return false;
+                }
+                obj.error_msg = "";
+                var flag = true;
+                if (obj.email == '' || obj.captcha == '') {
+                    obj.error_msg = "表单不允许有空值";
+                    return false;
+                }
+                if (!FUNC.verify.email(obj.email)) {
+                    obj.error_msg = "邮箱格式不正确";
+                    return false;
+                }
+                FUNC.targetSet("#SendMailButton", "邮件发送中，请稍等");
+                obj.lock = true;
+                FUNC.ajax(CONFIG.api.user.forget_send_mail, 'post', {
+                    email: obj.email,
+                    captcha: obj.captcha
+                }, function (result) {
+                    obj.lock = false;
+                    FUNC.targetSet("#SendMailButton", "再次发送邮件");
+                    if (!result.status) {
+                        FUNC.eventTrigger("#CaptchaImg", "click");
+                        obj.error_msg = result.msg ? result.msg : '未知错误';
+                    } else {
+                        obj.setup = "code";
+                        obj.code = "";
+                    }
+                });
                 return false;
             },
-            FormResult: function (data) {
-                if (!data.status) {
-                    this.error_msg = data.msg ? data.msg : '未知错误';
-                } else {
-                    alert("OK");
+            onCheckCode: function (event) {
+                event.preventDefault();
+                var obj = this;
+                obj.error_msg = "";
+                if (!/[a-zA-Z0-9]{32}/.test(obj.code)) {
+                    obj.error_msg = "验证码格式有误";
+                    return false;
                 }
+                FUNC.ajax(CONFIG.api.user.forget_check_code, "post", {code: obj.code}, function (result) {
+                    obj.error_msg = "";
+                    if (result.status) {
+                        obj.setup = "reset";
+                    } else {
+                        obj.error_msg = result.msg;
+                    }
+                });
+                return false;
+            },
+            onReset: function (event) {
+                event.preventDefault();
+                var obj = this;
+                obj.error_msg = "";
+                if (obj.pwd_1 == "" || obj.pwd_2 == "") {
+                    obj.error_msg = "密码不允许为空";
+                    return false;
+                }
+                if (obj.pwd_1 != obj.pwd_2) {
+                    obj.error_msg = "两次密码不一致";
+                    return false;
+                }
+                FUNC.ajax(CONFIG.api.user.forget_reset, "post", {password: obj.pwd_1}, function (result) {
+                    obj.error_msg = "";
+                    if (result.status) {
+                        obj.setup = "finish";
+                    } else {
+                        obj.error_msg = result.msg;
+                    }
+                });
+                return false;
             }
         }
     });
+    var hash_c = function () {
+        if (location.hash == "#code") {
+            vm.setup = "input_code";
+        } else if (/#code\/([a-zA-Z0-9]{32})/.test(location.hash)) {
+            vm.setup = "input_code";
+            var x = location.hash.match(/#code\/([a-zA-Z0-9]{32})/);
+            if (x != null && x.hasOwnProperty(1)) {
+                vm.code = x[1];
+            }
+        } else if ("#reset" == location.hash) {
+            vm.setup = "reset";
+        } else {
+            vm.setup = "send_mail";
+        }
+    };
+    hash_c();
+    FUNC.eventBind(window, "hashchange", hash_c);
+
+    return vm;
 };
 
 
@@ -713,7 +800,13 @@ Page.header = function () {
                 //退出登录
                 event.preventDefault();
                 FUNC.delToken();
-                location.href="login.html";
+                FUNC.ajax(CONFIG.api.user.logout, "GET", {}, function (result) {
+                    if (result.status) {
+                        location.href = "login.html";
+                    } else {
+                        alert("退出登录失败:" + result.msg);
+                    }
+                });
                 return false;
             }
         },
