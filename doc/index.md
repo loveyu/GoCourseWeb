@@ -47,6 +47,7 @@ Session ID 必须使用Cookie进行传递，且默认名称为`JSESSIONID`，该
 1. [获取专业等各种信息](college.html), `/college/`
 2. [获取服务器状态信息](server_status.html), `/server_status/`
 3. [学生信息获取](student.html), `/student/`
-4. [通用星的工具](tools.html), `/tools/`
-5. [用户信息相关操作](user.html), `/user/`
-6. [用户未登陆过程中的操作](user_action.html), `/user_action/`
+4. [教师信息获取](teacher.html), `/teacher/`
+5. [通用型的工具](tools.html), `/tools/`
+6. [用户信息相关操作](user.html), `/user/`
+7. [用户未登陆过程中的操作](user_action.html), `/user_action/`

@@ -124,8 +124,10 @@ var CONFIG = {
             get_departments: "college/get_departments",
             get_classes: "college/get_classes"
         },
-        teacher_info: 'teacher_info',
-        update_teacher_info: "update_teacher_info",
+        teacher:{
+            info:"teacher/info",
+            update_info:"teacher/update_info"
+        },
         quiz: {
             list: "quiz/list"
         }
@@ -833,7 +835,7 @@ Page.home = function () {
         },
         teacher: {
             teacher_info: {url: '/', name: '个人信息', active: true},
-            edit_profile_student: {url: '/edit_profile_student', name: '编辑资料', active: false},
+            edit_profile_teacher: {url: '/edit_profile_teacher', name: '编辑资料', active: false},
             edit_avatar: {url: '/edit_avatar', name: '更改头像', active: false},
             email_bind: {url: '/email_bind', name: '邮箱绑定', active: false},
             edit_password: {url: '/edit_password', name: '修改密码', active: false}
@@ -880,6 +882,10 @@ Page.home = function () {
                 home_vm.result = FUNC.objMerge(result.data, {status: {error: null, success: false}});
                 home_vm.currentView = "edit_profile_student";
             },
+            m_edit_profile_teacher: function (result) {
+                home_vm.result = FUNC.objMerge(result.data, {status: {error: null, success: false}});
+                home_vm.currentView = "edit_profile_teacher";
+            },
             m_email_bind: function (result) {
                 if (result.status) {
                     home_vm.result = {
@@ -911,7 +917,7 @@ Page.home = function () {
         },
         components: {
             student_info: {template:"<div class=\"home-student-info\"><h3>我的个人信息<\/h3><dl class=\"dl-horizontal\"><dt>用户名<\/dt><dd>{{user.uid}}<\/dd><dt>姓名<\/dt><dd>{{user.name}}<\/dd><dt>性别<\/dt><dd>{{user.sex}}<\/dd><dt>学校<\/dt><dd>{{college.uniName}}<\/dd><dt>学院<\/dt><dd>{{college.collegeName}}<\/dd><dt>专业<\/dt><dd>{{college.deptName}}<\/dd><dt>班级<\/dt><dd>{{college.className}}<\/dd><dt>个人简介<\/dt><dd>{{user.description}}<\/dd><\/dl><\/div>"},
-            teacher_info: {template:"<div class=\"home-student-info\"><h3>教师信息<\/h3><dl class=\"dl-horizontal\"><dt>用户名<\/dt><dd>{{user_id}}<\/dd><dt>姓名<\/dt><dd>{{name}}<\/dd><dt>学校<\/dt><dd>{{school}}<\/dd><dt>学院<\/dt><dd>{{college}}<\/dd><dt>专业<\/dt><dd>{{zy}}<\/dd><\/dl><\/div>"},
+            teacher_info: {template:"<div class=\"home-student-info\"><h3>教师信息<\/h3><dl class=\"dl-horizontal\"> <dt>用户名<\/dt><dd>{{user.uid}}<\/dd> <dt>姓名<\/dt><dd>{{user.name}}<\/dd> <dt>性别<\/dt><dd>{{user.sex}}<\/dd> <dt>学校<\/dt><dd>{{college.uniName}}<\/dd> <dt>学院<\/dt><dd>{{college.collegeName}}<\/dd> <dt>个人简介<\/dt><dd>{{user.description}}<\/dd><\/dl><\/div>"},
             edit_avatar: {template:"<div><h4>当前头像:<\/h4><img class=\"img-circle img-responsive\" v-attr=\"src: now_avatar\"><h4>上传新头像:<\/h4><div class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/div><div class=\"alert-success alert\" v-if=\"success\">头像更换成功<\/div><form method=\"post\" v-on=\"submit: onSubmitAvatar\"><div class=\"form-group\"><label for=\"InputFile\">选择图片<\/label><input type=\"file\" id=\"InputFile\" v-on=\"change: fileChange\"><p class=\"help-block\">从这里选择你要上传的图片，最大2MB，将会默认居中裁剪为200x200的方形。<\/p><\/div><div class=\"form-group\"><button type=\"submit\" class=\"btn btn-primary\">上传新的头像<\/button><\/div><\/form><\/div>",methods:{
     onSubmitAvatar: function (event) {
         event.preventDefault();
@@ -1000,6 +1006,25 @@ Page.home = function () {
         };
         var em_obj = this;
         FUNC.ajax(CONFIG.api.student.update_info, "post", obj, function (data) {
+            if (data.status) {
+                em_obj.status.success = true;
+            } else {
+                em_obj.status.error = data.msg;
+            }
+        });
+        return false;
+    }
+}},
+            edit_profile_teacher: {template:"<h3>编辑个人信息<\/h3><form style=\"max-width: 600px;margin: 0 auto\" method=\"post\" v-on=\"submit:onSubmit\"> <p class=\"alert-danger alert\" v-if=\"status.error\">{{status.error}}<\/p> <p class=\"alert-success alert\" v-if=\"status.success\">成功更新个人信息<\/p> <div class=\"form-group\"> <label class=\"control-label\" for=\"inputDesc\">个人描述<\/label> <div> <p class=\"help-block\">你的个人简单介绍<\/p> <textarea id=\"inputDesc\" class=\"form-control\" v-model=\"user.description\"><\/textarea> <\/div> <\/div> <div class=\"form-group\"> <div> <button type=\"submit\" class=\"btn btn-primary\">更新个人信息<\/button> <\/div> <\/div><\/form>",methods:{
+    onSubmit: function (event) {
+        event.preventDefault();
+        this.status.success = false;
+        this.status.error = null;
+        var obj = {
+            user_description:this.user.description
+        };
+        var em_obj = this;
+        FUNC.ajax(CONFIG.api.teacher.update_info, "post", obj, function (data) {
             if (data.status) {
                 em_obj.status.success = true;
             } else {
@@ -1216,7 +1241,7 @@ Page.home = function () {
                 FUNC.ajax(CONFIG.api.student.info, "get", {}, home_vm.m_student_info);
             } else if (home_vm.is_teacher) {
                 change_menus_active("teacher_info");
-                FUNC.ajax(CONFIG.api.teacher_info, "get", {}, home_vm.m_teacher_info);
+                FUNC.ajax(CONFIG.api.teacher.info, "get", {}, home_vm.m_teacher_info);
             }
         },
         '/edit_avatar': function () {
@@ -1234,6 +1259,10 @@ Page.home = function () {
         '/edit_profile_student': function () {
             change_menus_active("edit_profile_student");
             FUNC.ajax(CONFIG.api.student.info, "get", {}, home_vm.m_edit_profile_student);
+        },
+        '/edit_profile_teacher': function () {
+            change_menus_active("edit_profile_teacher");
+            FUNC.ajax(CONFIG.api.teacher.info, "get", {}, home_vm.m_edit_profile_teacher);
         }
     };
     var router = Router(routes);//初始化一个路由器

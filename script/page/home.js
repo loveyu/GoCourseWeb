@@ -12,7 +12,7 @@ Page.home = function () {
         },
         teacher: {
             teacher_info: {url: '/', name: '个人信息', active: true},
-            edit_profile_student: {url: '/edit_profile_student', name: '编辑资料', active: false},
+            edit_profile_teacher: {url: '/edit_profile_teacher', name: '编辑资料', active: false},
             edit_avatar: {url: '/edit_avatar', name: '更改头像', active: false},
             email_bind: {url: '/email_bind', name: '邮箱绑定', active: false},
             edit_password: {url: '/edit_password', name: '修改密码', active: false}
@@ -59,6 +59,10 @@ Page.home = function () {
                 home_vm.result = FUNC.objMerge(result.data, {status: {error: null, success: false}});
                 home_vm.currentView = "edit_profile_student";
             },
+            m_edit_profile_teacher: function (result) {
+                home_vm.result = FUNC.objMerge(result.data, {status: {error: null, success: false}});
+                home_vm.currentView = "edit_profile_teacher";
+            },
             m_email_bind: function (result) {
                 if (result.status) {
                     home_vm.result = {
@@ -94,6 +98,7 @@ Page.home = function () {
             edit_avatar: {__require: 'home/edit_avatar.html'},
             edit_password: {__require: 'home/edit_password.html'},
             edit_profile_student: {__require: 'home/edit_profile_student.html'},
+            edit_profile_teacher: {__require: 'home/edit_profile_teacher.html'},
             email_bind: {__require: 'home/email_bind.html'}
         }
     });
@@ -112,7 +117,7 @@ Page.home = function () {
                 FUNC.ajax(CONFIG.api.student.info, "get", {}, home_vm.m_student_info);
             } else if (home_vm.is_teacher) {
                 change_menus_active("teacher_info");
-                FUNC.ajax(CONFIG.api.teacher_info, "get", {}, home_vm.m_teacher_info);
+                FUNC.ajax(CONFIG.api.teacher.info, "get", {}, home_vm.m_teacher_info);
             }
         },
         '/edit_avatar': function () {
@@ -130,6 +135,10 @@ Page.home = function () {
         '/edit_profile_student': function () {
             change_menus_active("edit_profile_student");
             FUNC.ajax(CONFIG.api.student.info, "get", {}, home_vm.m_edit_profile_student);
+        },
+        '/edit_profile_teacher': function () {
+            change_menus_active("edit_profile_teacher");
+            FUNC.ajax(CONFIG.api.teacher.info, "get", {}, home_vm.m_edit_profile_teacher);
         }
     };
     var router = Router(routes);//初始化一个路由器

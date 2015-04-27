@@ -46,8 +46,10 @@ var CONFIG = {
             get_departments: "college/get_departments",
             get_classes: "college/get_classes"
         },
-        teacher_info: 'teacher_info',
-        update_teacher_info: "update_teacher_info",
+        teacher:{
+            info:"teacher/info",
+            update_info:"teacher/update_info"
+        },
         quiz: {
             list: "quiz/list"
         }
