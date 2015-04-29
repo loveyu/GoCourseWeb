@@ -1,17 +1,19 @@
 <div>
-	<h4>当前头像:</h4>
-	<img class="img-circle img-responsive" v-attr="src: now_avatar">
-	<h4>上传新头像:</h4>
-	<div class="alert-danger alert" v-if="error">{{error}}</div>
-	<div class="alert-success alert" v-if="success">头像更换成功</div>
-	<form method="post" v-on="submit: onSubmitAvatar">
-		<div class="form-group">
-			<label for="InputFile">选择图片</label>
-			<input type="file" id="InputFile" v-on="change: fileChange">
-			<p class="help-block">从这里选择你要上传的图片，最大2MB，将会默认居中裁剪为200x200的方形。</p>
-		</div>
-		<div class="form-group">
-			<button type="submit" class="btn btn-primary">上传新的头像</button>
-		</div>
-	</form>
+    <h4>当前头像:</h4>
+    <img class="img-circle img-responsive" v-attr="src: now_avatar">
+    <h4>上传新头像:</h4>
+
+    <div class="alert-danger alert" v-if="error">{{error}}</div>
+    <div class="alert-success alert" v-if="success">头像更换成功</div>
+    <form method="post" v-on="submit: onSubmitAvatar">
+        <div class="form-group">
+            <label for="InputFile">选择图片</label>
+            <input type="file" id="InputFile" v-on="change: fileChange">
+
+            <p class="help-block">从这里选择你要上传的图片，最大2MB，将会默认居中裁剪为200x200的方形。</p>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">上传新的头像</button>
+        </div>
+    </form>
 </div>

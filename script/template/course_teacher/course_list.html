@@ -1,0 +1,15 @@
+<h3>课程列表</h3>
+<p class="alert-danger alert" v-if="error">{{error}}</p>
+<form v-on="submit: submitCourseAdd" class="form-group">
+    <div class="form-inline">
+        <div class="input-group">
+            <span class="input-group-addon">课程名</span>
+            <input type="text" v-model="form.name" name="name" class="form-control"
+                   placeholder="如：计算机网络, 组成原理等课程名称">
+        </div>
+        <button type="submit" class="btn btn-primary">添加</button>
+    </div>
+</form>
+<div v-if="course_list.length>0">
+    <button class="btn btn-info" v-repeat="course_list" v-on="click: courseClick" data-value="{{id}}">{{name}}</button>
+</div>
