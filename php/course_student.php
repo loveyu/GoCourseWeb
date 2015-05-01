@@ -1,6 +1,6 @@
 <?php
-require_once( "common/common.php" );
-get_header( "学生课表" );
+require_once("common/common.php");
+get_header("学生课表");
 ?>
 
 <div id="CourseStudent">
@@ -17,4 +17,4 @@ get_header( "学生课表" );
 	</div>
 </div>
 
-<?php get_footer( "course_student" ) ?>
+<?php get_footer("course_student") ?>

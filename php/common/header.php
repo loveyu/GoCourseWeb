@@ -3,7 +3,7 @@
 <head lang="zh-CN">
 	<meta charset="UTF-8">
 	<title><?php
-		if ( isset( $title ) && ! empty( $title ) ) {
+		if (isset($title) && !empty($title)) {
 			echo $title, " - Go Course";
 		} else {
 			echo "Go Course";
@@ -40,7 +40,8 @@
 					<li class="dropdown">
 						<a href="{{home_url}}" class="dropdown-toggle" data-toggle="dropdown" role="button"
 						   aria-expanded="false">
-							<img class="user-avatar" v-attr="src: avatar" alt="avatar">{{name}} <span class="caret"></span></a>
+							<img class="user-avatar" v-attr="src: avatar" alt="avatar">{{name}} <span
+								class="caret"></span></a>
 						<ul class="dropdown-menu" role="menu">
 							<li v-if="user_type=='teacher'"><a href="course_teacher.html">教师课表</a></li>
 							<li v-if="user_type=='student'"><a href="course_student.html">我的课表</a></li>

@@ -1,6 +1,6 @@
 <?php
-require_once( "common/common.php" );
-get_header( "个人中心" );
+require_once("common/common.php");
+get_header("个人中心");
 ?>
 
 <div id="Home">
@@ -17,4 +17,4 @@ get_header( "个人中心" );
 	</div>
 </div>
 
-<?php get_footer( "home" ) ?>
+<?php get_footer("home") ?>

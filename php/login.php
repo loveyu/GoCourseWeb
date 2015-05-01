@@ -18,4 +18,4 @@ get_header("用户登录");
 		</div>
 	</div>
 
-<?php get_footer("login")?>
+<?php get_footer("login") ?>

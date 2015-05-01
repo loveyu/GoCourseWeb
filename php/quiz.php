@@ -1,6 +1,6 @@
 <?php
-require_once( "common/common.php" );
-get_header( "课程测验" );
+require_once("common/common.php");
+get_header("课程测验");
 ?>
 
 <div id="Quiz">
@@ -9,4 +9,4 @@ get_header( "课程测验" );
 	</div>
 </div>
 
-<?php get_footer( "quiz" ) ?>
+<?php get_footer("quiz") ?>
