@@ -1,0 +1,28 @@
+<h3>课程表搜索</h3>
+<form>
+	<div class="form-inline form-group">
+		<select class="form-control" disabled>
+			<option>{{data.uniNickname}}</option>
+		</select>
+		<select class="form-control" disabled>
+			<option>{{data.collegeName}}</option>
+		</select>
+		<select class="form-control" name="dept" v-model="form.department">
+			<option value="">--请选择--</option>
+			<option v-repeat="data.departments" value="{{id}}">{{name}}</option>
+		</select>
+
+		<div class="input-group">
+			<span class="input-group-addon">年份</span>
+			<select class="form-control" name="openYear" v-model="form.openYear">
+				<option v-repeat="data.openYear">{{year}}</option>
+			</select>
+		</div>
+		<div class="input-group">
+			<span class="input-group-addon">学期</span>
+			<select class="form-control" name="openTerm" v-model="form.openTerm">
+				<option v-repeat="data.openTerm" value="{{id}}">{{term}}</option>
+			</select>
+		</div>
+	</div>
+</form>

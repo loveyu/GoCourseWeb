@@ -45,6 +45,6 @@ _methods_ = {
 				delete this.form.classes[val];
 			}
 		}
-		console.log(this.form.classes)
+
 	}
 };//_methods_
