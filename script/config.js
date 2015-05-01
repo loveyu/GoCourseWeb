@@ -45,7 +45,8 @@ var CONFIG = {
 			get_universities: "college/get_universities",
 			get_colleges: "college/get_colleges",
 			get_departments: "college/get_departments",
-			get_classes: "college/get_classes"
+			get_classes: "college/get_classes",
+			get_class_year: "college/get_class_year"
 		},
 		teacher: {
 			info: "teacher/info",
@@ -55,6 +56,9 @@ var CONFIG = {
 			add: "course/add",
 			list: "course/list",
 			del: "course/del"
+		},
+		schedule: {
+			add: "schedule/add"
 		},
 		quiz: {
 			list: "quiz/list"

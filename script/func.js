@@ -89,6 +89,16 @@ var FUNC = {
 			}
 			return rt;
 		},
+		arrToObjArr: function (data, keyName) {
+			var rt = [];
+			var obj;
+			for (var i in data) {
+				obj = {};
+				obj[keyName] = data[i];
+				rt.push(obj);
+			}
+			return rt;
+		},
 		targetSet: function (target, value) {
 			jQuery(target).html(value);
 		},

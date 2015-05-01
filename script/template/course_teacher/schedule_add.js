@@ -11,7 +11,28 @@ _methods_ = {
 	},
 	submitScheduleAdd: function (event) {
 		event.preventDefault();
-
+		var obj = this;
+		obj.error = "";
+		FUNC.ajax(CONFIG.api.schedule.add, "post", obj.form, function (result) {
+			if (result.status) {
+				obj.form = {
+					department: "",
+					name: "",
+					openYear: new Date().getFullYear(),
+					openTerm: "",
+					fromWeek: "",
+					endWeek: "",
+					requirement: "",
+					content: ""
+				};
+				obj.success = "成功添加了课程";
+				setTimeout(function () {
+					obj.success = "";
+				}, 3000);
+			} else {
+				obj.error = result.msg;
+			}
+		});
 		return false;
 	}
 };//_methods_

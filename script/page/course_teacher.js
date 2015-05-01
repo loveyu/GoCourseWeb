@@ -42,8 +42,11 @@ Page.course_teacher = function () {
 				FUNC.ajax(CONFIG.api.teacher.info, "get", {}, function (result) {
 					if (result.status) {
 						obj.result = {
+							error: "",
+							success: "",
 							form: {
 								department: "",
+								name: "",
 								openYear: "",
 								openTerm: "",
 								fromWeek: "",
@@ -66,6 +69,7 @@ Page.course_teacher = function () {
 						};
 						obj.currentView = "schedule_add";
 						obj.result.form.openYear = new Date().getFullYear();
+						obj.result.form.openTerm = 0;
 						obj._children[obj._children.length - 1].setDept(result.data.college.collegeID);
 					} else {
 						obj.m_load_error(result.msg);
@@ -79,9 +83,10 @@ Page.course_teacher = function () {
 						obj.result = {
 							form: {
 								department: "",
+								year: "",
 								classes: []
 							},
-							college: FUNC.objMerge(result.data.college, {departments: [], classes: ""})
+							college: FUNC.objMerge(result.data.college, {departments: [], classes: [], years: []})
 						};
 						obj.currentView = "add";
 						obj._children[obj._children.length - 1].setDept(result.data.college.collegeID);
