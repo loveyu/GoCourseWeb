@@ -21,7 +21,7 @@ Page.course_teacher = function () {
 				add: {url: '/add', name: '添加课表', active: false},
 				schedule_add: {url: '/schedule_add', name: '添加课程', active: false},
 				schedule_search: {url: '/schedule_search', name: '课程搜索', active: false},
-				course_list: {url: '/course_list', name: '课程列表', active: false}
+				course_list: {url: '/course_list', name: '课程名列表', active: false}
 			}
 		},
 		methods: {
@@ -78,16 +78,31 @@ Page.course_teacher = function () {
 					}
 				});
 			},
+			/**
+			 * 添加课程在老师的进度当中
+			 */
 			m_add: function () {
 				var obj = this;
 				FUNC.ajax(CONFIG.api.teacher.info, "get", {}, function (result) {
 					if (result.status) {
 						obj.result = {
+							success: "",
+							error: "",
+							search: {
+								name: ""
+							},
+							data: {
+								course_name: null
+							},
 							form: {
 								department: "",
 								year: "",
-								classes: []
+								notice: "",
+								scheduleID: "",
+								classes: [],
+								location:""
 							},
+							location:[],
 							college: FUNC.objMerge(result.data.college, {departments: [], classes: [], years: []})
 						};
 						obj.currentView = "add";
@@ -102,22 +117,35 @@ Page.course_teacher = function () {
 				FUNC.ajax(CONFIG.api.teacher.info, "get", {}, function (result) {
 					if (result.status) {
 						obj.result = {
+							error: "",
+							success: "",
 							form: {
 								department: "",
-								openYear: "",
-								openTerm: 0
+								course_name: "",
+								course_id: "",
+								year: "",
+								status: "",
+								term: 0
 							},
 							data: FUNC.objMerge(result.data.college, {
 								departments: [],
-								openYear: year_out(),
-								openTerm: [{id: 0, term: "春季"}, {id: 1, term: "秋季"}]
-							})
+								year: year_out(),
+								term: [{id: 0, term: "春季"}, {id: 1, term: "秋季"}],
+								status: [
+									{id: -1, status: "全部"},
+									{id: 0, status: "未开课"},
+									{id: 1, status: "已开课"},
+									{id: 3, status: "已结束"}
+								]
+							}),
+							result: null
 						};
 						FUNC.ajax(CONFIG.api.college.get_departments, "get", {college_id: result.data.college.collegeID}, function (result) {
 							obj.result.data.departments = result.status ? FUNC.mapToObjArr(result.data.departments, "id", "name") : [];
 							obj.currentView = "schedule_search";
-							obj.result.form.openYear = new Date().getFullYear();
-							obj.result.form.openTerm = 0;
+							obj.result.form.year = new Date().getFullYear();
+							obj.result.form.term = 0;
+							obj.result.form.status = -1;
 						});
 					} else {
 						obj.m_load_error(result.msg);

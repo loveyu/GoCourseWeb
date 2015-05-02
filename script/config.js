@@ -58,7 +58,11 @@ var CONFIG = {
 			del: "course/del"
 		},
 		schedule: {
-			add: "schedule/add"
+			add: "schedule/add",
+			search: "schedule/search"
+		},
+		course_table: {
+			add: "course_table/add"
 		},
 		quiz: {
 			list: "quiz/list"

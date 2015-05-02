@@ -1,5 +1,7 @@
 <h3>课程表搜索</h3>
-<form>
+<p class="alert-danger alert" v-if="error">{{error}}</p>
+<p class="alert-success alert" v-if="success">{{success}}</p>
+<form v-on="submit: onSearch">
 	<div class="form-inline form-group">
 		<select class="form-control" disabled>
 			<option>{{data.uniNickname}}</option>
@@ -14,15 +16,57 @@
 
 		<div class="input-group">
 			<span class="input-group-addon">年份</span>
-			<select class="form-control" name="openYear" v-model="form.openYear">
-				<option v-repeat="data.openYear">{{year}}</option>
+			<select class="form-control" name="year" v-model="form.year">
+				<option v-repeat="data.year">{{year}}</option>
 			</select>
 		</div>
 		<div class="input-group">
 			<span class="input-group-addon">学期</span>
-			<select class="form-control" name="openTerm" v-model="form.openTerm">
-				<option v-repeat="data.openTerm" value="{{id}}">{{term}}</option>
+			<select class="form-control" name="term" v-model="form.term">
+				<option v-repeat="data.term" value="{{id}}">{{term}}</option>
+			</select>
+		</div>
+		<div class="input-group">
+			<span class="input-group-addon">状态</span>
+			<select class="form-control" name="openTerm" v-model="form.status">
+				<option v-repeat="data.status" value="{{id}}">{{status}}</option>
 			</select>
 		</div>
 	</div>
+	<div class="form-inline form-group">
+		<div class="input-group">
+			<span class="input-group-addon">课程名</span>
+			<input type="text" class="form-control" v-model="form.course_name">
+		</div>
+		<div class="input-group">
+			<span class="input-group-addon">课程名ID(唯一搜索)</span>
+			<input type="number" class="form-control" v-model="form.course_id">
+		</div>
+		<button class="btn btn-primary" type="submit">搜索</button>
+	</div>
 </form>
+<p v-if="result!=null && result.length==0" class="alert alert-warning">当前查询结果为空</p>
+<table v-if="result!=null && result.length>0" class="table table-responsive table-striped table-hover">
+	<thead>
+	<tr>
+		<th>课程ID</th>
+		<th>课程名</th>
+		<th>年份</th>
+		<th>周次</th>
+		<th>状态</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr v-repeat="result">
+		<td>{{scheduleID}}</td>
+		<td>{{courseName}}({{courseID}})</td>
+		<td>{{openYear}}年{{openTerm?"秋季":"春季"}}</td>
+		<td>{{fromWeek}}-{{endWeek}} 周</td>
+		<td>
+			<span class="label label-primary" v-if="status==0">开课中</span>
+			<span class="label label-warning" v-if="status==1">未开课</span>
+			<span class="label label-danger" v-if="status==2">已结束</span>
+		</td>
+	</tr>
+	</tbody>
+</table>
