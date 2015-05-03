@@ -108,6 +108,17 @@ var FUNC = {
 		eventTrigger: function (obj, action, data, elem, onlyHandlers) {
 			jQuery(obj).trigger(action, data, elem, onlyHandlers);
 		},
+		clone: function (obj) {
+			if (obj === null || typeof(obj) !== 'object')
+				return obj;
+			var temp = obj.constructor(); // changed
+			for (var key in obj) {
+				if (Object.prototype.hasOwnProperty.call(obj, key)) {
+					temp[key] = FUNC.clone(obj[key]);
+				}
+			}
+			return temp;
+		},
 		verify: {
 			email: function (email) {
 				return /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{1,8}$/.test(email);

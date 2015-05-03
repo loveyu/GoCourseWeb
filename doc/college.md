@@ -57,7 +57,10 @@ Param: college_id(require)学院ID
 ### /college/get_classes
 Desc: 获取某一专业的班级列表，当数据为空时，data字段信息中classes为空对象，如果dept_id不存在，状态直接变为False
 Method: Default
-Param: dept_id(require)专业ID
+Param: 
+* dept_id(require)专业ID
+* year(可选)班级年份，如果年份为空或0则选择全部
+
 ```
 {
 	"status": true,
@@ -67,6 +70,29 @@ Param: dept_id(require)专业ID
 		"classes": {
 		    "2": "软工11205",
 		     //......
+		},
+		"dept_id": 2,
+		"year": 2012
+	}
+}
+```
+
+### /college/get_class_year
+Desc: 获取某一专业的班级入学年份列表，当数据为空时，data字段信息中classes为空对象，如果dept_id不存在，状态直接变为False
+Method: Default
+Param: 
+* dept_id(require)专业ID
+
+```
+{
+	"status": true,
+	"code": 0,
+	"msg": "",
+	"data": {
+		"class_year": {
+		    2012,
+		    2011,
+		    2010
 		},
 		"dept_id": 2
 	}

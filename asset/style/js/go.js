@@ -290,6 +290,17 @@ var FUNC = {
 		eventTrigger: function (obj, action, data, elem, onlyHandlers) {
 			jQuery(obj).trigger(action, data, elem, onlyHandlers);
 		},
+		clone: function (obj) {
+			if (obj === null || typeof(obj) !== 'object')
+				return obj;
+			var temp = obj.constructor(); // changed
+			for (var key in obj) {
+				if (Object.prototype.hasOwnProperty.call(obj, key)) {
+					temp[key] = FUNC.clone(obj[key]);
+				}
+			}
+			return temp;
+		},
 		verify: {
 			email: function (email) {
 				return /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{1,8}$/.test(email);
@@ -766,6 +777,7 @@ Page.course_teacher = function () {
 		var obj = this;
 		obj.college.years = [];
 		obj.college.classes = [];
+		obj.form.classes = [];
 		FUNC.ajax(CONFIG.api.college.get_class_year, "get", {dept_id: obj.form.department}, function (result) {
 			if (result.status) {
 				obj.college.years = FUNC.arrToObjArr(result.data.class_year, "year");
@@ -777,6 +789,7 @@ Page.course_teacher = function () {
 	yearChange: function (event) {
 		var obj = this;
 		obj.college.classes = [];
+		obj.form.classes = [];
 		FUNC.ajax(CONFIG.api.college.get_classes, "get", {
 			dept_id: obj.form.department,
 			year: obj.form.year
@@ -792,11 +805,15 @@ Page.course_teacher = function () {
 		var obj = jQuery(event.target);
 		var val = obj.val();
 		if ((obj.is(":checked"))) {
-			this.form.classes[val] = val;
+			this.form.classes.push(val);
 		} else {
-			if (this.form.classes.hasOwnProperty(val)) {
-				delete this.form.classes[val];
+			var new_c = [];
+			for (var i in this.form.classes) {
+				if (this.form.classes[i] != val) {
+					new_c.push(this.form.classes[i]);
+				}
 			}
+			this.form.classes = new_c;
 		}
 	},
 	onSearchName: function (event) {
@@ -889,6 +906,8 @@ Page.course_teacher = function () {
 			}
 		}
 		obj.form.location = JSON.stringify(obj.location);
+		//var tmp = FUNC.clone(obj.form);
+		//tmp.classes = tmp.classes.join(",");
 		FUNC.ajax(CONFIG.api.course_table.add, "post", obj.form, function (result) {
 			if (result.status) {
 				obj.error = "";
