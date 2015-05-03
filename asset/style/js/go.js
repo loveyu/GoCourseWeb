@@ -921,6 +921,9 @@ Page.course_teacher = function () {
 					location: ""
 				};
 				obj.location = [];
+				setTimeout(function () {
+					obj.success = "";
+				}, 5000)
 			} else {
 				obj.error = result.msg;
 			}

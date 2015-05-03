@@ -157,6 +157,9 @@ _methods_ = {
 					location: ""
 				};
 				obj.location = [];
+				setTimeout(function () {
+					obj.success = "";
+				}, 5000)
 			} else {
 				obj.error = result.msg;
 			}
