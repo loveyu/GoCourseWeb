@@ -39,7 +39,7 @@ get_header("找回密码");
 						</div>
 					</fieldset>
 				</form>
-				<form v-if="setup=='input_code'" method="get" v-on="submit: onCheckCode">
+				<form v-if="setup=='code'" method="get" v-on="submit: onCheckCode">
 					<div class="form-group">
 						<div class="input-group">
 							<span class="input-group-addon">邮箱验证码</span>
