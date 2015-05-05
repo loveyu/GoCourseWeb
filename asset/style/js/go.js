@@ -57,8 +57,9 @@ Vue.component('base-login-form', {template:"<form method=\"get\" v-on=\"submit: 
 		if (flag) {
 			this.error_msg = "";
 			FUNC.ajax(CONFIG.api.user.login, 'post', {
-				username: this.username, password: this.password
-				//, type: this.type
+				username: this.username,
+				password: this.password,
+				client: "web"
 			}, this.onLoginResult);
 		}
 		return false;

@@ -8,6 +8,8 @@ Param:
 
 * username(require) 用户名，支持两种类型，邮箱和个人ID，ID可能是学号也可能是字符串类型
 * password(require) 用户密码 6-32位长度
+* client(require) 客户端类型，可选值: `web`, `android`, `ios`
+* pwd_type(可选) 密码加密类型,可选值：`plain`,`md5`, 默认`plain`,区分大小写
 
 ```
 {
@@ -25,6 +27,7 @@ Param:
 Desc: 用户退出登录，会清除`token` Cookie
 Method: Default
 Param: `none`
+
 ```
 {
     "status": true,
@@ -56,6 +59,7 @@ Desc: 发送密码重置邮件
 Session: true
 Method: POST
 Param:
+
 * email(require) 邮箱地址
 * captcha(require) 验证码值
 * captcha_id(可选) 验证码的ID，用于区分多个验证码，不提交为默认ID
@@ -74,6 +78,7 @@ Desc: 检查当前验证码是否正确
 Session: true
 Method: POST
 Param:
+
 * code(require) 验证码
 
 ```
@@ -90,6 +95,7 @@ Desc:  重置密码
 Session: true
 Method: POST
 Param:
+
 * code(password) 新的密码
 
 ```
