@@ -18,7 +18,24 @@ Page.course_student = function () {
 				this.currentView = "my";
 			},
 			m_add: function () {
-				this.currentView = "add";
+				var obj = this;
+				FUNC.ajax(CONFIG.api.course_table.search, "get", {
+					search_type: "student",
+					set_location: 1
+				}, function (result) {
+					obj.result = {
+						list: null
+					};
+					if (result.status) {
+						obj.result.list = result.data;
+					} else {
+						obj.set_error(result.msg);
+					}
+					obj.currentView = "add";
+				});
+			},
+			set_error: function (msg) {
+				FUNC.alertOnElem(this.$el, msg);
 			}
 		},
 		components: {

@@ -26,7 +26,23 @@ Page.course_teacher = function () {
 		},
 		methods: {
 			m_my: function () {
-				this.currentView = "my";
+				var obj = this;
+				obj.result = {
+					error: "",
+					list: {}
+				};
+				FUNC.ajax(CONFIG.api.course_table.search, "get", {
+					search_type: "teacher",
+					set_class_info: 1,
+					set_location: 1
+				}, function (result) {
+					if (result.status) {
+						obj.result.list = result.data;
+						obj.currentView = "my";
+					} else {
+						obj.m_load_error(result.msg);
+					}
+				});
 			},
 			m_course_list: function () {
 				var obj = this;
@@ -100,9 +116,9 @@ Page.course_teacher = function () {
 								notice: "",
 								scheduleID: "",
 								classes: [],
-								location:""
+								location: ""
 							},
-							location:[],
+							location: [],
 							college: FUNC.objMerge(result.data.college, {departments: [], classes: [], years: []})
 						};
 						obj.currentView = "add";

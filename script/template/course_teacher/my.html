@@ -1,1 +1,19 @@
 <h3>教师课表</h3>
+
+<div class="list-group">
+	<div class="list-group-item" v-repeat="list">
+		<p>
+			{{course.courseName}}, 专业:{{course.deptName}}, 状态:{{course.status|course_table_status}}, 年级:{{course.enrolYear}}
+		</p>
+		<p>
+			班级：
+			<span v-repeat="classes_info" class="label label-info">{{className}}</span>
+			&nbsp;
+			&nbsp;
+			&nbsp;
+			地点：
+			<span v-repeat="locations">第{{slot}}节，{{location}}, {{week}}周&nbsp;&nbsp;&nbsp;</span>
+		</p>
+	</div>
+</div>
+<pre>{{list|json}}</pre>
