@@ -20,7 +20,7 @@ foreach (glob("doc/*.md") as $v) {
     $name = preg_replace("/\\.md$/", ".html", $base_n);
     file_put_contents("test/{$base_n}", "_文档生成时间: " .
         date("Y-m-d H:i:s") . "_\r\n\r\n" . file_get_contents($v));
-    system("ghmd --title \"{$title}\" --dest doc/{$name} test/{$base_n}");
+    system("ghmd --template doc/template/my.jade --title \"{$title}\" --dest doc/{$name} test/{$base_n}");
     unlink("test/{$base_n}");
     echo "finish $name\n";
 }
