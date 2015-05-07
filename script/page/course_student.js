@@ -26,6 +26,7 @@ Page.course_student = function () {
 				}, function (result) {
 					obj.result = {
 						error: "",
+						warning: "",
 						list: null
 					};
 					if (result.status) {
@@ -35,17 +36,21 @@ Page.course_student = function () {
 							ids.push(result.data[i].course.courseTableID);
 						}
 						obj.result.list = result.data;
-						FUNC.ajax(CONFIG.api.course_table.student_selected, "get", {ids: ids.join(",")}, function (result) {
-							if (result.status) {
-								for (var i in obj.result.list) {
-									if (result.data.hasOwnProperty(obj.result.list[i].course.courseTableID)) {
-										obj.result.list[i].selected = result.data[obj.result.list[i].course.courseTableID];
+						if (ids.length > 0) {
+							FUNC.ajax(CONFIG.api.course_table.student_selected, "get", {ids: ids.join(",")}, function (result) {
+								if (result.status) {
+									for (var i in obj.result.list) {
+										if (result.data.hasOwnProperty(obj.result.list[i].course.courseTableID)) {
+											obj.result.list[i].selected = result.data[obj.result.list[i].course.courseTableID];
+										}
 									}
+								} else {
+									obj.result.error = result.msg;
 								}
-							} else {
-								obj.result.error = result.msg;
-							}
-						});
+							});
+						} else {
+							obj.result.warning = "没有任何可选课程";
+						}
 					} else {
 						obj.set_error(result.msg);
 					}

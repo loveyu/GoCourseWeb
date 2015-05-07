@@ -578,6 +578,7 @@ Page.course_student = function () {
 				}, function (result) {
 					obj.result = {
 						error: "",
+						warning: "",
 						list: null
 					};
 					if (result.status) {
@@ -587,17 +588,21 @@ Page.course_student = function () {
 							ids.push(result.data[i].course.courseTableID);
 						}
 						obj.result.list = result.data;
-						FUNC.ajax(CONFIG.api.course_table.student_selected, "get", {ids: ids.join(",")}, function (result) {
-							if (result.status) {
-								for (var i in obj.result.list) {
-									if (result.data.hasOwnProperty(obj.result.list[i].course.courseTableID)) {
-										obj.result.list[i].selected = result.data[obj.result.list[i].course.courseTableID];
+						if (ids.length > 0) {
+							FUNC.ajax(CONFIG.api.course_table.student_selected, "get", {ids: ids.join(",")}, function (result) {
+								if (result.status) {
+									for (var i in obj.result.list) {
+										if (result.data.hasOwnProperty(obj.result.list[i].course.courseTableID)) {
+											obj.result.list[i].selected = result.data[obj.result.list[i].course.courseTableID];
+										}
 									}
+								} else {
+									obj.result.error = result.msg;
 								}
-							} else {
-								obj.result.error = result.msg;
-							}
-						});
+							});
+						} else {
+							obj.result.warning = "没有任何可选课程";
+						}
 					} else {
 						obj.set_error(result.msg);
 					}
@@ -610,7 +615,7 @@ Page.course_student = function () {
 		},
 		components: {
 			my: {template:"<h3>学生课表<\/h3>"},
-			add: {template:"<h3>添加课表<\/h3><p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p><div class=\"list-group\"><div class=\"list-group-item\" v-repeat=\"list\"><p><button v-if=\"selected>-1\" v-on=\"click:onAdd($index)\" class=\"btn btn-{{selected==0?'primary':'success'}}\">{{selected==0?'添加':'已选'}}<\/button>{{course.courseName}}, 专业:{{course.deptName}}, 状态:{{course.status|course_table_status}},年级:{{course.enrolYear}}<\/p><p>老师：{{course.teacherName}}，地点：<span v-repeat=\"locations\">第{{slot}}节，{{location}}, {{week}}周&nbsp;&nbsp;&nbsp;<\/span><\/p><\/div><\/div><pre>{{list|json}}<\/pre>",methods:{
+			add: {template:"<h3>添加课表<\/h3><p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p><p class=\"alert-warning alert\" v-if=\"warning\">{{warning}}<\/p><div class=\"list-group\"><div class=\"list-group-item\" v-repeat=\"list\"><p><button v-if=\"selected>-1\" v-on=\"click:onAdd($index)\" class=\"btn btn-{{selected==0?'primary':'success'}}\">{{selected==0?'添加':'已选'}}<\/button>{{course.courseName}}, 专业:{{course.deptName}}, 状态:{{course.status|course_table_status}},年级:{{course.enrolYear}}<\/p><p>老师：{{course.teacherName}}，地点：<span v-repeat=\"locations\">第{{slot}}节，{{location}}, {{week}}周&nbsp;&nbsp;&nbsp;<\/span><\/p><\/div><\/div><pre>{{list|json}}<\/pre>",methods:{
 	onAdd: function (id) {
 		var obj = this;
 		obj.error = "";
