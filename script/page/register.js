@@ -31,7 +31,7 @@ Page.register = function () {
 			},
 			regCallback: function (data) {
 				if (data.status) {
-					location.href = "home.html#/CreateInfo";
+					location.href = "login.html";
 				} else {
 					this.error_msg = data.msg ? data.msg : '未知错误';
 				}
