@@ -1,3 +1,18 @@
 <h3>添加课表</h3>
-
+<p class="alert-danger alert" v-if="error">{{error}}</p>
+<div class="list-group">
+	<div class="list-group-item" v-repeat="list">
+		<p>
+			<button v-if="selected>-1" v-on="click:onAdd($index)" class="btn btn-{{selected==0?'primary':'success'}}">{{selected==0?'添加':'已选'}}
+			</button>
+			{{course.courseName}}, 专业:{{course.deptName}}, 状态:{{course.status|course_table_status}},
+			年级:{{course.enrolYear}}
+		</p>
+		<p>
+			老师：{{course.teacherName}}，
+			地点：
+			<span v-repeat="locations">第{{slot}}节，{{location}}, {{week}}周&nbsp;&nbsp;&nbsp;</span>
+		</p>
+	</div>
+</div>
 <pre>{{list|json}}</pre>

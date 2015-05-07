@@ -21,13 +21,31 @@ Page.course_student = function () {
 				var obj = this;
 				FUNC.ajax(CONFIG.api.course_table.search, "get", {
 					search_type: "student",
-					set_location: 1
+					set_location: 1,
+					status: 0
 				}, function (result) {
 					obj.result = {
+						error: "",
 						list: null
 					};
 					if (result.status) {
+						var ids = [];
+						for (var i in result.data) {
+							result.data[i]["selected"] = -1;
+							ids.push(result.data[i].course.courseTableID);
+						}
 						obj.result.list = result.data;
+						FUNC.ajax(CONFIG.api.course_table.student_selected, "get", {ids: ids.join(",")}, function (result) {
+							if (result.status) {
+								for (var i in obj.result.list) {
+									if (result.data.hasOwnProperty(obj.result.list[i].course.courseTableID)) {
+										obj.result.list[i].selected = result.data[obj.result.list[i].course.courseTableID];
+									}
+								}
+							} else {
+								obj.result.error = result.msg;
+							}
+						});
 					} else {
 						obj.set_error(result.msg);
 					}

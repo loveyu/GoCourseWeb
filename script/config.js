@@ -4,11 +4,11 @@
 Vue.config.debug = true;
 var DOMAIN = (function () {
 	//switch (document.location.host) {
-		//此处修改为使用本地反向代理的形式，避免COOKIE的问题
-		//case "go.course.org":
-		//	return "http://127.0.0.1:8080/";
-		//case "10.109.0.10":
-		//	return "http://10.109.0.10:8080/";
+	//此处修改为使用本地反向代理的形式，避免COOKIE的问题
+	//case "go.course.org":
+	//	return "http://127.0.0.1:8080/";
+	//case "10.109.0.10":
+	//	return "http://10.109.0.10:8080/";
 	//}
 	return "http://" + document.location.host + "/";
 })();
@@ -64,7 +64,9 @@ var CONFIG = {
 		},
 		course_table: {
 			add: "course_table/add",
-			search: "course_table/search"
+			search: "course_table/search",
+			student_selected: "course_table/student_selected",
+			student_select_add: "course_table/student_select_add"
 		},
 		quiz: {
 			list: "quiz/list"
