@@ -1,11 +1,18 @@
-## 教师信息获取
+# 教师信息获取
 基本访问路径`/teacher`
 
-### /student/info
+## /student/info
 Desc: 获取当前登录教师的基本信息
 Method: Default
 Param: `none`
+
+#### 错误状态，错误标记`111`
+* `11100` 非教师身份，无法查询相关信息
+
+
+
 ```
+//注意分析事实数据，后期可能会有改动
 {
     "status": true,
     "code": 0,
@@ -33,11 +40,17 @@ Param: `none`
 }
 ```
 
-### /teacher/update_info
+## /teacher/update_info
 Desc: 更新教师基本信息
 Method: POST
 Param:
 * user_description(require) 用户描述信息
+
+#### 错误状态，错误标记`112`
+* `11200` 无需更新用户描述信息
+* `11201` 更新教师信息出错
+
+
 
 ```
 {

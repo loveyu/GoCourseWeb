@@ -1,7 +1,7 @@
-## 获取服务器状态信息
+# 获取服务器状态信息
 基本访问路径为:`/server_status`
 
-### /server_status/time
+## /server_status/time
 Desc: 获取服务器时间
 Method: Default
 Param: `none`
