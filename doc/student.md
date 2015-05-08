@@ -77,3 +77,72 @@ Param:
     "data": null
 }
 ```
+
+### /student/my_course
+Desc: 获取学生自己的课程表信息，会返回该学期所有的课程，数据量比较大
+Method: Default
+Param: 
+* year(可选) 课程的年份，默认当前年份
+* term(可选) 课程的季度（0春季，1秋季），默认当前季度
+* detail(可选) 是否显示细节信息，默认不显示，值为`1`时显示
+
+**警告：** year和term参数应该同时使用，同为空或同不为空
+**提示：** 在显示细节时，课程对象中的`requirement`,`content`的不为`null`，`location`中的`notice`不为`null`，在使用默认值时这几个字段将置为`null`
+
+```
+{
+	"status": true,
+	"code": 0,
+	"msg": "",
+	"data": [{
+		"scheduleID": 1,
+		"courseID": 1,
+		"courseTableID": 4,
+		"courseName": "人工智能",
+		"requirement": null,				//需要设置细节才会显示
+		"content": null,					//需要设置细节才会显示
+		"fromWeek": 1,
+		"endWeek": 13,
+		"teacherID": 31,
+		"teacherName": "发个",
+		"location": [{
+			"clID": 2,						//上课地点ID
+			"courseTableID": 4,
+			"location": "545345",
+			"week": "1,4,6,7,8,9,10",		//返回的值与之前的有所不同，这里使用`,`逗号连接所有星期为一个字符串，不会使用`1-8`值类的连接形式
+			"day": 2,
+			"slot": 1,
+			"notice": null					//需要设置细节才会显示
+		}]
+	},{
+		"scheduleID": 1,
+		"courseID": 1,
+		"courseTableID": 5,
+		"courseName": "人工智能",
+		"requirement": null,
+		"content": null,
+		"fromWeek": 1,
+		"endWeek": 13,
+		"teacherID": 1,
+		"teacherName": "管理员",
+		"location": [{					//上课地点应该是一个数组
+			"clID": 3,
+			"courseTableID": 5,
+			"location": "13-A-5",
+			"week": "1,2,4,7,8,9,10,11,12,13",
+			"day": 2,
+			"slot": 1,
+			"notice": null
+		},{
+			"clID": 4,
+			"courseTableID": 5,
+			"location": "12-404",
+			"week": "5,7,8,9,10,11,12,13",
+			"day": 3,
+			"slot": 3,
+			"notice": null
+		}]
+	}]
+}
+```
+

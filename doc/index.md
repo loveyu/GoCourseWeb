@@ -37,19 +37,21 @@ Token用于用户登录过程中的验证问题，长度为64位，如果涉及�
 
 目前需要验证权限的API列表：
 
-1. /user/*
-2. /user/*/*
-3. /student/*
-4. /teacher/*
-5. /course/*
-6. /schedule/*
-7. /course_table/*
+1. /user/\*
+2. /user/\*/\*
+3. /student/\*
+4. /teacher/\*
+5. /course/\*
+6. /schedule/\*
+7. /course_table/\*
 
 ### Session ID的传递
 Session ID 必须使用Cookie进行传递，且默认名称为`JSESSIONID`，该默认值可能会修改，最好的查询方式为检测服务器返回的COOKIE进行判断
 
 部分页面会需要提供SESSION值，文档中会用Session字段提示
 
+### 数据分页说明
+**提示：** 目前服务端未实现分页的接口，如果数据量较大请自行先预留分页的操作，接口会在data字段中添加相应的属性。
 
 ## API错误状态代码
 [链接: status_code.html](status_code.html)
