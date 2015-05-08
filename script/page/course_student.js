@@ -68,20 +68,14 @@ Page.course_student = function () {
 							obj.set_error(result.msg);
 						}
 					});
-				}
-				,
+				},
 				set_error: function (msg) {
 					FUNC.alertOnElem(this.$el, msg);
 				}
 			},
 			components: {
-				my: {
-					__require: 'course_student/my.html'
-				}
-				,
-				add: {
-					__require: 'course_student/add.html'
-				}
+				my: {__require: 'course_student/my.html'},
+				add: {__require: 'course_student/add.html'}
 			}
 		})
 		;

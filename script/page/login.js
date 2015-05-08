@@ -6,8 +6,9 @@ Page.login = function () {
 		el: "#Login",
 		data: {
 			result: {
-				error_msg: '', username: '', password: ''
-				//, type: ''
+				error_msg: '',
+				username: '',
+				password: ''
 			}
 		}
 	});

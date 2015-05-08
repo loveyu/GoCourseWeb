@@ -206,7 +206,8 @@ var FUNC = {
 			return {
 				active: active, name: name, link: link, title: title
 			};
-		}, ajax: function (url, method, data, success_callback, error) {
+		},
+		ajax: function (url, method, data, success_callback, error) {
 			//var token = FUNC.getToken();
 			var option = {
 				url: url,
@@ -223,6 +224,11 @@ var FUNC = {
 			//    option.data.__token = token.token;
 			//}
 			jQuery.ajax(option);
+		},
+		urlMatch: function (url) {
+			var path = window.location.pathname.substr(1);
+			if ("" == path)return false;
+			return path.toLocaleLowerCase().indexOf(url.toLocaleLowerCase()) === 0;
 		},
 		redirect: function (url) {
 			window.location.href = url;
@@ -622,15 +628,13 @@ Page.course_student = function () {
 							obj.set_error(result.msg);
 						}
 					});
-				}
-				,
+				},
 				set_error: function (msg) {
 					FUNC.alertOnElem(this.$el, msg);
 				}
 			},
 			components: {
-				my: {template:"<h3>学生课表<\/h3><p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p><pre>{{list|json}}<\/pre>"}
-				,
+				my: {template:"<h3>学生课表<\/h3><p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p><pre>{{list|json}}<\/pre>"},
 				add: {template:"<h3>添加课表<\/h3><p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p><p class=\"alert-warning alert\" v-if=\"warning\">{{warning}}<\/p><div class=\"list-group\"><div class=\"list-group-item\" v-repeat=\"list\"><p><button v-if=\"selected>-1\" v-on=\"click:onAdd($index)\" class=\"btn btn-{{selected==0?'primary':'success'}}\">{{selected==0?'添加':'已选'}}<\/button>{{course.courseName}}, 专业:{{course.deptName}}, 状态:{{course.status|course_table_status}},年级:{{course.enrolYear}}<\/p><p>老师：{{course.teacherName}}，地点：<span v-repeat=\"locations\">第{{slot}}节，{{location}}, {{week}}周&nbsp;&nbsp;&nbsp;<\/span><\/p><\/div><\/div><pre>{{list|json}}<\/pre>",methods:{
 	onAdd: function (id) {
 		var obj = this;
@@ -1341,13 +1345,13 @@ Page.header = function () {
 			site_url: CONFIG.site_url,
 			login_status: false,
 			nav_main: [
-				FUNC.nav('项目介绍', 'about', '关于项目的部分介绍'),
-				FUNC.nav('APP下载', 'download', '下载APP到移动端')
+				FUNC.nav('API文档', 'doc/', '用于开发的API文档')
 			],
 			nav_right: [
 				FUNC.nav('登录', 'login.html', '登录用户中心'),
 				FUNC.nav('注册', 'register.html', '注册新用户')
 			],
+			nav_private: [],
 			data: null,
 			avatar: null,
 			name: null,
@@ -1367,12 +1371,21 @@ Page.header = function () {
 					this.name = data.data.name;
 					this.avatar = data.data.avatar;
 					if (this.user_type == "student") {
-						this.nav_main = [
-							FUNC.nav('课程测验', 'quiz.html#/', '开始进行课程测验')
+						//this.nav_main = [
+						//	FUNC.nav('课程测验', 'quiz.html#/', '开始进行课程测验', FUNC.urlMatch("quiz.html"))
+						//];
+						this.nav_private = [
+							FUNC.nav("我的课表", "course_student.html#/", "", FUNC.urlMatch("course_student.html"))
 						];
 					} else if (this.user_type == "teacher") {
-						this.nav_main = [];
+						this.nav_private = [
+							FUNC.nav("教师课表", "course_teacher.html#/", "", FUNC.urlMatch("course_teacher.html")),
+							FUNC.nav("管理测验", "manager_quiz.html#/", "", FUNC.urlMatch("manager_quiz.html"))
+						];
 					}
+					this.nav_private.push(
+						FUNC.nav("个人中心", "home.html#/", "", FUNC.urlMatch("home.html"))
+					);
 					Hook.apply('login.finish', data.data);
 				}
 				Hook.apply('login.status');
@@ -1904,12 +1917,92 @@ Page.login = function () {
 		el: "#Login",
 		data: {
 			result: {
-				error_msg: '', username: '', password: ''
-				//, type: ''
+				error_msg: '',
+				username: '',
+				password: ''
 			}
 		}
 	});
 };
+
+
+/**
+ * Created by loveyu on 2015/3/30.
+ */
+Page.manager_quiz = function () {
+	var mq_vm = new Vue({
+			el: "#ManagerQuiz",
+			data: {
+				currentView: "base-loading",
+				currentName: "base-loading",
+				result: null,
+				menus: {
+					my: {url: '/', name: '我的测验', active: false},
+					add: {url: '/add', name: '添加测验', active: false},
+					share: {url: '/share', name: '共享的测验', active: false}
+				}
+			},
+			methods: {
+				m_my: function () {
+					this.currentView = "my";
+				},
+				m_add: function () {
+					this.currentView = "add";
+				},
+				m_share: function () {
+					this.currentView = "share";
+				}
+			},
+			components: {
+				my: {template:"<h3>我的课程测验<\/h3>"},
+				add: {template:"<h3>添加课程测验<\/h3>"},
+				share: {template:"<h3>共享的课程测验<\/h3>"}
+			}
+		})
+		;
+	var change_menus_active = function (view) {
+		if (mq_vm.menus.hasOwnProperty(mq_vm.currentName)) {
+			mq_vm.menus[mq_vm.currentName].active = false;
+		}
+		mq_vm.currentView = "base-loading";
+		mq_vm.currentName = view;
+		mq_vm.menus[view].active = true;
+	};
+	var routes = {
+		'/': function () {
+			change_menus_active("my");
+			mq_vm.m_my();
+		},
+		'/add': function () {
+			change_menus_active("add");
+			mq_vm.m_add();
+		},
+		'/share': function () {
+			change_menus_active("share");
+			mq_vm.m_share();
+		}
+	};
+	var router = Router(routes);//初始化一个路由器
+	var login_call = function (arg) {
+		if (Member.user_type != "teacher") {
+			FUNC.alertOnElem(mq_vm.$el, "非法访问");
+			return arg;
+		}
+		router.init();//加载路由配置
+		if (document.location.hash == "") {
+			//初始化空路由
+			routes['/']();
+		}
+		return arg;
+	};
+	if (!Member.login_status) {
+		Hook.add('login.finish', login_call);
+	} else {
+		login_call();
+	}
+	return mq_vm;
+}
+;
 
 
 /**

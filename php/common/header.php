@@ -43,9 +43,7 @@
 							<img class="user-avatar" v-attr="src: avatar" alt="avatar">{{name}} <span
 								class="caret"></span></a>
 						<ul class="dropdown-menu" role="menu">
-							<li v-if="user_type=='teacher'"><a href="course_teacher.html">教师课表</a></li>
-							<li v-if="user_type=='student'"><a href="course_student.html">我的课表</a></li>
-							<li><a href="home.html">个人中心</a></li>
+							<li v-repeat="nav_private" v-class="active?'active':''"><a v-attr="title:title" href="{{link}}">{{name}}</a>
 							<li class="divider"></li>
 							<li><a href="#" v-on="click: logout">退出登录</a></li>
 						</ul>

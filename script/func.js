@@ -6,7 +6,8 @@ var FUNC = {
 			return {
 				active: active, name: name, link: link, title: title
 			};
-		}, ajax: function (url, method, data, success_callback, error) {
+		},
+		ajax: function (url, method, data, success_callback, error) {
 			//var token = FUNC.getToken();
 			var option = {
 				url: url,
@@ -23,6 +24,11 @@ var FUNC = {
 			//    option.data.__token = token.token;
 			//}
 			jQuery.ajax(option);
+		},
+		urlMatch: function (url) {
+			var path = window.location.pathname.substr(1);
+			if ("" == path)return false;
+			return path.toLocaleLowerCase().indexOf(url.toLocaleLowerCase()) === 0;
 		},
 		redirect: function (url) {
 			window.location.href = url;

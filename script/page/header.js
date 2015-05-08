@@ -10,13 +10,13 @@ Page.header = function () {
 			site_url: CONFIG.site_url,
 			login_status: false,
 			nav_main: [
-				FUNC.nav('项目介绍', 'about', '关于项目的部分介绍'),
-				FUNC.nav('APP下载', 'download', '下载APP到移动端')
+				FUNC.nav('API文档', 'doc/', '用于开发的API文档')
 			],
 			nav_right: [
 				FUNC.nav('登录', 'login.html', '登录用户中心'),
 				FUNC.nav('注册', 'register.html', '注册新用户')
 			],
+			nav_private: [],
 			data: null,
 			avatar: null,
 			name: null,
@@ -36,12 +36,21 @@ Page.header = function () {
 					this.name = data.data.name;
 					this.avatar = data.data.avatar;
 					if (this.user_type == "student") {
-						this.nav_main = [
-							FUNC.nav('课程测验', 'quiz.html#/', '开始进行课程测验')
+						//this.nav_main = [
+						//	FUNC.nav('课程测验', 'quiz.html#/', '开始进行课程测验', FUNC.urlMatch("quiz.html"))
+						//];
+						this.nav_private = [
+							FUNC.nav("我的课表", "course_student.html#/", "", FUNC.urlMatch("course_student.html"))
 						];
 					} else if (this.user_type == "teacher") {
-						this.nav_main = [];
+						this.nav_private = [
+							FUNC.nav("教师课表", "course_teacher.html#/", "", FUNC.urlMatch("course_teacher.html")),
+							FUNC.nav("管理测验", "manager_quiz.html#/", "", FUNC.urlMatch("manager_quiz.html"))
+						];
 					}
+					this.nav_private.push(
+						FUNC.nav("个人中心", "home.html#/", "", FUNC.urlMatch("home.html"))
+					);
 					Hook.apply('login.finish', data.data);
 				}
 				Hook.apply('login.status');
