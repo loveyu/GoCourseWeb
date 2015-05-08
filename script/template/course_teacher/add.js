@@ -84,6 +84,7 @@ _methods_ = {
 		obj.location.push({
 			location: '',
 			slot: 1,
+			day: 1,
 			week: '',
 			notice: ''
 		});
@@ -136,6 +137,10 @@ _methods_ = {
 				obj.error = x_n + "上课节次不正确";
 				return false;
 			}
+			if (x.day < 1 || x.day > 7) {
+				obj.error = x_n + "上课星期不正确";
+				return false;
+			}
 			if (x.week == "") {
 				obj.error = x_n + "上课周次不能为空";
 				return false;
@@ -157,8 +162,10 @@ _methods_ = {
 					location: ""
 				};
 				obj.location = [];
-				setTimeout(function () {
-					obj.success = "";
+				setTimeout(function (obj) {
+					if (obj != null && obj.hasOwnProperty("success")) {
+						obj.success = "";
+					}
 				}, 5000)
 			} else {
 				obj.error = result.msg;

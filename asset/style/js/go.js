@@ -82,13 +82,14 @@ Vue.component('quiz-quiz-by-id', {template:"<h3>TEST<\/h3><p>ID:{{id}}<\/p>"});
  */
 Vue.config.debug = true;
 var DOMAIN = (function () {
-	//switch (document.location.host) {
-	//此处修改为使用本地反向代理的形式，避免COOKIE的问题
-	//case "go.course.org":
-	//	return "http://127.0.0.1:8080/";
-	//case "10.109.0.10":
-	//	return "http://10.109.0.10:8080/";
-	//}
+	switch (document.location.host) {
+		//此处修改为使用本地反向代理的形式，避免COOKIE的问题
+		case "go.course.org":
+			return "http://127.0.0.1:8080/";
+		//case "10.109.0.10":
+		//	return "http://10.109.0.10:8080/";
+	}
+	//return "http://192.168.88.128:8080/";
 	return "http://" + document.location.host + "/";
 })();
 var CONFIG = {
@@ -821,9 +822,9 @@ Page.course_teacher = function () {
 								term: [{id: 0, term: "春季"}, {id: 1, term: "秋季"}],
 								status: [
 									{id: -1, status: "全部"},
-									{id: 0, status: "未开课"},
-									{id: 1, status: "已开课"},
-									{id: 3, status: "已结束"}
+									{id: 0, status: "已开课"},
+									{id: 1, status: "未开课"},
+									{id: 2, status: "已结束"}
 								]
 							}),
 							result: null
@@ -846,7 +847,7 @@ Page.course_teacher = function () {
 		},
 		components: {
 			my: {template:"<h3>教师课表<\/h3><div class=\"list-group\"><div class=\"list-group-item\" v-repeat=\"list\"><p>{{course.courseName}}, 专业:{{course.deptName}}, 状态:{{course.status|course_table_status}}, 年级:{{course.enrolYear}}<\/p><p>班级：<span v-repeat=\"classes_info\" class=\"label label-info\">{{className}}<\/span>&nbsp;&nbsp;&nbsp;地点：<span v-repeat=\"locations\">第{{slot}}节，{{location}}, {{week}}周&nbsp;&nbsp;&nbsp;<\/span><\/p><\/div><\/div><pre>{{list|json}}<\/pre>"},
-			add: {template:"<h3>添加课表<\/h3><p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p><p class=\"alert-success alert\" v-if=\"success\">{{success}}<\/p><div class=\"form-inline form-group\"><select class=\"form-control\" disabled><option>{{college.uniNickname}}<\/option><\/select><select class=\"form-control\" disabled><option>{{college.collegeName}}<\/option><\/select><select class=\"form-control\" name=\"dept\" v-model=\"form.department\" v-on=\"change:departmentChange\"><option value=\"\">--请选择--<\/option><option v-repeat=\"college.departments\" value=\"{{id}}\">{{name}}<\/option><\/select><div class=\"input-group\"><span class=\"input-group-addon\">年级<\/span><select class=\"form-control\" name=\"year\" v-model=\"form.year\" v-on=\"change:yearChange\"><option value=\"\">--请选择--<\/option><option v-repeat=\"college.years\" value=\"{{year}}\">{{year}}<\/option><\/select><\/div><\/div><div class=\"form-inline form-group\" v-if=\"college.classes\"><strong>班级 : <\/strong><span v-if=\"college.classes.length==0\">无数据<\/span><label v-repeat=\"college.classes\"><input class=\"checkbox\" type=\"checkbox\" v-on=\"change:classChange\" value=\"{{id}}\"> {{name}}&nbsp;&nbsp;&nbsp;<\/label><\/div><div class=\"form-inline form-group\"><div class=\"input-group\"><span class=\"input-group-addon\">课程搜索<\/span><input type=\"text\" name=\"course\" v-model=\"search.name\" class=\"form-control\"><\/div><button class=\"btn btn-primary\" type=\"button\" v-on=\"click: onSearchName\">查询当前可添加课程<\/button><\/div><p v-if=\"data.course_name!=null && data.course_name.length==0\" class=\"alert alert-warning\">当前查询结果为空<\/p><div class=\"form-group form-inline\" v-if=\"data.course_name!=null && data.course_name.length>0\"><strong>选择课程 : &nbsp;&nbsp;<\/strong><label v-repeat=\"data.course_name\"><input type=\"radio\" name=\"my_schedule\" value=\"{{scheduleID}}\" v-model=\"form.scheduleID\"\/>{{courseName}},{{openTerm?\"秋季\":\"春季\"}}{{fromWeek}}-{{endWeek}}周&nbsp;&nbsp;<\/label><\/div><div class=\"form-group\"><label>该课程表的附加介绍信息:<\/label><textarea class=\"form-control\" v-model=\"form.notice\"><\/textarea><\/div><div class=\"form-group\"><strong>上课地点：<\/strong><button class=\"btn btn-success\" v-on=\"click:addLocation\">添加<\/button><\/div><div v-repeat=\"location\"><div class=\"form-group form-inline\"><button class=\"btn btn-danger\" v-on=\"click:removeLocation($index)\">移除<\/button><div class=\"input-group\"><span class=\"input-group-addon\">上课地点<\/span><input type=\"text\" name=\"location\" placeholder=\"如果：13-A-303\" v-model=\"location\" class=\"form-control\"><\/div><div class=\"input-group\"><span class=\"input-group-addon\">节次<\/span><select name=\"slot\" v-model=\"slot\" class=\"form-control\"><option>1<\/option><option>2<\/option><option>3<\/option><option>4<\/option><option>5<\/option><option>6<\/option><\/select><\/div><\/div><div class=\"form-group\"><div class=\"input-group\"><span class=\"input-group-addon\">周次规则<\/span><input type=\"text\" class=\"form-control\" placeholder=\"如:1,2,3或者1-4,5-9,这两种形式\" v-model=\"week\"\/><\/div><\/div><div class=\"form-group\"><textarea placeholder=\"备注提示\" name=\"notice\" rows=\"2\" v-model=\"notice\" class=\"form-control\"><\/textarea><\/div><hr><\/div><div class=\"form-group form-inline\"><button class=\"btn btn-primary\" v-on=\"click:onSubmit\">创建课程表<\/button><\/div>",methods:{
+			add: {template:"<h3>添加课表<\/h3><p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p><p class=\"alert-success alert\" v-if=\"success\">{{success}}<\/p><div class=\"form-inline form-group\"><select class=\"form-control\" disabled><option>{{college.uniNickname}}<\/option><\/select><select class=\"form-control\" disabled><option>{{college.collegeName}}<\/option><\/select><select class=\"form-control\" name=\"dept\" v-model=\"form.department\" v-on=\"change:departmentChange\"><option value=\"\">--请选择--<\/option><option v-repeat=\"college.departments\" value=\"{{id}}\">{{name}}<\/option><\/select><div class=\"input-group\"><span class=\"input-group-addon\">年级<\/span><select class=\"form-control\" name=\"year\" v-model=\"form.year\" v-on=\"change:yearChange\"><option value=\"\">--请选择--<\/option><option v-repeat=\"college.years\" value=\"{{year}}\">{{year}}<\/option><\/select><\/div><\/div><div class=\"form-inline form-group\" v-if=\"college.classes\"><strong>班级 : <\/strong><span v-if=\"college.classes.length==0\">无数据<\/span><label v-repeat=\"college.classes\"><input class=\"checkbox\" type=\"checkbox\" v-on=\"change:classChange\" value=\"{{id}}\"> {{name}}&nbsp;&nbsp;&nbsp;<\/label><\/div><div class=\"form-inline form-group\"><div class=\"input-group\"><span class=\"input-group-addon\">课程搜索<\/span><input type=\"text\" name=\"course\" v-model=\"search.name\" class=\"form-control\"><\/div><button class=\"btn btn-primary\" type=\"button\" v-on=\"click: onSearchName\">查询当前可添加课程<\/button><\/div><p v-if=\"data.course_name!=null && data.course_name.length==0\" class=\"alert alert-warning\">当前查询结果为空<\/p><div class=\"form-group form-inline\" v-if=\"data.course_name!=null && data.course_name.length>0\"><strong>选择课程 : &nbsp;&nbsp;<\/strong><label v-repeat=\"data.course_name\"><input type=\"radio\" name=\"my_schedule\" value=\"{{scheduleID}}\" v-model=\"form.scheduleID\"\/>{{courseName}},{{openTerm?\"秋季\":\"春季\"}}{{fromWeek}}-{{endWeek}}周&nbsp;&nbsp;<\/label><\/div><div class=\"form-group\"><label>该课程表的附加介绍信息:<\/label><textarea class=\"form-control\" v-model=\"form.notice\"><\/textarea><\/div><div class=\"form-group\"><strong>上课地点：<\/strong><button class=\"btn btn-success\" v-on=\"click:addLocation\">添加<\/button><\/div><div v-repeat=\"location\"><div class=\"form-group form-inline\"><button class=\"btn btn-danger\" v-on=\"click:removeLocation($index)\">移除<\/button><div class=\"input-group\"><span class=\"input-group-addon\">上课地点<\/span><input type=\"text\" name=\"location\" placeholder=\"如果：13-A-303\" v-model=\"location\" class=\"form-control\"><\/div><div class=\"input-group\"><span class=\"input-group-addon\">节次<\/span><select name=\"slot\" v-model=\"slot\" class=\"form-control\"><option>1<\/option><option>2<\/option><option>3<\/option><option>4<\/option><option>5<\/option><option>6<\/option><\/select><\/div><div class=\"input-group\"><span class=\"input-group-addon\">星期<\/span><select name=\"slot\" v-model=\"day\" class=\"form-control\"><option value=\"1\">一<\/option><option value=\"2\">二<\/option><option value=\"3\">三<\/option><option value=\"4\">四<\/option><option value=\"5\">五<\/option><option value=\"6\">六<\/option><option value=\"7\">日<\/option><\/select><\/div><\/div><div class=\"form-group\"><div class=\"input-group\"><span class=\"input-group-addon\">周次规则<\/span><input type=\"text\" class=\"form-control\" placeholder=\"如:1,2,3或者1-4,5-9,这两种形式\" v-model=\"week\"\/><\/div><\/div><div class=\"form-group\"><textarea placeholder=\"备注提示\" name=\"notice\" rows=\"2\" v-model=\"notice\" class=\"form-control\"><\/textarea><\/div><hr><\/div><div class=\"form-group form-inline\"><button class=\"btn btn-primary\" v-on=\"click:onSubmit\">创建课程表<\/button><\/div>",methods:{
 	setDept: function (college_id) {
 		var obj = this;
 		FUNC.ajax(CONFIG.api.college.get_departments, "get", {college_id: college_id}, function (result) {
@@ -932,6 +933,7 @@ Page.course_teacher = function () {
 		obj.location.push({
 			location: '',
 			slot: 1,
+			day: 1,
 			week: '',
 			notice: ''
 		});
@@ -984,6 +986,10 @@ Page.course_teacher = function () {
 				obj.error = x_n + "上课节次不正确";
 				return false;
 			}
+			if (x.day < 1 || x.day > 7) {
+				obj.error = x_n + "上课星期不正确";
+				return false;
+			}
 			if (x.week == "") {
 				obj.error = x_n + "上课周次不能为空";
 				return false;
@@ -1005,8 +1011,10 @@ Page.course_teacher = function () {
 					location: ""
 				};
 				obj.location = [];
-				setTimeout(function () {
-					obj.success = "";
+				setTimeout(function (obj) {
+					if (obj != null && obj.hasOwnProperty("success")) {
+						obj.success = "";
+					}
 				}, 5000)
 			} else {
 				obj.error = result.msg;
@@ -1119,7 +1127,9 @@ Page.course_teacher = function () {
 				};
 				obj.success = "成功添加了课程";
 				setTimeout(function () {
-					obj.success = "";
+					if (obj != null && obj.hasOwnProperty("success")) {
+						obj.success = "";
+					}
 				}, 3000);
 			} else {
 				obj.error = result.msg;

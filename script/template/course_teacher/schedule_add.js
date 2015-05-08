@@ -27,7 +27,9 @@ _methods_ = {
 				};
 				obj.success = "成功添加了课程";
 				setTimeout(function () {
-					obj.success = "";
+					if (obj != null && obj.hasOwnProperty("success")) {
+						obj.success = "";
+					}
 				}, 3000);
 			} else {
 				obj.error = result.msg;
