@@ -120,7 +120,8 @@ var CONFIG = {
 		student: {
 			info: "student/info",
 			bind_info: "student/bind_info",
-			update_info: "student/update_info"
+			update_info: "student/update_info",
+			my_course: "student/my_course"
 		},
 		college: {
 			get_universities: "college/get_universities",
@@ -556,67 +557,81 @@ Page.bind_student_info = (function () {
  */
 Page.course_student = function () {
 	var cs_vm = new Vue({
-		el: "#CourseStudent",
-		data: {
-			currentView: "base-loading",
-			currentName: "base-loading",
-			result: null,
-			menus: {
-				my: {url: '/', name: '我的课表', active: false},
-				add: {url: '/add', name: '添加课程', active: false}
-			}
-		},
-		methods: {
-			m_my: function () {
-				this.currentView = "my";
+			el: "#CourseStudent",
+			data: {
+				currentView: "base-loading",
+				currentName: "base-loading",
+				result: null,
+				menus: {
+					my: {url: '/', name: '我的课表', active: false},
+					add: {url: '/add', name: '添加课程', active: false}
+				}
 			},
-			m_add: function () {
-				var obj = this;
-				FUNC.ajax(CONFIG.api.course_table.search, "get", {
-					search_type: "student",
-					set_location: 1,
-					status: 0
-				}, function (result) {
-					obj.result = {
-						error: "",
-						warning: "",
-						list: null
-					};
-					if (result.status) {
-						var ids = [];
-						for (var i in result.data) {
-							result.data[i]["selected"] = -1;
-							ids.push(result.data[i].course.courseTableID);
+			methods: {
+				m_my: function () {
+					var obj = this;
+					FUNC.ajax(CONFIG.api.student.my_course, "get", {}, function (result) {
+						if (result.status) {
+							obj.result = {
+								error: "",
+								list: result.data
+							};
+							obj.currentView = "my";
 						}
-						obj.result.list = result.data;
-						if (ids.length > 0) {
-							FUNC.ajax(CONFIG.api.course_table.student_selected, "get", {ids: ids.join(",")}, function (result) {
-								if (result.status) {
-									for (var i in obj.result.list) {
-										if (result.data.hasOwnProperty(obj.result.list[i].course.courseTableID)) {
-											obj.result.list[i].selected = result.data[obj.result.list[i].course.courseTableID];
+						else {
+							obj.set_error(result.msg);
+						}
+					});
+				},
+				m_add: function () {
+					var obj = this;
+					FUNC.ajax(CONFIG.api.course_table.search, "get", {
+						search_type: "student",
+						set_location: 1,
+						status: 0
+					}, function (result) {
+						obj.result = {
+							error: "",
+							warning: "",
+							list: null
+						};
+						if (result.status) {
+							var ids = [];
+							for (var i in result.data) {
+								result.data[i]["selected"] = -1;
+								ids.push(result.data[i].course.courseTableID);
+							}
+							obj.result.list = result.data;
+							if (ids.length > 0) {
+								FUNC.ajax(CONFIG.api.course_table.student_selected, "get", {ids: ids.join(",")}, function (result) {
+									if (result.status) {
+										for (var i in obj.result.list) {
+											if (result.data.hasOwnProperty(obj.result.list[i].course.courseTableID)) {
+												obj.result.list[i].selected = result.data[obj.result.list[i].course.courseTableID];
+											}
 										}
+									} else {
+										obj.result.error = result.msg;
 									}
-								} else {
-									obj.result.error = result.msg;
-								}
-							});
+								});
+							} else {
+								obj.result.warning = "没有任何可选课程";
+							}
+							obj.currentView = "add";
 						} else {
-							obj.result.warning = "没有任何可选课程";
+							obj.set_error(result.msg);
 						}
-					} else {
-						obj.set_error(result.msg);
-					}
-					obj.currentView = "add";
-				});
+					});
+				}
+				,
+				set_error: function (msg) {
+					FUNC.alertOnElem(this.$el, msg);
+				}
 			},
-			set_error: function (msg) {
-				FUNC.alertOnElem(this.$el, msg);
-			}
-		},
-		components: {
-			my: {template:"<h3>学生课表<\/h3>"},
-			add: {template:"<h3>添加课表<\/h3><p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p><p class=\"alert-warning alert\" v-if=\"warning\">{{warning}}<\/p><div class=\"list-group\"><div class=\"list-group-item\" v-repeat=\"list\"><p><button v-if=\"selected>-1\" v-on=\"click:onAdd($index)\" class=\"btn btn-{{selected==0?'primary':'success'}}\">{{selected==0?'添加':'已选'}}<\/button>{{course.courseName}}, 专业:{{course.deptName}}, 状态:{{course.status|course_table_status}},年级:{{course.enrolYear}}<\/p><p>老师：{{course.teacherName}}，地点：<span v-repeat=\"locations\">第{{slot}}节，{{location}}, {{week}}周&nbsp;&nbsp;&nbsp;<\/span><\/p><\/div><\/div><pre>{{list|json}}<\/pre>",methods:{
+			components: {
+				my: {template:"<h3>学生课表<\/h3><p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p><pre>{{list|json}}<\/pre>"}
+				,
+				add: {template:"<h3>添加课表<\/h3><p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p><p class=\"alert-warning alert\" v-if=\"warning\">{{warning}}<\/p><div class=\"list-group\"><div class=\"list-group-item\" v-repeat=\"list\"><p><button v-if=\"selected>-1\" v-on=\"click:onAdd($index)\" class=\"btn btn-{{selected==0?'primary':'success'}}\">{{selected==0?'添加':'已选'}}<\/button>{{course.courseName}}, 专业:{{course.deptName}}, 状态:{{course.status|course_table_status}},年级:{{course.enrolYear}}<\/p><p>老师：{{course.teacherName}}，地点：<span v-repeat=\"locations\">第{{slot}}节，{{location}}, {{week}}周&nbsp;&nbsp;&nbsp;<\/span><\/p><\/div><\/div><pre>{{list|json}}<\/pre>",methods:{
 	onAdd: function (id) {
 		var obj = this;
 		obj.error = "";
@@ -629,8 +644,9 @@ Page.course_student = function () {
 		});
 	}
 }}
-		}
-	});
+			}
+		})
+		;
 	var change_menus_active = function (view) {
 		if (cs_vm.menus.hasOwnProperty(cs_vm.currentName)) {
 			cs_vm.menus[cs_vm.currentName].active = false;
@@ -668,7 +684,8 @@ Page.course_student = function () {
 		login_call();
 	}
 	return cs_vm;
-};
+}
+;
 
 
 /**

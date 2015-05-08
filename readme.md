@@ -4,6 +4,9 @@
 
 ```
 php make.php
+
+//如果需要使用cdn加速资源文件使用下面命令
+php make.php cdn
 ```
 
 * 然后将asset目录文件复制到html_out目录，对应的即可用的静态目录

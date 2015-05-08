@@ -4,11 +4,11 @@
 	</div>
 </footer>
 </body>
-<script src="asset/vue/vue.js"></script>
-<script src="asset/director/director.js"></script>
-<script src="asset/jquery/jquery.js"></script>
-<script src="asset/bootstrap/js/bootstrap.js"></script>
-<script src="asset/style/js/go.js"></script>
+<script src="<?php echo get_asset("asset/vue/vue.js"); ?>"></script>
+<script src="<?php echo get_asset("asset/director/director.js"); ?>"></script>
+<script src="<?php echo get_asset("asset/jquery/jquery.js"); ?>"></script>
+<script src="<?php echo get_asset("asset/jquery/jquery.js"); ?>"></script>
+<script src="<?php echo get_asset("asset/style/js/go.js", false); ?>"></script>
 <?php
 if (isset($name) && !empty($name)):
 	?>

@@ -41,7 +41,8 @@ var CONFIG = {
 		student: {
 			info: "student/info",
 			bind_info: "student/bind_info",
-			update_info: "student/update_info"
+			update_info: "student/update_info",
+			my_course: "student/my_course"
 		},
 		college: {
 			get_universities: "college/get_universities",
