@@ -570,17 +570,17 @@ Page.course_student = function () {
 			methods: {
 				m_my: function () {
 					var obj = this;
+					obj.result = {
+						error: "",
+						list: null
+					};
 					FUNC.ajax(CONFIG.api.student.my_course, "get", {}, function (result) {
 						if (result.status) {
-							obj.result = {
-								error: "",
-								list: result.data
-							};
-							obj.currentView = "my";
+							obj.result.list = result.data;
+						} else {
+							obj.result.error = result.msg;
 						}
-						else {
-							obj.set_error(result.msg);
-						}
+						obj.currentView = "my";
 					});
 				},
 				m_add: function () {
