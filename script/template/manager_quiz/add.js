@@ -3,8 +3,23 @@ _methods_ = {
 		this.loadCourseList();
 		this.initQuiz();
 	},
+	checkQuizEmpty: function () {
+		if (this.model.quiz.title != "") {
+			return false;
+		}
+		for (var i in this.model.quiz.options) {
+			if (this.model.quiz.options[i] != "") {
+				return false;
+			}
+		}
+		if (this.model.quiz.desc != "") {
+			return false;
+		}
+		return true;
+	},
 	loadCourseList: function () {
 		var obj = this;
+		obj.quiz_empty = obj.checkQuizEmpty();
 		obj.model.course = -1;
 		obj.course_list = null;
 		obj.loading = true;
