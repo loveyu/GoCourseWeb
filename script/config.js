@@ -70,8 +70,8 @@ var CONFIG = {
 			student_selected: "course_table/student_selected",
 			student_select_add: "course_table/student_select_add"
 		},
-		quiz: {
-			list: "quiz/list"
+		quiz_teacher: {
+			course_list: "quiz_teacher/course_list"
 		}
 	}
 };

@@ -125,6 +125,17 @@ var FUNC = {
 			}
 			return temp;
 		},
+		isEmpty: function (obj) {
+			switch (typeof obj) {
+				case "object":
+					for (var i in obj) {
+						return false;
+					}
+					return true;
+				default :
+					return obj == "";
+			}
+		},
 		verify: {
 			email: function (email) {
 				return /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{1,8}$/.test(email);

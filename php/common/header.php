@@ -9,8 +9,10 @@
 			echo "Go Course";
 		}
 		?></title>
+	<LINK href="" type="" rel=icon>
 	<link type="text/css" rel="stylesheet" href="<?php echo get_asset("asset/bootstrap/css/bootstrap.css") ?>"/>
 	<link type="text/css" rel="stylesheet" href="<?php echo get_asset("asset/style/css/style.css", false) ?>"/>
+	<link type="text/css" rel="icon" href="<?php echo get_asset("favicon.ico") ?>"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
