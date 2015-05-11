@@ -76,7 +76,10 @@ Param:
     "status": true,
     "code": 0,
     "msg": "",
-    "data": null
+     "data": {
+            "token": "f7e805ea9eb58c022d3a58262ad457a13992baca9b1c821a6bc9e0d6fe4b6325",
+            "expire": 1430913472
+        }
 }
 ```
 
