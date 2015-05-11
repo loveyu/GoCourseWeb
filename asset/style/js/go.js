@@ -164,7 +164,8 @@ var CONFIG = {
 			student_select_add: "course_table/student_select_add"
 		},
 		quiz_teacher: {
-			course_list: "quiz_teacher/course_list"
+			course_list: "quiz_teacher/course_list",
+			quiz_add: "quiz_teacher/quiz_add"
 		}
 	}
 };
@@ -230,8 +231,12 @@ var FUNC = {
 				method: method,
 				xhrFields: {
 					withCredentials: true
-				}, success: success_callback,
-				error: error
+				},
+				success: success_callback,
+				error: (typeof error == "undefined") ? function (xhr) {
+					alert("AJAX请求出错。。");
+					console.log(xhr);
+				} : error
 			};
 			//if (token != null) {
 			//    //添加Token
@@ -1977,11 +1982,13 @@ Page.manager_quiz = function () {
 					model: {
 						status: -1,
 						course: -1,
+						add_my_course: "1",
 						quiz: {
 							title: "",
 							options: [],
 							correct: [],
-							desc: ""
+							desc: "",
+							index: ''
 						},
 						quiz_name: []
 					},
@@ -1989,6 +1996,7 @@ Page.manager_quiz = function () {
 				};
 				this.currentView = "add";
 				this.result.model.status = -1;
+				this.result.model.add_my_course = "1";
 				this._children[this._children.length - 1].load();
 			},
 			m_share: function () {
@@ -1997,7 +2005,7 @@ Page.manager_quiz = function () {
 		},
 		components: {
 			my: {template:"<h3>我的课程测验<\/h3>"},
-			add: {template:"<h3>添加课程测验<\/h3><div class=\"panel panel-primary\"><div class=\"panel-heading form-inline form-group-sm\">选择你的课程<select v-on=\"change: onCourseChange\" v-model=\"model.status\" class=\"form-control\"><option v-repeat=\"map.status\" value=\"{{id}}\">{{status}}<\/option><\/select><\/div><div class=\"panel-body\"><p class=\"alert-danger alert\" v-if=\"error && model.course==-1\">{{error}}<\/p><p v-if=\"loading\" class=\"alert alert-info\">加载中。。。。。<\/p><p v-if=\"course_list_empty\" class=\"alert alert-warning\">无任何课程数据<\/p><button v-repeat=\"course_list\" class=\"btn btn-{{model.course==$index?'success':'default'}}\" type=\"button\" v-on=\"click: onCourseClick($index)\" data-id=\"{{$index}}\">{{$value}}<\/button><\/div><\/div><div v-if=\"model.course>-1 || !quiz_empty\" class=\"panel panel-primary\"><div class=\"panel-heading\">测试内容<\/div><div class=\"panel-body\"><p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p><div class=\"form-group\"><h4><label for=\"InputTitle\">测试的标题<\/label><\/h4><textarea v-model=\"model.quiz.title\" id=\"InputTitle\" class=\"form-control\" placeholder=\"输入测试的标题，多选指定答案请使用__A__，正确选项字符前两下划线\" rows=\"2\"><\/textarea><\/div><div class=\"form-group input-group\" v-repeat=\"model.quiz_name\"><span class=\"input-group-addon\"><label style=\"margin-bottom: 0\" for=\"InputValue_{{key}}\">{{key}}<\/label><\/span><input v-model=\"model.quiz.options[$index]\" type=\"text\" class=\"form-control\" placeholder=\"选项{{key}}\" id=\"InputValue_{{key}}\"><\/div><div class=\"form-group\"><p><span class=\"glyphicon glyphicon-ok text-primary\">正确选项<\/span>，<span class=\"text-warning glyphicon glyphicon-warning-sign\">如果只选择一个将作为单选题<\/span><\/p><button v-repeat=\"model.quiz_name\" v-on=\"click:onSetCorrect($index)\" class=\"btn btn-{{correct?'success':'default'}}\">{{key}}<\/button><button class=\"btn btn-primary\" v-on=\"click:onQuizAdd\" type=\"button\">添加<\/button><button class=\"btn btn-danger\" v-on=\"click:onQuizRemove\" type=\"button\">移除<\/button><\/div><div class=\"form-group\"><label for=\"Desc\">答题解析：<\/label><textarea name=\"desc\" v-model=\"model.desc\" id=\"Desc\" class=\"form-control\" rows=\"4\"><\/textarea><\/div><div class=\"form-group\"><button class=\"btn btn-block btn-primary\" type=\"button\" v-on=\"click:onSubmit\">添加测试题<\/button><\/div><\/div><\/div>",methods:{
+			add: {template:"<h3>添加课程测验<\/h3><div class=\"panel panel-primary\"><div class=\"panel-heading form-inline form-group-sm\">选择你的课程<select v-on=\"change: onCourseChange\" v-model=\"model.status\" class=\"form-control\"><option v-repeat=\"map.status\" value=\"{{id}}\">{{status}}<\/option><\/select><\/div><div class=\"panel-body\"><p class=\"alert-danger alert\" v-if=\"error && model.course==-1\">{{error}}<\/p><p v-if=\"loading\" class=\"alert alert-info\">加载中。。。。。<\/p><p v-if=\"course_list_empty\" class=\"alert alert-warning\">无任何课程数据<\/p><button v-repeat=\"course_list\" class=\"btn btn-{{model.course==$key?'success':'default'}}\" type=\"button\" v-on=\"click: onCourseClick($key)\" data-id=\"{{$key}}\">{{$value}}<\/button><\/div><\/div><div v-if=\"model.course>-1 || !quiz_empty\" class=\"panel panel-primary\"><div class=\"panel-heading\">测试内容<\/div><div class=\"panel-body\"><p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p><p class=\"alert-success alert\" v-if=\"success\"><span>{{success}},<\/span><button type=\"button\" class=\"btn btn-success\" v-on=\"click:onAddNewQuiz\">添加新的测验<\/button><\/p><div class=\"form-group\"><h4><label for=\"InputTitle\">测试的标题<\/label><\/h4><textarea v-model=\"model.quiz.title\" id=\"InputTitle\" class=\"form-control\" placeholder=\"输入测试的标题，多选指定答案请使用__A__，正确选项字符前两下划线\" rows=\"2\"><\/textarea><\/div><div class=\"form-group input-group\" v-repeat=\"model.quiz_name\"><span class=\"input-group-addon\"><label style=\"margin-bottom: 0\" for=\"InputValue_{{key}}\">{{key}}<\/label><\/span><input v-model=\"model.quiz.options[$index]\" type=\"text\" class=\"form-control\" placeholder=\"选项{{key}}\" id=\"InputValue_{{key}}\"><\/div><div class=\"form-group\"><p><span class=\"glyphicon glyphicon-ok text-primary\">正确选项<\/span>，<span class=\"text-warning glyphicon glyphicon-warning-sign\">如果只选择一个将作为单选题<\/span><\/p><button v-repeat=\"model.quiz_name\" v-on=\"click:onSetCorrect($index)\" class=\"btn btn-{{correct?'success':'default'}}\">{{key}}<\/button><button class=\"btn btn-primary\" v-on=\"click:onQuizAdd\" type=\"button\">添加<\/button><button class=\"btn btn-danger\" v-on=\"click:onQuizRemove\" type=\"button\">移除<\/button><\/div><div class=\"form-group\"><label for=\"Desc\">答题解析：<\/label><textarea name=\"desc\" v-model=\"model.quiz.desc\" id=\"Desc\" class=\"form-control\" rows=\"4\"><\/textarea><\/div><div class=\"form-group form-inline\"><div class=\"input-group\" style=\"margin-right: 20px\"><span class=\"input-group-addon\"><label style=\"margin-bottom: 0\" for=\"InputValue_index\">章节索引<\/label><\/span><input type=\"text\" v-model=\"model.quiz.index\" class=\"form-control\" placeholder=\"如：2.5, 等，0开头为综合测试\" id=\"InputValue_index\"><\/div><label><input type=\"checkbox\" v-model=\"model.add_my_course\" value=\"1\">&nbsp;添加到我当前的课程<\/label><\/div><div class=\"form-group\"><button class=\"btn btn-block btn-primary\" type=\"button\" v-on=\"click:onSubmit\">添加测试题<\/button><\/div><\/div><\/div>",methods:{
 	load: function () {
 		this.loadCourseList();
 		this.initQuiz();
@@ -2034,6 +2042,14 @@ Page.manager_quiz = function () {
 		});
 	},
 	initQuiz: function () {
+		this.model.quiz = {
+			title: "",
+			options: [],
+			correct: [],
+			desc: "",
+			index: ''
+		};
+		this.model.quiz_name = [];
 		var A_code = 'A'.charCodeAt(0);
 		for (var i = 0; i < 4; i++) {
 			this.model.quiz_name.push({key: String.fromCharCode(A_code + i), correct: false});
@@ -2044,7 +2060,7 @@ Page.manager_quiz = function () {
 		this.loadCourseList();
 	},
 	onCourseClick: function (index) {
-		this.model.course = index;
+		this.model.course = parseInt(index);
 	},
 	onQuizAdd: function () {
 		var len = this.model.quiz_name.length;
@@ -2069,13 +2085,15 @@ Page.manager_quiz = function () {
 	onSubmit: function (event) {
 		var obj = this;
 		obj.error = "";
+		obj.success = "";
 		if (obj.model.quiz.title == "") {
 			obj.error = "测试标题不能为空";
 			return;
 		}
 		obj.model.quiz.correct = [];
-		for (var i in obj.model.quiz_name) {
-			if (obj.model.quiz.options[i] == "") {
+		var i;
+		for (i in obj.model.quiz_name) {
+			if (obj.model.quiz.options[i].trim() == "") {
 				obj.error = "任何测试答案不允许为空，如:" + String.fromCharCode(+i + 'A'.charCodeAt(0));
 				return;
 			}
@@ -2096,7 +2114,7 @@ Page.manager_quiz = function () {
 				return;
 			}
 			var matches = [];
-			for (var i in list) {
+			for (i in list) {
 				var code = +list[i].charCodeAt(2) - 'A'.charCodeAt(0);
 				var flag = false;
 				for (var j in matches) {
@@ -2123,8 +2141,36 @@ Page.manager_quiz = function () {
 				}
 			}
 		}
-		console.log(obj.model.quiz);
-		//noting
+		if (obj.model.quiz.index == "") {
+			obj.error = "章节索引不能为空";
+			return;
+		}
+		var index_list = obj.model.quiz.index.match(/[\d]+/g);
+		if (index_list.length == 0) {
+			obj.error = "章节不合法";
+			return;
+		}
+		for (i in index_list) {
+			index_list[i] = parseInt(index_list[i]);
+		}
+		if (index_list.join(".") != obj.model.quiz.index) {
+			obj.error = "你可以使用“" + index_list.join(".") + "”形式的章节描述，而非当前的";
+			return;
+		}
+		FUNC.ajax(CONFIG.api.quiz_teacher.quiz_add, "post", {
+			course_id: obj.model.course,
+			add_my_course: (obj.model.add_my_course == 1 || obj.model.add_my_course == true) ? 1 : 0,
+			quiz_json: JSON.stringify(obj.model.quiz)
+		}, function (result) {
+			if (result.status) {
+				obj.success = "成功添加测验";
+			} else {
+				obj.error = result.msg;
+			}
+		});
+	},
+	onAddNewQuiz: function () {
+		this.initQuiz();
 	}
 }},
 			share: {template:"<h3>共享的课程测验<\/h3>"}
