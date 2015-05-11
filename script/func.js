@@ -16,8 +16,12 @@ var FUNC = {
 				method: method,
 				xhrFields: {
 					withCredentials: true
-				}, success: success_callback,
-				error: error
+				},
+				success: success_callback,
+				error: (typeof error == "undefined") ? function (xhr) {
+					alert("AJAX请求出错。。");
+					console.log(xhr);
+				} : error
 			};
 			//if (token != null) {
 			//    //添加Token

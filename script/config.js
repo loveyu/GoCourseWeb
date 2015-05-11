@@ -71,7 +71,8 @@ var CONFIG = {
 			student_select_add: "course_table/student_select_add"
 		},
 		quiz_teacher: {
-			course_list: "quiz_teacher/course_list"
+			course_list: "quiz_teacher/course_list",
+			quiz_add: "quiz_teacher/quiz_add"
 		}
 	}
 };

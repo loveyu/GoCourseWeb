@@ -12,9 +12,9 @@
 
 		<p v-if="course_list_empty" class="alert alert-warning">无任何课程数据</p>
 		<button v-repeat="course_list"
-		        class="btn btn-{{model.course==$index?'success':'default'}}" type="button"
-		        v-on="click: onCourseClick($index)"
-		        data-id="{{$index}}">
+		        class="btn btn-{{model.course==$key?'success':'default'}}" type="button"
+		        v-on="click: onCourseClick($key)"
+		        data-id="{{$key}}">
 			{{$value}}
 		</button>
 	</div>
@@ -24,6 +24,11 @@
 	<div class="panel-heading">测试内容</div>
 	<div class="panel-body">
 		<p class="alert-danger alert" v-if="error">{{error}}</p>
+
+		<p class="alert-success alert" v-if="success">
+			<span>{{success}},</span>
+			<button type="button" class="btn btn-success" v-on="click:onAddNewQuiz">添加新的测验</button>
+		</p>
 
 		<div class="form-group">
 			<h4><label for="InputTitle">测试的标题</label></h4>
@@ -51,7 +56,17 @@
 		</div>
 		<div class="form-group">
 			<label for="Desc">答题解析：</label>
-			<textarea name="desc" v-model="model.desc" id="Desc" class="form-control" rows="4"></textarea>
+			<textarea name="desc" v-model="model.quiz.desc" id="Desc" class="form-control" rows="4"></textarea>
+		</div>
+		<div class="form-group form-inline">
+			<div class="input-group" style="margin-right: 20px">
+				<span class="input-group-addon">
+				<label style="margin-bottom: 0" for="InputValue_index">章节索引</label>
+			</span>
+				<input type="text" v-model="model.quiz.index" class="form-control" placeholder="如：2.5, 等，0开头为综合测试"
+				       id="InputValue_index">
+			</div>
+			<label><input type="checkbox" v-model="model.add_my_course" value="1">&nbsp;添加到我当前的课程</label>
 		</div>
 		<div class="form-group">
 			<button class="btn btn-block btn-primary" type="button" v-on="click:onSubmit">添加测试题</button>

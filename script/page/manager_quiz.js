@@ -29,11 +29,13 @@ Page.manager_quiz = function () {
 					model: {
 						status: -1,
 						course: -1,
+						add_my_course: "1",
 						quiz: {
 							title: "",
 							options: [],
 							correct: [],
-							desc: ""
+							desc: "",
+							index: ''
 						},
 						quiz_name: []
 					},
@@ -41,6 +43,7 @@ Page.manager_quiz = function () {
 				};
 				this.currentView = "add";
 				this.result.model.status = -1;
+				this.result.model.add_my_course = "1";
 				this._children[this._children.length - 1].load();
 			},
 			m_share: function () {

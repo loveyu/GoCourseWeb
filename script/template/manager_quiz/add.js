@@ -35,6 +35,14 @@ _methods_ = {
 		});
 	},
 	initQuiz: function () {
+		this.model.quiz = {
+			title: "",
+			options: [],
+			correct: [],
+			desc: "",
+			index: ''
+		};
+		this.model.quiz_name = [];
 		var A_code = 'A'.charCodeAt(0);
 		for (var i = 0; i < 4; i++) {
 			this.model.quiz_name.push({key: String.fromCharCode(A_code + i), correct: false});
@@ -45,7 +53,7 @@ _methods_ = {
 		this.loadCourseList();
 	},
 	onCourseClick: function (index) {
-		this.model.course = index;
+		this.model.course = parseInt(index);
 	},
 	onQuizAdd: function () {
 		var len = this.model.quiz_name.length;
@@ -70,13 +78,15 @@ _methods_ = {
 	onSubmit: function (event) {
 		var obj = this;
 		obj.error = "";
+		obj.success = "";
 		if (obj.model.quiz.title == "") {
 			obj.error = "测试标题不能为空";
 			return;
 		}
 		obj.model.quiz.correct = [];
-		for (var i in obj.model.quiz_name) {
-			if (obj.model.quiz.options[i] == "") {
+		var i;
+		for (i in obj.model.quiz_name) {
+			if (obj.model.quiz.options[i].trim() == "") {
 				obj.error = "任何测试答案不允许为空，如:" + String.fromCharCode(+i + 'A'.charCodeAt(0));
 				return;
 			}
@@ -97,7 +107,7 @@ _methods_ = {
 				return;
 			}
 			var matches = [];
-			for (var i in list) {
+			for (i in list) {
 				var code = +list[i].charCodeAt(2) - 'A'.charCodeAt(0);
 				var flag = false;
 				for (var j in matches) {
@@ -124,7 +134,35 @@ _methods_ = {
 				}
 			}
 		}
-		console.log(obj.model.quiz);
-		//noting
+		if (obj.model.quiz.index == "") {
+			obj.error = "章节索引不能为空";
+			return;
+		}
+		var index_list = obj.model.quiz.index.match(/[\d]+/g);
+		if (index_list.length == 0) {
+			obj.error = "章节不合法";
+			return;
+		}
+		for (i in index_list) {
+			index_list[i] = parseInt(index_list[i]);
+		}
+		if (index_list.join(".") != obj.model.quiz.index) {
+			obj.error = "你可以使用“" + index_list.join(".") + "”形式的章节描述，而非当前的";
+			return;
+		}
+		FUNC.ajax(CONFIG.api.quiz_teacher.quiz_add, "post", {
+			course_id: obj.model.course,
+			add_my_course: (obj.model.add_my_course == 1 || obj.model.add_my_course == true) ? 1 : 0,
+			quiz_json: JSON.stringify(obj.model.quiz)
+		}, function (result) {
+			if (result.status) {
+				obj.success = "成功添加测验";
+			} else {
+				obj.error = result.msg;
+			}
+		});
+	},
+	onAddNewQuiz: function () {
+		this.initQuiz();
 	}
 };//_methods_
