@@ -1,0 +1,163 @@
+<html>
+<head lang="zh-CN">
+  <meta charset="UTF-8">
+  <title>教师课表 - Go Course</title>
+  <link href="asset/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css">
+  <link href="asset/style/css/style.css" rel="stylesheet" type="text/css">
+  <link href="asset/style/css/my_course_t.css" rel="stylesheet" type="text/css">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+</head>
+<body>
+<header class="navbar navbar-default" id="Header">
+  <div class="container">
+    <div class="navbar-header">
+      <button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle collapsed">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Go Course</a>
+    </div>
+    <nav class="collapse navbar-collapse bs-navbar-collapse">
+      <div class="container">
+        <ul class="nav navbar-nav">
+          <li><a href="doc/" title="用于开发的API文档">API文档</a>
+          </li><!--v-repeat-->
+        </ul>
+        <!--v-if-start--><ul class="nav navbar-nav navbar-right">
+          <li><a href="login.html" title="登录用户中心">登录</a>
+          </li><li><a href="register.html" title="注册新用户">注册</a>
+          </li><!--v-repeat-->
+        </ul><!--v-if-end-->
+        <!--v-if-start--><!--v-if-end-->
+      </div>
+    </nav>
+  </div>
+</header>
+
+
+<div id="CourseTeacher">
+  <div class="container">
+    <div style="margin-bottom: 15px">
+      <ul class="nav nav-pills">
+        <li role="presentation">
+          <a href="#/">我的课表</a>
+        </li><li role="presentation">
+          <a href="#/add">添加课表</a>
+        </li><li role="presentation">
+          <a href="#/schedule_add">添加课程</a>
+        </li><li role="presentation">
+          <a href="#/schedule_search">课程搜索</a>
+        </li><li role="presentation">
+          <a href="#/course_list">课程名列表</a>
+        </li><!--v-repeat-->
+      </ul>
+    </div>
+    <div class="container">
+        <table class="table">
+            <caption>周次：
+        <div class="btn-group" role="group" aria-label="...">
+          <button type="button" class="btn btn-default pre"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></button>
+          <button type="button" class="btn btn-default">1</button>
+          <button type="button" class="btn btn-default">2</button>
+          <button type="button" class="btn btn-default">3</button>
+          <button type="button" class="btn btn-default">4</button>
+          <button type="button" class="btn btn-default">5</button>
+          <button type="button" class="btn btn-default">6</button>
+          <button type="button" class="btn btn-default">7</button>
+          <button type="button" class="btn btn-default">8</button>
+          <button type="button" class="btn btn-default">9</button>
+          <button type="button" class="btn btn-default blue">10</button>
+          <button type="button" class="btn btn-default">11</button>
+          <button type="button" class="btn btn-default">12</button>
+          <button type="button" class="btn btn-default">13</button>
+          <button type="button" class="btn btn-default">14</button>
+          <button type="button" class="btn btn-default">7</button>
+          <button type="button" class="btn btn-default">8</button>
+          <button type="button" class="btn btn-default">9</button>
+          <button type="button" class="btn btn-default">10</button>
+          <button type="button" class="btn btn-default">11</button>
+          <button type="button" class="btn btn-default">12</button>
+          <button type="button" class="btn btn-default">13</button>
+          <button type="button" class="btn btn-default">8</button>
+          <button type="button" class="btn btn-default">11</button>
+          <button type="button" class="btn btn-default">12</button>
+          <button type="button" class="btn btn-default">13</button>
+          <button type="button" class="btn btn-default">14</button>
+          <button type="button" class="btn btn-default next"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
+        </div>
+            </caption>
+              <thead>
+                <tr>
+                  <th>第十周</th>
+                  <th>课程名称</th>
+                  <th>星期</th>
+                  <th>节次</th>
+                  <th>地点</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="today"></td>
+                  <td>计算机组成</td>
+                  <td>星期一</td>
+                  <td>2大节</td>
+                  <td>13-B-308</td>
+                </tr>
+                <tbody>
+                <tr>
+                  <td class="today"></td>
+                  <td>计算机组成</td>
+                  <td>星期一</td>
+                  <td>4大节</td>
+                  <td>13-B-308</td>
+                </tr>
+              </tbody>
+              <tbody>
+                <tr >
+                  <td></td>
+                  <td rowspan=2>计算机组成</td>
+                  <td>星期三</td>
+                  <td>2大节</td>
+                  <td>13-B-308</td>
+                </tr>
+                <tr>
+                  
+                  <td></td>
+                  <td>星期五</td>
+                  <td>5大节</td>
+                  <td>13-B-308</td>
+                
+                </tr>
+              </tbody>
+              <tbody>
+                <tr>
+                  <td></td>
+                  <td>计算机组成</td>
+                  <td>星期六</td>
+                  <td>1大节</td>
+                  <td>13-B-308</td>
+                </tr>
+              </tbody>
+        </table>
+    </div><!--v-component-->
+  </div>
+</div>
+
+<footer id="Footer">
+  <div class="container">
+    <p class="text-center">&copy;Go Course 2015</p>
+  </div>
+</footer>
+
+<script src="asset/vue/vue.js"></script>
+<script src="asset/director/director.js"></script>
+<script src="asset/jquery/jquery.js"></script>
+<script src="asset/bootstrap/js/bootstrap.js"></script>
+<script src="asset/style/js/go.js"></script>
+  <script>
+    APP.runPage('course_teacher');
+  </script>
+
+</body></html>

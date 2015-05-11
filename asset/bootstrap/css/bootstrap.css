@@ -2079,12 +2079,12 @@ th {
 .table > tfoot > tr > td {
   padding: 8px;
   line-height: 1.42857143;
-  vertical-align: top;
-  border-top: 1px solid #ddd;
+  vertical-align: center;
+/*   border-top: 1px solid #ddd;你这个坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑 */
 }
 .table > thead > tr > th {
-  vertical-align: bottom;
-  border-bottom: 2px solid #ddd;
+  vertical-align: center;
+/*   border-bottom: 2px solid #ddd;你这个坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑 */
 }
 .table > caption + thead > tr:first-child > th,
 .table > colgroup + thead > tr:first-child > th,
@@ -2095,7 +2095,7 @@ th {
   border-top: 0;
 }
 .table > tbody + tbody {
-  border-top: 2px solid #ddd;
+/*   border-top: 2px solid #ddd;你这个坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑 */
 }
 .table .table {
   background-color: #fff;
