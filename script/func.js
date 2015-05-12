@@ -140,6 +140,47 @@ var FUNC = {
 					return obj == "";
 			}
 		},
+		inArray: function (item, array) {
+			for (var i in array) {
+				if (array[i] == item) {
+					return true;
+				}
+			}
+			return false;
+		},
+		findVueChild: function (vue, name) {
+			for (var index in vue._children) {
+				if (vue._children[index].hasOwnProperty('$options') &&
+					vue._children[index].$options.hasOwnProperty('name') &&
+					vue._children[index].$options.name === name
+				) {
+					return vue._children[index];
+				}
+			}
+			return null;
+		},
+		parseWeek: function (str) {
+			var list = str.split(/[,|，]/);
+			var rt = [];
+			for (var item in list) {
+				if (!list.hasOwnProperty(item)) {
+					continue;
+				}
+				if (/^[\d]+$/.test(list[item])) {
+					rt.push(parseInt(list[item]));
+				} else if (/^[\d]+-[\d]+$/.test(list[item])) {
+					var be = list[item].split('-');
+					var i = parseInt(be[0]);
+					var j = parseInt(be[1]);
+					if (i <= j && i > 0) {
+						for (; i <= j; ++i) {
+							rt.push(i);
+						}
+					}
+				}
+			}
+			return rt;
+		},
 		verify: {
 			email: function (email) {
 				return /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{1,8}$/.test(email);

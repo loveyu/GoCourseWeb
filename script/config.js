@@ -74,6 +74,12 @@ var CONFIG = {
 			course_list: "quiz_teacher/course_list",
 			quiz_add: "quiz_teacher/quiz_add"
 		}
+	},
+	current_week: {	//当前的周次，该数据会依据服务器状态而更新
+		"year": 2015,					//当前年份
+		"term": 0,						//季度
+		"week": 10,						//周次
+		"begin_date": "2015-03-09"	//第一周周一开始时间
 	}
 };
 //初始化API完整地址

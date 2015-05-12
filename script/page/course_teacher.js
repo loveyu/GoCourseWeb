@@ -29,7 +29,7 @@ Page.course_teacher = function () {
 				var obj = this;
 				obj.result = {
 					error: "",
-					list: {}
+					list: [],
 				};
 				FUNC.ajax(CONFIG.api.course_table.search, "get", {
 					search_type: "teacher",
@@ -37,7 +37,8 @@ Page.course_teacher = function () {
 					set_location: 1
 				}, function (result) {
 					if (result.status) {
-						obj.result.list = result.data;
+						obj.result.list = result.data.list;
+						CONFIG.current_week = result.data.week;
 						obj.currentView = "my";
 					} else {
 						obj.m_load_error(result.msg);

@@ -1,19 +1,35 @@
 <h3>添加课表</h3>
 <p class="alert-danger alert" v-if="error">{{error}}</p>
 <p class="alert-warning alert" v-if="warning">{{warning}}</p>
-<div class="list-group">
-	<div class="list-group-item" v-repeat="list">
-		<p>
-			<button v-if="selected>-1" v-on="click:onAdd($index)" class="btn btn-{{selected==0?'primary':'success'}}">{{selected==0?'添加':'已选'}}
-			</button>
-			{{course.courseName}}, 专业:{{course.deptName}}, 状态:{{course.status|course_table_status}},
-			年级:{{course.enrolYear}}
-		</p>
-		<p>
-			老师：{{course.teacherName}}，
-			地点：
-			<span v-repeat="locations">第{{slot}}节，{{location}}, {{week}}周&nbsp;&nbsp;&nbsp;</span>
-		</p>
-	</div>
+<div class="course-table">
+	<table class="table">
+		<thead>
+		<tr>
+			<th>操作</th>
+			<th>课程名称</th>
+			<th>教师</th>
+			<th>周次</th>
+			<th>星期</th>
+			<th>节次</th>
+			<th>地点</th>
+		</tr>
+		</thead>
+		<tbody v-repeat="list">
+		<tr v-repeat="locations">
+			<td v-if="$index==0" rowspan="{{locations.length}}">
+				<button v-if="selected>-1" v-on="click:onAdd(course.courseTableID)"
+				        class="btn btn-{{selected==0?'primary':'success'}}">{{selected==0?'添加':'已选'}}
+				</button>
+			</td>
+			<td v-if="$index==0" rowspan="{{locations.length}}">{{course.courseName}}</td>
+			<td v-if="$index==0" rowspan="{{locations.length}}">
+				{{course.teacherName}}
+			</td>
+			<td>{{week}}</td>
+			<td>{{day|course_week_parse}}</td>
+			<td><strong>{{slot}}</strong>大节</td>
+			<td>{{location}}</td>
+		</tr>
+		</tbody>
+	</table>
 </div>
-<pre>{{list|json}}</pre>

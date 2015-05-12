@@ -18,15 +18,24 @@ Page.course_student = function () {
 					var obj = this;
 					obj.result = {
 						error: "",
-						list: null
+						list: null,
+						has_course:false,
+						week_current: 0,
+						week_table: [],
+						week_list: []
 					};
 					FUNC.ajax(CONFIG.api.student.my_course, "get", {}, function (result) {
 						if (result.status) {
-							obj.result.list = result.data;
+							obj.result.list = result.data.list;
+							CONFIG.current_week = result.data.week;
 						} else {
 							obj.result.error = result.msg;
 						}
 						obj.currentView = "my";
+						var my_obj = FUNC.findVueChild(obj, "my");
+						if (my_obj != null) {
+							my_obj.paresTable();
+						}
 					});
 				},
 				m_add: function () {
@@ -43,11 +52,12 @@ Page.course_student = function () {
 						};
 						if (result.status) {
 							var ids = [];
-							for (var i in result.data) {
-								result.data[i]["selected"] = -1;
-								ids.push(result.data[i].course.courseTableID);
+							var data = result.data.list;
+							for (var i in data) {
+								data[i]["selected"] = -1;
+								ids.push(data[i].course.courseTableID);
 							}
-							obj.result.list = result.data;
+							obj.result.list = data;
 							if (ids.length > 0) {
 								FUNC.ajax(CONFIG.api.course_table.student_selected, "get", {ids: ids.join(",")}, function (result) {
 									if (result.status) {

@@ -1,66 +1,3 @@
-#Header .user-avatar{
-	width: 25px;
-	height: 25px;
-	border-radius: 25px;
-	margin-right: 5px;
-}
-
-#Footer {
-	background-color: #f4f4f4;
-	padding: 30px 18px;
-	margin-top: 50px;
-}
-
-#Footer .container {
-}
-
-
-.course-table tbody {
-    background-color: #e6f8fb;
-    color: #666;
-}
-
-.course-table .table > thead > tr > th,
-.course-table .table > tbody > tr > td{
-    text-align: center;
-    vertical-align: middle;
-    border-top: none;
-}
-
-.course-table .table > thead > tr > th {
-    background-color: #5bc0de;
-}
-
-.course-table .table > tbody {
-    border-style: none;
-}
-
-.course-table tbody:nth-of-type(2n) {
-    background: #feeeab;
-}
-
-.course-table .table > thead > tr > th {
-    color: #fff;
-}
-
-.course-table tr {
-    height: 52px;
-}
-
-.course-table .pre, .next {
-    height: 34px;
-}
-
-.course-table .today {
-    background: url(image/today_red.png) no-repeat center center;
-}
-
-.course-table .blue {
-    background-color: #5bc0de;
-    border: 1px solid #28a2c6;
-}
-
-
 .student-course-table > thead > tr > th, td {
     text-align: center;
 }
@@ -147,6 +84,3 @@
     background: url(image/address.png) no-repeat 4px 0;
     background-size: 16px 20px;
 }
-
-
-

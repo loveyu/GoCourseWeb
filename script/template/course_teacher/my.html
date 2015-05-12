@@ -1,19 +1,33 @@
 <h3>教师课表</h3>
-
-<div class="list-group">
-	<div class="list-group-item" v-repeat="list">
-		<p>
-			{{course.courseName}}, 专业:{{course.deptName}}, 状态:{{course.status|course_table_status}}, 年级:{{course.enrolYear}}
-		</p>
-		<p>
-			班级：
-			<span v-repeat="classes_info" class="label label-info">{{className}}</span>
-			&nbsp;
-			&nbsp;
-			&nbsp;
-			地点：
-			<span v-repeat="locations">第{{slot}}节，{{location}}, {{week}}周&nbsp;&nbsp;&nbsp;</span>
-		</p>
-	</div>
+<div class="course-table">
+	<table class="table">
+		<thead>
+		<tr>
+			<th>&nbsp;</th>
+			<th>课程名称</th>
+			<th>班级</th>
+			<th>周次</th>
+			<th>星期</th>
+			<th>节次</th>
+			<th>地点</th>
+			<th>操作</th>
+		</tr>
+		</thead>
+		<tbody v-repeat="list">
+		<tr v-repeat="locations">
+			<td class="{{locations[$index] | course_location_check_today today none}}"></td>
+			<td v-if="$index==0" rowspan="{{locations.length}}">{{course.courseName}}</td>
+			<td v-if="$index==0" rowspan="{{locations.length}}">
+				<span v-repeat="classes_info" class="btn-block">{{className}}</span>
+			</td>
+			<td>{{week}}</td>
+			<td>{{day|course_week_parse}}</td>
+			<td><strong>{{slot}}</strong>大节</td>
+			<td>{{location}}</td>
+			<td v-if="$index==0" rowspan="{{locations.length}}">
+				<button class="btn btn-primary btn-sm">编辑</button>
+			</td>
+		</tr>
+		</tbody>
+	</table>
 </div>
-<pre>{{list|json}}</pre>
