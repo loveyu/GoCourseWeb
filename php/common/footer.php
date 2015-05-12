@@ -15,5 +15,8 @@ if (isset($name) && !empty($name)):
 	<script>
 		APP.runPage('<?php echo $name?>');
 	</script>
-<?php endif; ?>
+<?php endif;
+if (isset($footer_content) && !empty($footer_content)):
+	echo $footer_content;
+endif; ?>
 </html>
