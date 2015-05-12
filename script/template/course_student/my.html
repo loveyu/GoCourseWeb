@@ -12,7 +12,7 @@
 <div class="alert alert-warning" v-if="!has_course">
 	<p>本周没有任何课程</p>
 </div>
-<table class="table student-course-table">
+<table v-if="has_course" class="table student-course-table">
 	<thead>
 	<tr>
 		<th class="Weekly">第{{week_current}}周</th>
