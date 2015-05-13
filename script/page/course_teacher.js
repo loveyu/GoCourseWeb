@@ -29,7 +29,7 @@ Page.course_teacher = function () {
 				var obj = this;
 				obj.result = {
 					error: "",
-					list: [],
+					list: []
 				};
 				FUNC.ajax(CONFIG.api.course_table.search, "get", {
 					search_type: "teacher",

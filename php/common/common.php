@@ -37,3 +37,8 @@ function set_cdn()
 		return false;
 	}
 }
+
+function is_cli()
+{
+	return substr(php_sapi_name(), 0, 3) === "cli";
+}

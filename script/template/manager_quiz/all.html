@@ -1,0 +1,68 @@
+<div class="panel panel-primary">
+
+	<div class="panel-heading form-inline form-group-sm">选择你的课程
+		<select v-on="change: onCourseChange" v-model="model.status" class="form-control">
+			<option v-repeat="map.status" value="{{id}}">{{status}}</option>
+		</select></div>
+	<div class="panel-body">
+		<p class="alert-danger alert" v-if="error1">{{error1}}</p>
+
+		<p v-if="loading" class="alert alert-info">加载中。。。。。</p>
+
+		<p v-if="course_list_empty" class="alert alert-warning">无任何课程数据</p>
+		<button v-repeat="course_list"
+		        class="btn btn-{{model.course==$key?'success':'default'}}" type="button"
+		        v-on="click: onCourseClick($key)"
+		        data-id="{{$key}}">
+			{{$value}}
+		</button>
+	</div>
+</div>
+
+<div v-if="model.course>0" class="panel panel-primary">
+	<div class="panel-heading">
+		<strong>{{course_list[model.course]}}</strong>
+	</div>
+	<div class="panel-body">
+		<p class="alert-danger alert" v-if="error2">{{error2}}</p>
+
+		<p v-if="quiz_list_empty" class="alert alert-warning">课程数据为空</p>
+
+		<div v-if="quiz_list!==null && quiz_list.length>0">
+			<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+				<div v-repeat="quiz_list" class="panel panel-default">
+					<div class="panel-heading" role="tab" id="Heading_{{$index}}">
+						<h4 class="panel-title">
+							<a data-toggle="collapse" data-parent="#accordion" href="#collapse_{{$index}}"
+							   aria-expanded="true"
+							   aria-controls="#collapse_{{$index}}">
+								<i>{{quiz.index}}</i>&nbsp;&nbsp;{{quiz.title}}
+							</a>
+						</h4>
+					</div>
+					<div id="collapse_{{$index}}" class="panel-collapse collapse{{$index==0?' in':''}}" role="tabpane"
+					     aria-labelledby="Heading_{{$index}}">
+						<div class="panel-body">
+							<p>{{quiz.title}}</p>
+
+							<div class="clearfix">
+								<dl v-repeat="options" class="dl-horizontal pull-left">
+									<dt class="{{isCorrect?'glyphicon glyphicon-align-right text-success':''}}">
+										{{index|quiz_option_translate_index}}、
+									</dt>
+									<dd>{{description}}</dd>
+								</dl>
+							</div>
+
+							<blockquote v-if="quiz.desc">
+								{{quiz.desc}}
+							</blockquote>
+						</div>
+					</div>
+				</div>
+
+				<!--<pre>{{quiz_list|json}}</pre>-->
+			</div>
+		</div>
+	</div>
+</div>

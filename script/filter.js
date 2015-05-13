@@ -74,3 +74,7 @@ Vue.filter('course_location_check_today', function (location, class1, class2) {
 	return class2;
 });
 
+Vue.filter('quiz_option_translate_index', function (value) {
+	value = +value;
+	return String.fromCharCode(+'A'.charCodeAt(0) + value);
+});

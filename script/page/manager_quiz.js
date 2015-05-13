@@ -9,7 +9,8 @@ Page.manager_quiz = function () {
 			currentName: "base-loading",
 			result: null,
 			menus: {
-				my: {url: '/', name: '我的测验', active: false},
+				my: {url: '/', name: '当前课程测验', active: false},
+				all: {url: '/all', name: '全部测验', active: false},
 				add: {url: '/add', name: '添加测验', active: false},
 				share: {url: '/share', name: '共享的测验', active: false}
 			}
@@ -17,6 +18,24 @@ Page.manager_quiz = function () {
 		methods: {
 			m_my: function () {
 				this.currentView = "my";
+			},
+			m_all: function () {
+				this.result = {
+					course_list: null,
+					course_list_empty: false,
+					loading: true,
+					error1: "",
+					error2: "",
+					quiz_list: null,
+					quiz_list_empty: false,
+					model: {
+						course: 0,
+						status: -1
+					},
+					map: {status: CONST_MAP.course_status}
+				};
+				this.currentView = "all";
+				FUNC.findVueChild(this, "all").load();
 			},
 			m_add: function () {
 				this.result = {
@@ -44,7 +63,7 @@ Page.manager_quiz = function () {
 				this.currentView = "add";
 				this.result.model.status = -1;
 				this.result.model.add_my_course = "1";
-				this._children[this._children.length - 1].load();
+				FUNC.findVueChild(this, "add").load();
 			},
 			m_share: function () {
 				this.currentView = "share";
@@ -52,6 +71,7 @@ Page.manager_quiz = function () {
 		},
 		components: {
 			my: {__require: 'manager_quiz/my.html'},
+			all: {__require: 'manager_quiz/all.html'},
 			add: {__require: 'manager_quiz/add.html'},
 			share: {__require: 'manager_quiz/share.html'}
 		}
@@ -72,6 +92,10 @@ Page.manager_quiz = function () {
 		'/add': function () {
 			change_menus_active("add");
 			mq_vm.m_add();
+		},
+		'/all': function () {
+			change_menus_active("all");
+			mq_vm.m_all();
 		},
 		'/share': function () {
 			change_menus_active("share");

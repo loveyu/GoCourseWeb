@@ -31,6 +31,9 @@
 		<nav class="collapse navbar-collapse bs-navbar-collapse">
 			<div class="container">
 				<ul class="nav navbar-nav">
+					<?php if (!is_cli()): ?>
+					<li><a href="test.html">临时测试文件</a>
+						<?php endif; ?>
 					<li v-repeat="nav_main" v-class="active?'active':''"><a v-attr="title:title" href="{{link}}">{{name}}</a>
 					</li>
 				</ul>
@@ -45,7 +48,8 @@
 							<img class="user-avatar" v-attr="src: avatar" alt="avatar">{{name}} <span
 								class="caret"></span></a>
 						<ul class="dropdown-menu" role="menu">
-							<li v-repeat="nav_private" v-class="active?'active':''"><a v-attr="title:title" href="{{link}}">{{name}}</a>
+							<li v-repeat="nav_private" v-class="active?'active':''"><a v-attr="title:title"
+							                                                           href="{{link}}">{{name}}</a>
 							<li class="divider"></li>
 							<li><a href="#" v-on="click: logout">退出登录</a></li>
 						</ul>

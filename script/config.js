@@ -72,7 +72,8 @@ var CONFIG = {
 		},
 		quiz_teacher: {
 			course_list: "quiz_teacher/course_list",
-			quiz_add: "quiz_teacher/quiz_add"
+			quiz_add: "quiz_teacher/quiz_add",
+			quiz_list: "quiz_teacher/quiz_list"
 		}
 	},
 	current_week: {	//当前的周次，该数据会依据服务器状态而更新

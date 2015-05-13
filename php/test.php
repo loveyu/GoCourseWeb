@@ -8,7 +8,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : "";
 if (empty($list)):?>
 	<div class="alert alert-danger">未找到任何测试的HTML页面，请检查html_test目录。</div>
 <?php else: ?>
-	<ul class="nav nav-pills">
+	<ul class="nav nav-pills" style="margin-bottom: 15px">
 		<?php foreach ($list as $v):
 			$base_name = preg_replace("/\\.html$/", "", basename($v));
 			?>
