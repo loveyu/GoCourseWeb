@@ -103,34 +103,36 @@ _methods_ = {
 			//检测多选答案位子，多个不做处理
 			var list = obj.model.quiz.title.match(/__([A-Z]?)__/g);
 			if (list == null) {
-				obj.error = "标题中没有匹配的多选答案列表";
-				return;
-			}
-			var matches = [];
-			for (i in list) {
-				var code = +list[i].charCodeAt(2) - 'A'.charCodeAt(0);
-				var flag = false;
-				for (var j in matches) {
-					if (code == matches[j]) {
-						flag = true;
-						break;
+				//没有答案索引的情况下，不判断多选顺序
+				//obj.error = "标题中没有匹配的多选答案列表";
+				//return;
+			} else {
+				var matches = [];
+				for (i in list) {
+					var code = +list[i].charCodeAt(2) - 'A'.charCodeAt(0);
+					var flag = false;
+					for (var j in matches) {
+						if (code == matches[j]) {
+							flag = true;
+							break;
+						}
+					}
+					if (!flag) {
+						matches.push(code);
 					}
 				}
-				if (!flag) {
-					matches.push(code);
-				}
-			}
-			matches.sort();
-			obj.model.quiz.correct.sort();
-			var l1 = matches.length;
-			if (l1 != l2) {
-				obj.error = "答案提示与对应的答案长度列表不一致";
-				return;
-			}
-			for (i = 0; i < l1; i++) {
-				if (matches[i] != obj.model.quiz.correct[i]) {
-					obj.error = "答案中的选项列表与标题中存在不一致的情况，请检查对应的选项是否设置为正确选项。";
+				matches.sort();
+				obj.model.quiz.correct.sort();
+				var l1 = matches.length;
+				if (l1 != l2) {
+					obj.error = "答案提示与对应的答案长度列表不一致";
 					return;
+				}
+				for (i = 0; i < l1; i++) {
+					if (matches[i] != obj.model.quiz.correct[i]) {
+						obj.error = "答案中的选项列表与标题中存在不一致的情况，请检查对应的选项是否设置为正确选项。";
+						return;
+					}
 				}
 			}
 		}

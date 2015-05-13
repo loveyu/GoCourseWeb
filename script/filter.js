@@ -74,7 +74,32 @@ Vue.filter('course_location_check_today', function (location, class1, class2) {
 	return class2;
 });
 
+/**
+ * 转换序号索引为A...B....C....
+ */
 Vue.filter('quiz_option_translate_index', function (value) {
 	value = +value;
 	return String.fromCharCode(+'A'.charCodeAt(0) + value);
+});
+
+/**
+ * 转换测试类型
+ */
+Vue.filter('quiz_translate_type', function (value) {
+	value = +value;
+	switch (value) {
+		case 0:
+			return "单选";
+		case 1:
+			return "多选";
+		case 2:
+			return "判断";
+	}
+	return "未知";
+});
+
+Vue.filter('timestamp_to_date', function (value) {
+	var date = new Date((+value) * 1000);
+	return "" + date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate() + " "
+		+ date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
 });
