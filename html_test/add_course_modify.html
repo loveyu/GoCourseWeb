@@ -1,0 +1,135 @@
+
+            <div class="content">
+                <!--v-if-start-->
+                <!--v-if-end-->
+                <!--v-if-start-->
+                <!--v-if-end-->
+<!--                 <div class="form-inline form-group">
+    <select disabled="" class="form-control">
+        <option>长江大学</option>
+    </select>
+    <select disabled="" class="form-control">
+        <option>计算机科学学院</option>
+    </select>
+    <select name="dept" class="form-control">
+        <option value="">--请选择--</option>
+        <option value="1">计算机科学与技术系</option>
+        v-repeat
+    </select>
+    <div class="input-group"><span class="input-group-addon">年级</span>
+        <select name="year" class="form-control">
+            <option value="">--请选择--</option>
+            v-repeat
+        </select>
+    </div>
+</div>
+v-if-start
+<div class="form-inline form-group"><strong>班级 : </strong>
+    v-if-start<span>无数据</span>
+    v-if-end
+    v-repeat
+</div>
+v-if-end
+<div class="form-inline form-group">
+    <div class="input-group"><span class="input-group-addon">课程搜索</span>
+        <input type="text" class="form-control" name="course">
+    </div>
+    <button type="button" class="btn btn-primary">查询当前可添加课程</button>
+</div> -->
+                <!--v-if-start-->
+                <!--v-if-end-->
+                <!--v-if-start-->
+                <!--v-if-end-->
+                <div class="row modify">
+                <h3>数据结构<small><修改></small></h3>
+                <h4><span>计算机科学学院</span><span>软件工程11201班</span></h4>
+                </div>
+                <div class="form-group overhead">
+                    <label>该课程表的附加介绍信息:</label>
+                    <textarea class="form-control"></textarea>
+                </div>
+                <div class="form-group"><strong>上课地点：</strong>
+                    <button class="btn btn-success">添加</button>
+                </div>
+                <div>
+                    <div class="form-group form-inline">
+                        <button class="btn btn-danger">移除</button>
+                        <div class="input-group"><span class="input-group-addon">上课地点</span>
+                            <input type="text" class="form-control" placeholder="如果：13-A-303" name="location">
+                        </div>
+                        <div class="input-group"><span class="input-group-addon">节次</span>
+                            <select class="form-control" name="slot">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                                <option>6</option>
+                            </select>
+                        </div>
+                        <div class="input-group"><span class="input-group-addon">星期</span>
+                            <select class="form-control" name="slot">
+                                <option value="1">一</option>
+                                <option value="2">二</option>
+                                <option value="3">三</option>
+                                <option value="4">四</option>
+                                <option value="5">五</option>
+                                <option value="6">六</option>
+                                <option value="7">日</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group"><span class="input-group-addon">周次规则</span>
+                            <input type="text" placeholder="如:1,2,3或者1-4,5-9,这两种形式" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" rows="2" name="notice" placeholder="备注提示"></textarea>
+                    </div>
+                    <hr>
+                </div>
+                <div>
+                    <div class="form-group form-inline">
+                        <button class="btn btn-danger">移除</button>
+                        <div class="input-group"><span class="input-group-addon">上课地点</span>
+                            <input type="text" class="form-control" placeholder="如果：13-A-303" name="location">
+                        </div>
+                        <div class="input-group"><span class="input-group-addon">节次</span>
+                            <select class="form-control" name="slot">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                                <option>6</option>
+                            </select>
+                        </div>
+                        <div class="input-group"><span class="input-group-addon">星期</span>
+                            <select class="form-control" name="slot">
+                                <option value="1">一</option>
+                                <option value="2">二</option>
+                                <option value="3">三</option>
+                                <option value="4">四</option>
+                                <option value="5">五</option>
+                                <option value="6">六</option>
+                                <option value="7">日</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group"><span class="input-group-addon">周次规则</span>
+                            <input type="text" placeholder="如:1,2,3或者1-4,5-9,这两种形式" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" rows="2" name="notice" placeholder="备注提示"></textarea>
+                    </div>
+                    <hr>
+                </div>
+                <!--v-repeat-->
+                <div class="form-group form-inline">
+                    <button class="btn btn-primary">确定修改</button>
+                </div>
+            </div>
+  
