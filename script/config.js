@@ -66,6 +66,7 @@ var CONFIG = {
 		},
 		course_table: {
 			add: "course_table/add",
+			get: "course_table/get",
 			search: "course_table/search",
 			student_selected: "course_table/student_selected",
 			student_select_add: "course_table/student_select_add"

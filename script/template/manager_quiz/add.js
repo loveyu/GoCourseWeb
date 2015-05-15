@@ -1,6 +1,24 @@
 _methods_ = {
+	/**
+	 * 普通加载，自己选择课程
+	 */
 	load: function () {
 		this.loadCourseList();
+		this.initQuiz();
+	},
+	/**
+	 * 强制加载某一课程名称
+	 */
+	forceLoad: function () {
+		var obj = this;
+		this.is_force_load = true;
+		FUNC.ajax(CONFIG.api.course_table.get + "/" + this.courseTableId, "get", {}, function (reslut) {
+			if (reslut.status) {
+				obj.courseTableInfo = reslut.data;
+			} else {
+				obj.error = reslut.msg;
+			}
+		});
 		this.initQuiz();
 	},
 	checkQuizEmpty: function () {
@@ -154,6 +172,7 @@ _methods_ = {
 		}
 		FUNC.ajax(CONFIG.api.quiz_teacher.quiz_add, "post", {
 			course_id: obj.model.course,
+			course_table_id: obj.courseTableId,
 			add_my_course: (obj.model.add_my_course == 1 || obj.model.add_my_course == true) ? 1 : 0,
 			quiz_json: JSON.stringify(obj.model.quiz)
 		}, function (result) {

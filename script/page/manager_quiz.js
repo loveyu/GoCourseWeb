@@ -17,7 +17,21 @@ Page.manager_quiz = function () {
 		},
 		methods: {
 			m_my: function () {
-				this.currentView = "my";
+				var obj = this;
+				FUNC.ajax(CONFIG.api.course_table.search, "get", {
+					search_type: 'teacher',
+					set_class_info: 1,
+					status: 0
+				}, function (result) {
+					obj.result = {
+						error: result.status ? '' : result.msg,
+						list: []
+					};
+					if (result.status) {
+						obj.result.list = result.data.list;
+					}
+					obj.currentView = "my";
+				});
 			},
 			m_all: function () {
 				this.result = {
@@ -37,17 +51,23 @@ Page.manager_quiz = function () {
 				this.currentView = "all";
 				FUNC.findVueChild(this, "all").load();
 			},
-			m_add: function () {
+			m_add: function (course, table) {
+				if (typeof table == "undefined" || table < 1) {
+					table = -1;
+				}
 				this.result = {
 					course_list: null,
 					course_list_empty: false,
 					quiz_empty: true,
 					error: "",
 					success: "",
+					is_force_load: false,
 					loading: true,
+					courseTableId: table,
+					courseTableInfo: null,//强制加载的课程信息
 					model: {
 						status: -1,
-						course: -1,
+						course: (typeof course == "undefined" ? -1 : course),
 						add_my_course: "1",
 						quiz: {
 							title: "",
@@ -63,7 +83,11 @@ Page.manager_quiz = function () {
 				this.currentView = "add";
 				this.result.model.status = -1;
 				this.result.model.add_my_course = "1";
-				FUNC.findVueChild(this, "add").load();
+				if (typeof course != "undefined" && course > 0 && table > 0) {
+					FUNC.findVueChild(this, "add").forceLoad();
+				} else {
+					FUNC.findVueChild(this, "add").load();
+				}
 			},
 			m_share: function () {
 				this.currentView = "share";
@@ -100,6 +124,10 @@ Page.manager_quiz = function () {
 		'/share': function () {
 			change_menus_active("share");
 			mq_vm.m_share();
+		},
+		'/add/:id/table/:id': function (course, table) {
+			change_menus_active("add");
+			mq_vm.m_add(course, table);
 		}
 	};
 	var router = Router(routes);//初始化一个路由器

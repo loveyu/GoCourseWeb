@@ -1,5 +1,5 @@
 <h3>添加课程测验</h3>
-<div class="panel panel-primary">
+<div class="panel panel-primary" v-if="!is_force_load">
 
 	<div class="panel-heading form-inline form-group-sm">选择你的课程
 		<select v-on="change: onCourseChange" v-model="model.status" class="form-control">
@@ -18,6 +18,11 @@
 			{{$value}}
 		</button>
 	</div>
+</div>
+
+<div v-if="is_force_load" class="alert alert-info">
+	<p v-if="courseTableInfo==null" class="alert alert-warning">加载中.....</p>
+	<p v-if="courseTableInfo!=null" ><strong>课程：</strong>{{courseTableInfo.course.courseName}}, {{courseTableInfo.course.deptName}}, {{courseTableInfo.course.enrolYear}}级</p>
 </div>
 
 <div v-if="model.course>-1 || !quiz_empty" class="panel panel-primary">
@@ -66,7 +71,7 @@
 				<input type="text" v-model="model.quiz.index" class="form-control" placeholder="如：2.5, 等，0开头为综合测试"
 				       id="InputValue_index">
 			</div>
-			<label><input type="checkbox" v-model="model.add_my_course" value="1">&nbsp;添加到我当前的课程</label>
+			<label v-if="!courseTableInfo"><input type="checkbox" v-model="model.add_my_course" value="1">&nbsp;添加到我当前的课程</label>
 		</div>
 		<div class="form-group">
 			<button class="btn btn-block btn-primary" type="button" v-on="click:onSubmit">添加测试题</button>
