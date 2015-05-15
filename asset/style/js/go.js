@@ -159,6 +159,7 @@ var CONFIG = {
 		},
 		course_table: {
 			add: "course_table/add",
+			get: "course_table/get",
 			search: "course_table/search",
 			student_selected: "course_table/student_selected",
 			student_select_add: "course_table/student_select_add"
@@ -2180,7 +2181,21 @@ Page.manager_quiz = function () {
 		},
 		methods: {
 			m_my: function () {
-				this.currentView = "my";
+				var obj = this;
+				FUNC.ajax(CONFIG.api.course_table.search, "get", {
+					search_type: 'teacher',
+					set_class_info: 1,
+					status: 0
+				}, function (result) {
+					obj.result = {
+						error: result.status ? '' : result.msg,
+						list: []
+					};
+					if (result.status) {
+						obj.result.list = result.data.list;
+					}
+					obj.currentView = "my";
+				});
 			},
 			m_all: function () {
 				this.result = {
@@ -2200,17 +2215,23 @@ Page.manager_quiz = function () {
 				this.currentView = "all";
 				FUNC.findVueChild(this, "all").load();
 			},
-			m_add: function () {
+			m_add: function (course, table) {
+				if (typeof table == "undefined" || table < 1) {
+					table = -1;
+				}
 				this.result = {
 					course_list: null,
 					course_list_empty: false,
 					quiz_empty: true,
 					error: "",
 					success: "",
+					is_force_load: false,
 					loading: true,
+					courseTableId: table,
+					courseTableInfo: null,//强制加载的课程信息
 					model: {
 						status: -1,
-						course: -1,
+						course: (typeof course == "undefined" ? -1 : course),
 						add_my_course: "1",
 						quiz: {
 							title: "",
@@ -2226,14 +2247,18 @@ Page.manager_quiz = function () {
 				this.currentView = "add";
 				this.result.model.status = -1;
 				this.result.model.add_my_course = "1";
-				FUNC.findVueChild(this, "add").load();
+				if (typeof course != "undefined" && course > 0 && table > 0) {
+					FUNC.findVueChild(this, "add").forceLoad();
+				} else {
+					FUNC.findVueChild(this, "add").load();
+				}
 			},
 			m_share: function () {
 				this.currentView = "share";
 			}
 		},
 		components: {
-			my: {template:"<h3>我的课程测验<\/h3>"},
+			my: {template:"<p class=\"alert alert-danger\" v-if=\"error\">{{error}}<\/p><div class=\"alert alert-warning\" v-if=\"list.length==0\">当前开课列表为空，请先添加课程<\/div><div class=\"course-table\" v-if=\"list.length>0\"><table class=\"table\"><thead><tr><th>课程名称<\/th><th>班级<\/th><th>专业年级<\/th><th>操作<\/th><\/tr><\/thead><tbody v-repeat=\"list\"><tr><td>{{course.courseName}}<\/td><td><span v-repeat=\"classes_info\" class=\"btn-block\">{{className}}<\/span><\/td><td>{{course.deptName}}<br>{{course.enrolYear}}级<\/td><td><p><a class=\"btn btn-success btn-sm\" href=\"#\/add\/{{course.courseID}}\/table\/{{course.courseTableID}}\">添加新测验到课程<\/a><button class=\"btn btn-primary btn-sm\">关联已有测验<\/button><button class=\"btn btn-info btn-sm\">做题记录<\/button><\/p><p><button class=\"btn btn-success btn-sm\">管理列表<\/button><button class=\"btn btn-primary btn-sm\">发布学生测验<\/button><button class=\"btn btn-success btn-sm\">学生测验记录<\/button><\/p><\/td><\/tr><\/tbody><\/table><\/div>"},
 			all: {template:"<div class=\"panel panel-primary\"><div class=\"panel-heading form-inline form-group-sm\">选择你的课程<select v-on=\"change: onCourseChange\" v-model=\"model.status\" class=\"form-control\"><option v-repeat=\"map.status\" value=\"{{id}}\">{{status}}<\/option><\/select><\/div><div class=\"panel-body\"><p class=\"alert-danger alert\" v-if=\"error1\">{{error1}}<\/p><p v-if=\"loading\" class=\"alert alert-info\">加载中。。。。。<\/p><p v-if=\"course_list_empty\" class=\"alert alert-warning\">无任何课程数据<\/p><button v-repeat=\"course_list\" class=\"btn btn-{{model.course==$key?'success':'default'}}\" type=\"button\" v-on=\"click: onCourseClick($key)\" data-id=\"{{$key}}\">{{$value}}<\/button><\/div><\/div><div v-if=\"model.course>0\" class=\"panel panel-primary\"><div class=\"panel-heading\"><strong>{{course_list[model.course]}}<\/strong><\/div><div class=\"panel-body\"><p class=\"alert-danger alert\" v-if=\"error2\">{{error2}}<\/p><p v-if=\"quiz_list_empty\" class=\"alert alert-warning\">课程数据为空<\/p><div v-if=\"quiz_list!==null && quiz_list.length>0\"><div class=\"panel-group\" id=\"accordion\" role=\"tablist\" aria-multiselectable=\"true\"><div v-repeat=\"quiz_list\" class=\"panel panel-default\"><div class=\"panel-heading\" role=\"tab\" id=\"Heading_{{$index}}\"><h4 class=\"panel-title\"><a data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#collapse_{{$index}}\" aria-expanded=\"true\" aria-controls=\"#collapse_{{$index}}\"><i>{{quiz.index}}<\/i>&nbsp;&nbsp;{{quiz.title}}<\/a><\/h4><\/div><div id=\"collapse_{{$index}}\" class=\"panel-collapse collapse{{$index==0?' in':''}}\" role=\"tabpane\" aria-labelledby=\"Heading_{{$index}}\"><div class=\"panel-body\"><h4>{{quiz.title}}<\/h4><ul class=\"list-unstyled\"><li v-repeat=\"options\"><p><strong class=\"{{isCorrect?'text-success':''}}\">{{index|quiz_option_translate_index}}:&nbsp;<span class=\"{{isCorrect?'glyphicon glyphicon-ok':''}}\"><\/span>&nbsp;<\/strong>{{description}}<\/p><p v-if=\"feedback\"><small><strong><i>选项解析：<\/i><\/strong>{{feedback}}<\/small><\/p><\/li><\/ul><blockquote style=\"padding: 2px 5px;margin-bottom: 5px\"><p><small>章节: {{quiz.index}},&nbsp;&nbsp;类型: {{quiz.type|quiz_translate_type}},&nbsp;&nbsp;评论: {{quiz.reply}},&nbsp;&nbsp;时间: {{quiz.time|timestamp_to_date}}<\/small><\/p><\/blockquote><p class=\"bg-success\" v-if=\"quiz.desc\" style=\"padding: 10px 5px\"><strong>答题解析：<\/strong>{{quiz.desc}}<\/p><\/div><\/div><\/div><\/div><\/div><\/div><\/div>",methods:{
 	load: function () {
 		this.loadCourseList();
@@ -2277,9 +2302,27 @@ Page.manager_quiz = function () {
 		});
 	}
 }},
-			add: {template:"<h3>添加课程测验<\/h3><div class=\"panel panel-primary\"><div class=\"panel-heading form-inline form-group-sm\">选择你的课程<select v-on=\"change: onCourseChange\" v-model=\"model.status\" class=\"form-control\"><option v-repeat=\"map.status\" value=\"{{id}}\">{{status}}<\/option><\/select><\/div><div class=\"panel-body\"><p class=\"alert-danger alert\" v-if=\"error && model.course==-1\">{{error}}<\/p><p v-if=\"loading\" class=\"alert alert-info\">加载中。。。。。<\/p><p v-if=\"course_list_empty\" class=\"alert alert-warning\">无任何课程数据<\/p><button v-repeat=\"course_list\" class=\"btn btn-{{model.course==$key?'success':'default'}}\" type=\"button\" v-on=\"click: onCourseClick($key)\" data-id=\"{{$key}}\">{{$value}}<\/button><\/div><\/div><div v-if=\"model.course>-1 || !quiz_empty\" class=\"panel panel-primary\"><div class=\"panel-heading\">测试内容<\/div><div class=\"panel-body\"><p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p><p class=\"alert-success alert\" v-if=\"success\"><span>{{success}},<\/span><button type=\"button\" class=\"btn btn-success\" v-on=\"click:onAddNewQuiz\">添加新的测验<\/button><\/p><div class=\"form-group\"><h4><label for=\"InputTitle\">测试的标题<\/label><\/h4><textarea v-model=\"model.quiz.title\" id=\"InputTitle\" class=\"form-control\" placeholder=\"输入测试的标题，多选指定答案请使用__A__，否则多选不要知道顺序，正确选项字符前两下划线\" rows=\"2\"><\/textarea><\/div><div class=\"form-group input-group\" v-repeat=\"model.quiz_name\"><span class=\"input-group-addon\"><label style=\"margin-bottom: 0\" for=\"InputValue_{{key}}\">{{key}}<\/label><\/span><input v-model=\"model.quiz.options[$index]\" type=\"text\" class=\"form-control\" placeholder=\"选项{{key}}\" id=\"InputValue_{{key}}\"><\/div><div class=\"form-group\"><p><span class=\"glyphicon glyphicon-ok text-primary\">正确选项<\/span>，<span class=\"text-warning glyphicon glyphicon-warning-sign\">如果只选择一个将作为单选题<\/span><\/p><button v-repeat=\"model.quiz_name\" v-on=\"click:onSetCorrect($index)\" class=\"btn btn-{{correct?'success':'default'}}\">{{key}}<\/button><button class=\"btn btn-primary\" v-on=\"click:onQuizAdd\" type=\"button\">添加<\/button><button class=\"btn btn-danger\" v-on=\"click:onQuizRemove\" type=\"button\">移除<\/button><\/div><div class=\"form-group\"><label for=\"Desc\">答题解析：<\/label><textarea name=\"desc\" v-model=\"model.quiz.desc\" id=\"Desc\" class=\"form-control\" rows=\"4\"><\/textarea><\/div><div class=\"form-group form-inline\"><div class=\"input-group\" style=\"margin-right: 20px\"><span class=\"input-group-addon\"><label style=\"margin-bottom: 0\" for=\"InputValue_index\">章节索引<\/label><\/span><input type=\"text\" v-model=\"model.quiz.index\" class=\"form-control\" placeholder=\"如：2.5, 等，0开头为综合测试\" id=\"InputValue_index\"><\/div><label><input type=\"checkbox\" v-model=\"model.add_my_course\" value=\"1\">&nbsp;添加到我当前的课程<\/label><\/div><div class=\"form-group\"><button class=\"btn btn-block btn-primary\" type=\"button\" v-on=\"click:onSubmit\">添加测试题<\/button><\/div><\/div><\/div>",methods:{
+			add: {template:"<h3>添加课程测验<\/h3><div class=\"panel panel-primary\" v-if=\"!is_force_load\"><div class=\"panel-heading form-inline form-group-sm\">选择你的课程<select v-on=\"change: onCourseChange\" v-model=\"model.status\" class=\"form-control\"><option v-repeat=\"map.status\" value=\"{{id}}\">{{status}}<\/option><\/select><\/div><div class=\"panel-body\"><p class=\"alert-danger alert\" v-if=\"error && model.course==-1\">{{error}}<\/p><p v-if=\"loading\" class=\"alert alert-info\">加载中。。。。。<\/p><p v-if=\"course_list_empty\" class=\"alert alert-warning\">无任何课程数据<\/p><button v-repeat=\"course_list\" class=\"btn btn-{{model.course==$key?'success':'default'}}\" type=\"button\" v-on=\"click: onCourseClick($key)\" data-id=\"{{$key}}\">{{$value}}<\/button><\/div><\/div><div v-if=\"is_force_load\" class=\"alert alert-info\"><p v-if=\"courseTableInfo==null\" class=\"alert alert-warning\">加载中.....<\/p><p v-if=\"courseTableInfo!=null\" ><strong>课程：<\/strong>{{courseTableInfo.course.courseName}}, {{courseTableInfo.course.deptName}}, {{courseTableInfo.course.enrolYear}}级<\/p><\/div><div v-if=\"model.course>-1 || !quiz_empty\" class=\"panel panel-primary\"><div class=\"panel-heading\">测试内容<\/div><div class=\"panel-body\"><p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p><p class=\"alert-success alert\" v-if=\"success\"><span>{{success}},<\/span><button type=\"button\" class=\"btn btn-success\" v-on=\"click:onAddNewQuiz\">添加新的测验<\/button><\/p><div class=\"form-group\"><h4><label for=\"InputTitle\">测试的标题<\/label><\/h4><textarea v-model=\"model.quiz.title\" id=\"InputTitle\" class=\"form-control\" placeholder=\"输入测试的标题，多选指定答案请使用__A__，否则多选不要知道顺序，正确选项字符前两下划线\" rows=\"2\"><\/textarea><\/div><div class=\"form-group input-group\" v-repeat=\"model.quiz_name\"><span class=\"input-group-addon\"><label style=\"margin-bottom: 0\" for=\"InputValue_{{key}}\">{{key}}<\/label><\/span><input v-model=\"model.quiz.options[$index]\" type=\"text\" class=\"form-control\" placeholder=\"选项{{key}}\" id=\"InputValue_{{key}}\"><\/div><div class=\"form-group\"><p><span class=\"glyphicon glyphicon-ok text-primary\">正确选项<\/span>，<span class=\"text-warning glyphicon glyphicon-warning-sign\">如果只选择一个将作为单选题<\/span><\/p><button v-repeat=\"model.quiz_name\" v-on=\"click:onSetCorrect($index)\" class=\"btn btn-{{correct?'success':'default'}}\">{{key}}<\/button><button class=\"btn btn-primary\" v-on=\"click:onQuizAdd\" type=\"button\">添加<\/button><button class=\"btn btn-danger\" v-on=\"click:onQuizRemove\" type=\"button\">移除<\/button><\/div><div class=\"form-group\"><label for=\"Desc\">答题解析：<\/label><textarea name=\"desc\" v-model=\"model.quiz.desc\" id=\"Desc\" class=\"form-control\" rows=\"4\"><\/textarea><\/div><div class=\"form-group form-inline\"><div class=\"input-group\" style=\"margin-right: 20px\"><span class=\"input-group-addon\"><label style=\"margin-bottom: 0\" for=\"InputValue_index\">章节索引<\/label><\/span><input type=\"text\" v-model=\"model.quiz.index\" class=\"form-control\" placeholder=\"如：2.5, 等，0开头为综合测试\" id=\"InputValue_index\"><\/div><label v-if=\"!courseTableInfo\"><input type=\"checkbox\" v-model=\"model.add_my_course\" value=\"1\">&nbsp;添加到我当前的课程<\/label><\/div><div class=\"form-group\"><button class=\"btn btn-block btn-primary\" type=\"button\" v-on=\"click:onSubmit\">添加测试题<\/button><\/div><\/div><\/div>",methods:{
+	/**
+	 * 普通加载，自己选择课程
+	 */
 	load: function () {
 		this.loadCourseList();
+		this.initQuiz();
+	},
+	/**
+	 * 强制加载某一课程名称
+	 */
+	forceLoad: function () {
+		var obj = this;
+		this.is_force_load = true;
+		FUNC.ajax(CONFIG.api.course_table.get + "/" + this.courseTableId, "get", {}, function (reslut) {
+			if (reslut.status) {
+				obj.courseTableInfo = reslut.data;
+			} else {
+				obj.error = reslut.msg;
+			}
+		});
 		this.initQuiz();
 	},
 	checkQuizEmpty: function () {
@@ -2433,6 +2476,7 @@ Page.manager_quiz = function () {
 		}
 		FUNC.ajax(CONFIG.api.quiz_teacher.quiz_add, "post", {
 			course_id: obj.model.course,
+			course_table_id: obj.courseTableId,
 			add_my_course: (obj.model.add_my_course == 1 || obj.model.add_my_course == true) ? 1 : 0,
 			quiz_json: JSON.stringify(obj.model.quiz)
 		}, function (result) {
@@ -2474,6 +2518,10 @@ Page.manager_quiz = function () {
 		'/share': function () {
 			change_menus_active("share");
 			mq_vm.m_share();
+		},
+		'/add/:id/table/:id': function (course, table) {
+			change_menus_active("add");
+			mq_vm.m_add(course, table);
 		}
 	};
 	var router = Router(routes);//初始化一个路由器

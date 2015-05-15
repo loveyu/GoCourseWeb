@@ -66,6 +66,79 @@ Return:
 	"data": null
 }
 ```
+## /course_table/get/{courseTableId}
+Desc: 查询某一门课程的信息
+Method: Default
+Param: *提示：* 此处参数与`search`的有部分重合
+* set_class_id (可选) 是否显示班级ID信息，即可选班级的数组ID，默认不显示，参数`1`显示
+* set_class_info (可选) 是否显示班级的详细信息，包含名称，默认不显示，参数`1`显示
+* set_location (可选) 是否显示上课地点，默认不显示，参数`1`显示
+* status (可选) 要搜索的课程状态，默认`-1`为全部，`0`为开课中,`1`为未开课,`2`为已结束
+
+*提示：*如果未找到，会返回一个错误状态
+
+#### 错误状态，错误标记`129`
+* `12900` 学生只允许查询自己的课表
+* `12901` 未查询到当前学生的课程表
+* `12902` 不允许查询其他院系的学生课表信息
+* `12903` 当前年份学期信息不存在
+* `12904` 你当前没有任何课程
+
+
+
+```
+{
+  "status": true,
+  "code": 0,
+  "msg": "",
+  "data": {
+	"course": {
+	  "scheduleID": 15,
+	  "courseTableID": 8,
+	  "teacherID": 1,
+	  "teacherName": "管理员",
+	  "deptID": 1,
+	  "deptName": "计算机科学与技术系",
+	  "deptNickName": "计科系",
+	  "enrolYear": 2011,
+	  "courseID": 414,
+	  "courseName": "广告学",
+	  "openYear": 2015,
+	  "openTerm": 0,
+	  "fromWeek": 1,
+	  "endWeek": 22,
+	  "status": 1
+	},
+	"classes_id": [
+	  1,
+	  2
+	],
+	"classes_info": [
+	  {
+		"classID": 1,
+		"className": "计科11101",
+		"courseTableID": 8
+	  },
+	  {
+		"classID": 2,
+		"className": "计科11102",
+		"courseTableID": 8
+	  }
+	],
+	"locations": [
+	  {
+		"clID": 7,
+		"courseTableID": 8,
+		"location": "新兴县",
+		"week": "1-8",
+		"day": 1,
+		"slot": 4,
+		"notice": ""
+	  }
+	]
+  }
+}
+```
 
 ## /course_table/search
 Desc: 课程表搜索
@@ -77,7 +150,7 @@ Param:
 * set_location (可选) 是否显示上课地点，默认不显示，参数`1`显示
 * status (可选) 要搜索的课程状态，默认`-1`为全部，`0`为开课中,`1`为未开课,`2`为已结束
 
-**警告：** 当没有设置可选参数时数据不会设置字段，也不会为`null`，比如未设置`set_location`时，对象中根本就没有`locations`属性，注意检查和判断
+**警告：** 当没有设置可选参数时数据不会设置字段，比如未设置`set_location`时，`locations`属性值为null，注意检查和判断
 
 #### 错误状态，错误标记`126`
 * `12600` 请先登录
@@ -91,108 +164,121 @@ Param:
 ```
 //注意data数组中的对象属性
 {
-	"status": true,
-	"code": 0,
-	"msg": "",
-	"data": {
-		"list": [{
-			"course": {						//默认会显示的数据
-				"scheduleID": 1,
-				"courseTableID": 4,
-				"teacherID": 31,
-				"teacherName": "发个",
-				"deptID": 1,
-				"deptName": "计算机科学与技术系",
-				"deptNickName": "计科系",
-				"enrolYear": 2011,
-				"courseID": 1,
-				"courseName": "人工智能",
-				"openYear": 2015,
-				"openTerm": 0,
-				"fromWeek": 1,
-				"endWeek": 13,
-				"status": 0
-			},
-			"locations": [{			//上课地点，受到`set_location`的影响
-				"clID": 2,
-				"courseTableID": 4,
-				"location": "545345",
-				"week": "1,4,6-10",	//数据值为分段值，非分隔值
-				"day": 2,
-				"slot": 1,
-				"notice": ""
-			}],
-			"classes_id": [1,
-				2],		//可选课的班级ID数组，受到set_class_id参数的影响
-			"classes_info": [{			//可选课的班级信息数组，受到set_class_info参数的影响
-				"classID": 1,
-				"className": "计科11101",
-				"courseTableID": 4
-			},
-				{
-					"classID": 2,
-					"className": "计科11102",
-					"courseTableID": 4
-				}]
+  "status": true,
+  "code": 0,
+  "msg": "",
+  "data": {
+	"list": [
+	  {
+		"course": {				//默认会显示的数据
+		  "scheduleID": 1,
+		  "courseTableID": 4,
+		  "teacherID": 31,
+		  "teacherName": "发个",
+		  "deptID": 1,
+		  "deptName": "计算机科学与技术系",
+		  "deptNickName": "计科系",
+		  "enrolYear": 2011,
+		  "courseID": 1,
+		  "courseName": "人工智能",
+		  "openYear": 2015,
+		  "openTerm": 0,
+		  "fromWeek": 1,
+		  "endWeek": 13,
+		  "status": 0
 		},
-			{
-				"course": {
-					"scheduleID": 1,
-					"courseTableID": 5,
-					"teacherID": 1,
-					"teacherName": "管理员",
-					"deptID": 1,
-					"deptName": "计算机科学与技术系",
-					"deptNickName": "计科系",
-					"enrolYear": 2011,
-					"courseID": 1,
-					"courseName": "人工智能",
-					"openYear": 2015,
-					"openTerm": 0,
-					"fromWeek": 1,
-					"endWeek": 13,
-					"status": 0
-				},
-				"locations": [{
-					"clID": 3,
-					"courseTableID": 5,
-					"location": "13-A-5",
-					"week": "1,2,4,7-13",
-					"day": 2,
-					"slot": 1,
-					"notice": "无备注"
-				},
-					{
-						"clID": 4,
-						"courseTableID": 5,
-						"location": "12-404",
-						"week": "5,7-13",
-						"day": 3,
-						"slot": 3,
-						"notice": "无备注"
-					}],
-				"classes_id": [1,
-					2],
-				"classes_info": [{
-					"classID": 1,
-					"className": "计科11101",
-					"courseTableID": 5
-				},
-					{
-						"classID": 2,
-						"className": "计科11102",
-						"courseTableID": 5
-					}]
-			}
-			//..更多数据
+		"locations": [			//上课地点，受到`set_location`的影响
+		  {
+			"clID": 2,
+			"courseTableID": 4,
+			"location": "545345",
+			"week": "1,4,6-10",		//数据值为分段值，非分隔值
+			"day": 2,
+			"slot": 1,
+			"notice": ""
+		  }
 		],
-		"week": {							//当前的周次
-			"year": 2015,					//当前年份
-			"term": 0,						//季度
-			"week": 10,						//周次
-			"begin_date": "2015-03-09"	//第一周周一开始时间
-		}
+		"classes_id": [			//可选课的班级ID数组，受到set_class_id参数的影响
+		  1,
+		  2
+		],
+		"classes_info": [			//可选课的班级信息数组，受到set_class_info参数的影响
+		  {
+			"classID": 1,
+			"className": "计科11101",
+			"courseTableID": 4
+		  },
+		  {
+			"classID": 2,
+			"className": "计科11102",
+			"courseTableID": 4
+		  }
+		]
+	  },
+	  {
+		"course": {
+		  "scheduleID": 1,
+		  "courseTableID": 5,
+		  "teacherID": 1,
+		  "teacherName": "管理员",
+		  "deptID": 1,
+		  "deptName": "计算机科学与技术系",
+		  "deptNickName": "计科系",
+		  "enrolYear": 2011,
+		  "courseID": 1,
+		  "courseName": "人工智能",
+		  "openYear": 2015,
+		  "openTerm": 0,
+		  "fromWeek": 1,
+		  "endWeek": 13,
+		  "status": 0
+		},
+		"locations": [
+		  {
+			"clID": 3,
+			"courseTableID": 5,
+			"location": "13-A-5",
+			"week": "1,2,4,7-13",
+			"day": 2,
+			"slot": 1,
+			"notice": "无备注"
+		  },
+		  {
+			"clID": 4,
+			"courseTableID": 5,
+			"location": "12-404",
+			"week": "5,7-13",
+			"day": 3,
+			"slot": 3,
+			"notice": "无备注"
+		  }
+		],
+		"classes_id": [
+		  1,
+		  2
+		],
+		"classes_info": [
+		  {
+			"classID": 1,
+			"className": "计科11101",
+			"courseTableID": 5
+		  },
+		  {
+			"classID": 2,
+			"className": "计科11102",
+			"courseTableID": 5
+		  }
+		]
+	  }
+	  //..更多数据
+	],
+	"week": {			//当前的周次
+	  "year": 2015,		//当前年份
+	  "term": 0,		//季度
+	  "week": 10,		//周次
+	  "begin_date": "2015-03-09"			//第一周周一开始时间
 	}
+  }
 }
 ```
 
