@@ -1,0 +1,28 @@
+<h4>{{quiz.title}}</h4>
+
+<ul class="list-unstyled">
+	<li v-repeat="options">
+		<p><strong class="{{isCorrect?'text-success':''}}">
+			{{index|quiz_option_translate_index}}:&nbsp;
+			<span class="{{isCorrect?'glyphicon glyphicon-ok':''}}"></span>&nbsp;
+		</strong>
+			{{description}}</p>
+
+		<p v-if="feedback">
+			<small><strong><i>选项解析：</i></strong>{{feedback}}</small>
+		</p>
+	</li>
+</ul>
+<blockquote style="padding: 2px 5px;margin-bottom: 5px">
+	<p>
+		<small>
+			章节: {{quiz.index}},&nbsp;&nbsp;
+			类型: {{quiz.type|quiz_translate_type}},&nbsp;&nbsp;
+			评论: {{quiz.reply}},&nbsp;&nbsp;
+			时间: {{quiz.time|timestamp_to_date}}
+		</small>
+	</p>
+</blockquote>
+<p class="bg-success" v-if="quiz.desc" style="padding: 10px 5px">
+	<strong>答题解析：</strong>{{quiz.desc}}
+</p>

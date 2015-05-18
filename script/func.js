@@ -129,6 +129,15 @@ var FUNC = {
 			}
 			return temp;
 		},
+		cloneArrExclude: function (obj, index) {
+			var rt = [];
+			for (var i in obj) {
+				if (i != index) {
+					rt.push(obj[i]);
+				}
+			}
+			return rt;
+		},
 		isEmpty: function (obj) {
 			switch (typeof obj) {
 				case "object":

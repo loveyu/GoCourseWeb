@@ -1,0 +1,117 @@
+<h3>绑定课程测验</h3>
+<p class="alert alert-danger" v-if="error">{{error}}</p>
+<div class="alert alert-info">
+	<p v-if="courseTableInfo==null" class="alert alert-warning">加载中.....</p>
+
+	<p v-if="courseTableInfo!=null"><strong>课程：</strong>{{courseTableInfo.course.courseName}},
+		{{courseTableInfo.course.deptName}}, {{courseTableInfo.course.enrolYear}}级</p>
+</div>
+
+<ul class="nav nav-tabs" role="tablist">
+	<li role="presentation" class="active">
+		<a href="#bind" aria-controls="bind" v-on="click: t_bind" role="tab" data-toggle="tab">已绑定</a>
+	</li>
+	<li role="presentation">
+		<a href="#unbind" aria-controls="unbind" v-on="click: t_unbind" role="tab" data-toggle="tab">未绑定</a>
+	</li>
+	<li role="presentation">
+		<a href="#share" aria-controls="share" v-on="click: t_share" role="tab" data-toggle="tab">共享的</a>
+	</li>
+</ul>
+<div class="tab-content">
+	<div role="tabpane" class="tab-pane active" id="bind">
+		<div v-if="bindQuiz==null" class="alert alert-info">加载中......</div>
+		<div v-if="bindQuiz!==null && bindQuiz.length==0" class="alert alert-warning">数据为空</div>
+		<div v-if="bindQuiz!==null && bindQuiz.length>0">
+			<div class="panel-group" id="accordion_bind" role="tablist" aria-multiselectable="true">
+				<div v-repeat="bindQuiz"  class="panel panel-default">
+					<div class="panel-heading" role="tab" id="Heading_bind_{{$index}}">
+						<h4 class="panel-title">
+							<a data-toggle="collapse" data-parent="#accordion_bind" href="#collapse_bind_{{$index}}"
+							   aria-expanded="true"
+							   aria-controls="#collapse_bind_{{$index}}">
+								<i>{{quiz.index}}</i>&nbsp;&nbsp;{{quiz.title}}
+							</a>
+							<span class="pull-right" aria-hidden="true">
+								<span class="label label-info" aria-hidden="true"
+								      v-if="teacher_id!=quiz.teacherID">共享</span>
+									<button type="button" v-on="click: onCancelBind($index)"
+									        class=" panel-title-button btn btn-sm btn-warning">
+										解绑
+									</button>
+								</span>
+						</h4>
+					</div>
+					<div id="#collapse_bind_{{$index}}"
+					     class="panel-collapse collapse{{$index==0?' in':''}}"
+					     role="tabpane"
+					     aria-labelledby="Heading_bind_{{$index}}">
+						<div class="panel-body" v-with="bindQuiz[$index]" v-component="quiz-item"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div role="tabpane" class="tab-pane" id="unbind">
+		<div v-if="unbindQuiz==null" class="alert alert-info">加载中......</div>
+		<div v-if="unbindQuiz!==null && unbindQuiz.length==0" class="alert alert-warning">数据为空</div>
+		<div v-if="unbindQuiz!==null && unbindQuiz.length>0">
+			<div class="panel-group" id="accordion_unbind" role="tablist" aria-multiselectable="true">
+				<div v-repeat="unbindQuiz" class="panel panel-default">
+					<div class="panel-heading" role="tab" id="Heading_unbind_{{$index}}">
+						<h4 class="panel-title">
+							<a data-toggle="collapse" data-parent="#accordio_nunbind_" href="#collapse_unbind_{{$index}}"
+							   aria-expanded="true"
+							   aria-controls="#collapse_unbind_{{$index}}">
+								<i>{{quiz.index}}</i>&nbsp;&nbsp;{{quiz.title}}
+							</a>
+							<span class="pull-right" aria-hidden="true">
+									<button type="button" v-on="click: onBind($index)"
+									        class=" panel-title-button btn btn-sm btn-success">
+										绑定
+									</button>
+								</span>
+						</h4>
+					</div>
+					<div id="collapse_unbind_{{$index}}"
+					     class="panel-collapse collapse{{$index==0?' in':''}}"
+					     role="tabpane"
+					     aria-labelledby="Heading_unbind_{{$index}}">
+						<div class="panel-body" v-with="unbindQuiz[$index]" v-component="quiz-item"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div role="tabpane" class="tab-pane" id="share">
+		<div v-if="shareQuiz==null" class="alert alert-info">加载中......</div>
+		<div v-if="shareQuiz!==null && shareQuiz.length==0" class="alert alert-warning">数据为空</div>
+		<div v-if="shareQuiz!==null && shareQuiz.length>0">
+			<div class="panel-group" id="accordion_share" role="tablist" aria-multiselectable="true">
+				<div v-repeat="shareQuiz" class="panel panel-default">
+					<div class="panel-heading" role="tab" id="Heading_share_{{$index}}">
+						<h4 class="panel-title">
+							<a data-toggle="collapse" data-parent="#accordion_share" href="#collapse_share_{{$index}}"
+							   aria-expanded="true"
+							   aria-controls="#collapse_share_{{$index}}">
+								<i>{{quiz.index}}</i>&nbsp;&nbsp;{{quiz.title}}
+							</a>
+							<span class="pull-right" aria-hidden="true">
+									<button type="button" v-on="click: onShareBind($index)"
+									        class=" panel-title-button btn btn-sm btn-success">
+										绑定
+									</button>
+								</span>
+						</h4>
+					</div>
+					<div id="collapse_share_{{$index}}"
+					     class="panel-collapse collapse{{$index==0?' in':''}}"
+					     role="tabpane"
+					     aria-labelledby="Heading_share_{{$index}}">
+						<div class="panel-body" v-with="shareQuiz[$index]" v-component="quiz-item"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

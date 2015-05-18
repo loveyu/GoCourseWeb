@@ -91,10 +91,24 @@ Page.manager_quiz = function () {
 			},
 			m_share: function () {
 				this.currentView = "share";
+			},
+			m_bind: function (table) {
+				this.result = {
+					courseTableInfo: null,
+					bindQuiz: null,
+					unbindQuiz: null,
+					shareQuiz: null,
+					course_table: table,
+					teacher_id: Member.id,
+					error: ""
+				};
+				this.currentView = "bind";
+				FUNC.findVueChild(this, "bind").load(table);
 			}
 		},
 		components: {
 			my: {__require: 'manager_quiz/my.html'},
+			bind: {__require: 'manager_quiz/bind.html'},
 			all: {__require: 'manager_quiz/all.html'},
 			add: {__require: 'manager_quiz/add.html'},
 			share: {__require: 'manager_quiz/share.html'}
@@ -128,6 +142,10 @@ Page.manager_quiz = function () {
 		'/add/:id/table/:id': function (course, table) {
 			change_menus_active("add");
 			mq_vm.m_add(course, table);
+		},
+		'/bind/:id': function (table) {
+			change_menus_active("my");
+			mq_vm.m_bind(table);
 		}
 	};
 	var router = Router(routes);//初始化一个路由器
