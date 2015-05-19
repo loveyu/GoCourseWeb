@@ -92,9 +92,15 @@ Page.manager_quiz = function () {
 			m_share: function () {
 				this.result = {
 					search: '',
+					course: -1,
+					course_list_empty: false,
+					courseName: '',
 					course_list: [],
 					quiz_list: [],
-					is_init: true
+					is_init: true,
+					error: "",
+					teacher_id: Member.id,
+					error2: ""
 				};
 				this.currentView = "share";
 			},
@@ -173,5 +179,4 @@ Page.manager_quiz = function () {
 		login_call();
 	}
 	return mq_vm;
-}
-;
+};

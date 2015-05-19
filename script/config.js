@@ -76,6 +76,7 @@ var CONFIG = {
 			course_list: "quiz_teacher/course_list",
 			quiz_add: "quiz_teacher/quiz_add",
 			quiz_list: "quiz_teacher/quiz_list",
+			quiz_share_list: "quiz_teacher/quiz_share_list",
 			quiz_share: "quiz_teacher/quiz_share",
 			quiz_share_cancel: "quiz_teacher/quiz_share_cancel",
 			bind_list: "quiz_teacher/bind_list",
