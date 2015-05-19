@@ -90,6 +90,12 @@ Page.manager_quiz = function () {
 				}
 			},
 			m_share: function () {
+				this.result = {
+					search: '',
+					course_list: [],
+					quiz_list: [],
+					is_init: true
+				};
 				this.currentView = "share";
 			},
 			m_bind: function (table) {
