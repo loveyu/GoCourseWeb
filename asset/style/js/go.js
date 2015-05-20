@@ -150,6 +150,7 @@ var CONFIG = {
 		course: {
 			add: "course/add",
 			list: "course/list",
+			search: "course/search",
 			del: "course/del"
 		},
 		schedule: {
@@ -167,13 +168,14 @@ var CONFIG = {
 			course_list: "quiz_teacher/course_list",
 			quiz_add: "quiz_teacher/quiz_add",
 			quiz_list: "quiz_teacher/quiz_list",
+			quiz_share_list: "quiz_teacher/quiz_share_list",
 			quiz_share: "quiz_teacher/quiz_share",
 			quiz_share_cancel: "quiz_teacher/quiz_share_cancel",
 			bind_list: "quiz_teacher/bind_list",
 			unbind_list: "quiz_teacher/unbind_list",
 			unbind_share_list: "quiz_teacher/unbind_share_list",
-			bind_quiz:"quiz_teacher/bind_quiz",
-			bind_quiz_cancel:"quiz_teacher/bind_quiz_cancel"
+			bind_quiz: "quiz_teacher/bind_quiz",
+			bind_quiz_cancel: "quiz_teacher/bind_quiz_cancel"
 		}
 	},
 	current_week: {	//当前的周次，该数据会依据服务器状态而更新
@@ -2269,6 +2271,18 @@ Page.manager_quiz = function () {
 				}
 			},
 			m_share: function () {
+				this.result = {
+					search: '',
+					course: -1,
+					course_list_empty: false,
+					courseName: '',
+					course_list: [],
+					quiz_list: [],
+					is_init: true,
+					error: "",
+					teacher_id: Member.id,
+					error2: ""
+				};
 				this.currentView = "share";
 			},
 			m_bind: function (table) {
@@ -2635,7 +2649,64 @@ Page.manager_quiz = function () {
 		this.initQuiz();
 	}
 }},
-			share: {template:"<h3>共享的课程测验<\/h3>"}
+			share: {template:"<div class=\"panel panel-info\"><div class=\"panel-heading\">共享的课程测验<form action=\"\" class=\"form-inline form-group-sm\" v-on=\"submit: onSearch\" style=\"display: inline-block;\"><div class=\"input-group\" style=\"margin-left: 10px;\"><input v-model=\"search\" type=\"text\" class=\"form-control\" placeholder=\"搜索课程\"> <span class=\"input-group-btn\"> <button class=\"btn btn-primary btn-sm\" type=\"submit\">搜索<\/button> <\/span><\/div><\/form><\/div><div class=\"panel-body\"><p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p><p v-if=\"is_init\" class=\"help-block\">请先搜索课程<\/p><p v-if=\"!is_init && course_list_empty\" class=\"alert alert-warning\">无任何课程请重新搜索<\/p><button v-repeat=\"course_list\" class=\"btn btn-{{course==$key?'success':'default'}}\" type=\"button\" v-on=\"click: onCourseClick($key)\" data-id=\"{{$key}}\">{{$value}}<\/button><\/div><\/div><div v-if=\"courseName\" class=\"panel panel-primary\"><div class=\"panel-heading\">{{courseName}}<\/div><div class=\"panel-body\"><p class=\"alert-danger alert\" v-if=\"error2\">{{error2}}<\/p><div v-if=\"!error2 && quiz_list.length==0\" class=\"alert alert-warning\">该课程无共享的课程<\/div><div v-if=\"quiz_list!==null && quiz_list.length>0\"><div class=\"panel-group\" id=\"accordion\" role=\"tablist\" aria-multiselectable=\"true\"><div v-repeat=\"quiz_list\" class=\"panel panel-default\"><div class=\"panel-heading\" role=\"tab\" id=\"Heading_{{$index}}\"><h4 class=\"panel-title\"><a data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#collapse_{{$index}}\" aria-expanded=\"true\" aria-controls=\"#collapse_{{$index}}\"><i>{{quiz.index}}<\/i>&nbsp;&nbsp;{{quiz.title}}<\/a><span class=\"pull-right\" aria-hidden=\"true\"><button v-if=\"quiz.teacherID==teacher_id\" type=\"button\" v-on=\"click: onShare($index)\" class=\" panel-title-button btn btn-sm btn-{{quiz.status?'warning':'info'}}\">{{quiz.status?'取消共享':'共享测验'}}<\/button><\/span><\/h4><\/div><div id=\"collapse_{{$index}}\" class=\"panel-collapse collapse{{$index==0?' in':''}}\" role=\"tabpane\" aria-labelledby=\"Heading_{{$index}}\"><div class=\"panel-body\" v-with=\"quiz_list[$index]\" v-component=\"quiz-item\"><\/div><\/div><\/div><\/div><\/div><\/div><\/div>",methods:{
+	onSearch: function (event) {
+		event.preventDefault();
+		var obj = this;
+		obj.error = "";
+		FUNC.ajax(CONFIG.api.course.search, "get", {query: this.search}, function (result) {
+			obj.is_init = false;
+			if (result.status) {
+				obj.course_list = result.data;
+				obj.course_list_empty = FUNC.isEmpty(result.data);
+			} else {
+				obj.error = result.msg;
+			}
+		});
+		return false;
+	},
+	onCourseClick: function (index) {
+		this.course = parseInt(index);
+		this.courseName = this.course_list[this.course];
+		this.load_course(this.course)
+	},
+	load_course: function (courseId) {
+		var obj = this;
+		obj.error2 = "";
+		FUNC.ajax(CONFIG.api.quiz_teacher.quiz_share_list, "get", {course_id: obj.course}, function (result) {
+			if (result.status) {
+				obj.quiz_list = result.data.list;
+			} else {
+				obj.quiz_list = [];
+				obj.error2 = result.msg;
+			}
+		});
+	},
+	onShare:function(index){
+		var obj_vue = this;
+		obj_vue.error2 = "";
+		var obj = this.quiz_list[index];
+		if (obj.quiz.status) {
+			//取消共享
+			FUNC.ajax(CONFIG.api.quiz_teacher.quiz_share_cancel, "post", {quiz_id: obj.quiz.quizID}, function (result) {
+				if (result.status) {
+					obj.quiz.status = 0;
+				} else {
+					obj_vue.error2 = result.msg;
+				}
+			});
+		} else {
+			//共享
+			FUNC.ajax(CONFIG.api.quiz_teacher.quiz_share, "post", {quiz_id: obj.quiz.quizID}, function (result) {
+				if (result.status) {
+					obj.quiz.status = 1;
+				} else {
+					obj_vue.error2 = result.msg;
+				}
+			});
+		}
+	}
+}}
 		}
 	});
 	var change_menus_active = function (view) {
@@ -2691,8 +2762,7 @@ Page.manager_quiz = function () {
 		login_call();
 	}
 	return mq_vm;
-}
-;
+};
 
 
 /**
