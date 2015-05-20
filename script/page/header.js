@@ -36,10 +36,11 @@ Page.header = function () {
 					this.name = data.data.name;
 					this.avatar = data.data.avatar;
 					if (this.user_type == "student") {
-						//this.nav_main = [
-						//	FUNC.nav('课程测验', 'quiz.html#/', '开始进行课程测验', FUNC.urlMatch("quiz.html"))
-						//];
+						this.nav_main.push(
+							FUNC.nav('课程测验', 'quiz.html#/', '开始进行课程测验', FUNC.urlMatch("quiz.html"))
+						);
 						this.nav_private = [
+							FUNC.nav('课程测验', 'quiz.html#/', '开始进行课程测验', FUNC.urlMatch("quiz.html")),
 							FUNC.nav("我的课表", "course_student.html#/", "", FUNC.urlMatch("course_student.html"))
 						];
 					} else if (this.user_type == "teacher") {

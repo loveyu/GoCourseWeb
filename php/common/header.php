@@ -32,8 +32,10 @@
 			<div class="container">
 				<ul class="nav navbar-nav">
 					<?php if (!is_cli()): ?>
-					<li><a href="test.html">临时测试文件</a>
-						<?php endif; ?>
+					<li<?php echo $_SERVER['SCRIPT_NAME'] == '/php/test.php' ? " class=\"active\"" : "" ?>>
+						<a href="test.html">
+							临时测试文件
+						</a><?php endif; ?>
 					<li v-repeat="nav_main" v-class="active?'active':''"><a v-attr="title:title" href="{{link}}">{{name}}</a>
 					</li>
 				</ul>
@@ -43,7 +45,7 @@
 				</ul>
 				<ul v-if="login_status" class="nav navbar-nav navbar-right">
 					<li class="dropdown">
-						<a href="{{home_url}}" class="dropdown-toggle" data-toggle="dropdown" role="button"
+						<a href="{{home_url}}" class="dropdown-toggle profile-info" data-toggle="dropdown" role="button"
 						   aria-expanded="false">
 							<img class="user-avatar" v-attr="src: avatar" alt="avatar">{{name}} <span
 								class="caret"></span></a>

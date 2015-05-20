@@ -1,7 +1,12 @@
+#Header .profile-info{
+    padding: 0;
+    line-height: 50px;
+    display: inline-block;
+}
 #Header .user-avatar {
-    width: 25px;
-    height: 25px;
-    border-radius: 25px;
+    width: 30px;
+    height: 30px;
+    border-radius: 30px;
     margin-right: 5px;
 }
 

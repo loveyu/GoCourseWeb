@@ -16,7 +16,7 @@ var DOMAIN = (function () {
 var CONFIG = {
 	site_title: 'GO Course',
 	site_description: '让课程变得更简单',
-	site_url: DOMAIN,
+	site_url: "http://" + document.location.host + "/",
 	api_url: DOMAIN + 'gocourse/',
 	captcha_url: DOMAIN + "gocourse/tools/captcha",
 	api: {
