@@ -84,6 +84,9 @@ var CONFIG = {
 			unbind_share_list: "quiz_teacher/unbind_share_list",
 			bind_quiz: "quiz_teacher/bind_quiz",
 			bind_quiz_cancel: "quiz_teacher/bind_quiz_cancel"
+		},
+		quiz_student: {
+			get_test_list: "quiz_student/get_test_list"
 		}
 	},
 	current_week: {	//当前的周次，该数据会依据服务器状态而更新

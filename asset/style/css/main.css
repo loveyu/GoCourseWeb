@@ -1,8 +1,9 @@
-#Header .profile-info{
+#Header .profile-info {
     padding: 0;
     line-height: 50px;
     display: inline-block;
 }
+
 #Header .user-avatar {
     width: 30px;
     height: 30px;
@@ -22,4 +23,8 @@
 .panel-title-button {
     margin-top: -5px;
     margin-right: -10px
+}
+
+.bg-padding {
+    padding: 12px 8px;
 }

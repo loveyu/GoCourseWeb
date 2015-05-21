@@ -10,37 +10,61 @@ Page.quiz = function () {
 			currentView: 'base-loading',
 			currentName: "base-loading",
 			menus: {
-				all: {url: '/', name: '课程测验', active: false},
+				course_table_list: {url: '/', name: '课程测验', active: false},
 				test: {url: '/test', name: '测验记录', active: false},
 				history: {url: '/history', name: '答题记录', active: false},
 				open: {url: '/open', name: '开放性测验', active: false}
 			}
 		},
 		methods: {
-			load: function (data) {
-				if (data.status) {
-					this.currentView = "quiz_list";
-					this.result = {data: data.data};
-				} else {
-					FUNC.alertOnElem(quiz_vm.$el, "无法加载数据");
-				}
+			my: function (data) {
+				var obj = this;
+				FUNC.ajax(CONFIG.api.course_table.search, "get", {
+					search_type: 'student',
+					status: 0
+				}, function (result) {
+					var rt = {
+						error: "",
+						course_table: []
+					};
+					if (result.status) {
+						rt.course_table = result.data.list;
+					} else {
+						rt.error = result.msg;
+					}
+					obj.result = rt;
+					obj.currentView = "course_table_list";
+				});
 			},
-			quiz_by_id: function (id) {
-				this.result = {id: id};
-				this.currentView = "quiz_item";
+			do_test: function (id) {
+				this.result = {
+					id: id,
+					index: 0,
+					error: '',
+					warning: '',
+					quiz_list: []
+				};
+				var parse_id = parseInt(id);
+				if (parse_id < 1 || ("" + parse_id) != id) {
+					this.result.error = "ID参数解析错误";
+				}
+				this.currentView = "do_test";
+				if (!this.result.error) {
+					FUNC.findVueChild(this, "do_test").load_course_table();
+				}
 			},
 			loading: function () {
 				this.currentView = "base-loading";
 			}
 		},
 		components: {
-			quiz_list: {__require: 'quiz/quiz_list.html'},
-			quiz_item: {__require: 'quiz/quiz_item.html'}
+			course_table_list: {__require: 'quiz/course_table_list.html'},
+			do_test: {__require: 'quiz/do_test.html'}
 		}
 	});
 	var change_menus_active = function (view) {
 		if (quiz_vm.menus.hasOwnProperty(quiz_vm.currentName)) {
-			quiz_vm.menus[mq_vm.currentName].active = false;
+			quiz_vm.menus[quiz_vm.currentName].active = false;
 		}
 		quiz_vm.currentView = "base-loading";
 		quiz_vm.currentName = view;
@@ -48,11 +72,11 @@ Page.quiz = function () {
 	};
 	var routes = {
 		'/': function () {
-			change_menus_active("all");
-			quiz_vm.load({status: true});
+			change_menus_active("course_table_list");
+			quiz_vm.my();
 		},
-		'/quiz/:id': function (id) {
-			quiz_vm.quiz_by_id(id);
+		'/do/:id': function (id) {
+			quiz_vm.do_test(id);
 		}
 	};
 	var router = Router(routes);//初始化一个路由器

@@ -1,0 +1,27 @@
+<p class="alert alert-danger" v-if="error">{{error}}</p>
+<div class="alert alert-warning" v-if="course_table!=null && course_table.length==0">
+	当前开课列表为空，请先添加课程
+</div>
+<div class="course-table" v-if="course_table!=null && course_table.length>0">
+	<table class="table">
+		<thead>
+		<tr>
+			<th>课程名称</th>
+			<th>老师</th>
+			<th>操作</th>
+		</tr>
+		</thead>
+		<tbody v-repeat="course_table">
+		<tr>
+			<td>{{course.courseName}}</td>
+			<td>{{course.teacherName}}</td>
+			<td>
+				<a class="btn btn-success btn-sm" href="#/do/{{course.courseTableID}}">做题</a>
+				<a class="btn btn-primary btn-sm" href="#/see/{{course.courseTableID}}">看题</a>
+				<button class="btn btn-info btn-sm" href="#/history/{{course.courseTableID}}">记录</button>
+
+			</td>
+		</tr>
+		</tbody>
+	</table>
+</div>

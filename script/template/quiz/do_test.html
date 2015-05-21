@@ -1,0 +1,6 @@
+<h3 class="bg-success bg-padding">开始答题</h3>
+<p v-if="error" class="alert alert-danger">{{error}}</p>
+<p v-if="warning" class="alert alert-warning">{{warning}}</p>
+<p v-if="quiz_list.length==0 && !warning" class="alert alert-info">加载中</p>
+
+<pre>{{quiz_list|json}}</pre>
