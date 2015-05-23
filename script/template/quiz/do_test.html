@@ -2,5 +2,35 @@
 <p v-if="error" class="alert alert-danger">{{error}}</p>
 <p v-if="warning" class="alert alert-warning">{{warning}}</p>
 <p v-if="quiz_list.length==0 && !warning" class="alert alert-info">加载中</p>
+<div v-if="quiz_list!=null && quiz_list.length>0">
+	<div v-repeat="quiz_list">
+		<p class="test-title"><span>{{$index+1}}.</span>&nbsp;<span
+				class="small">({{quiz.type|quiz_translate_type}})</span>&nbsp;
+			{{quiz.title}}
+		</p>
+		<ul v-if="quiz.type==0" class="quiz-single-option list-unstyled">
+			<li v-repeat="options">
+				<button class="btn btn-sm btn-default">{{$index|quiz_option_translate_index}}</button>
+				&nbsp;{{description}}
+			</li>
+		</ul>
+		<ul class="quiz-multi-option list-unstyled" v-if="quiz.type==1 && quiz.size>0">
+			<li v-repeat="options">
+				<span class="display-char">{{$index|quiz_option_translate_index}}.</span>&nbsp;{{description}}
+			</li>
+			<li v-repeat="quiz.size | call_func FUNC.createArray">
+				<span class="display-answer-index">({{$index}})&nbsp;</span>
+				<button v-repeat="options.length | call_func FUNC.createArray" class="btn btn-sm btn-default">
+					{{$value|quiz_option_translate_index}}
+				</button>
+			</li>
+		</ul>
+		<ul class="quiz-multi-option list-unstyled" v-if="quiz.type==1 && quiz.size==0">
+			<li v-repeat="options">
+				<button class="btn btn-sm btn-default">{{$index|quiz_option_translate_index}}</button>
+				&nbsp;{{description}}
+			</li>
+		</ul>
 
-<pre>{{quiz_list|json}}</pre>
+	</div>
+</div>

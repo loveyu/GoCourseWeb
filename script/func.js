@@ -190,6 +190,24 @@ var FUNC = {
 			}
 			return rt;
 		},
+		createArray: function (size) {
+			var rt = [];
+			for (var i = 0; i < size; i++) {
+				rt.push(i);
+			}
+			return rt;
+		},
+		quiz: {
+			parse_title: function (title) {
+				var matches = title.match(/\(___\)?/g);
+				if (matches != null && matches.length > 0) {
+					for (var i = 1; i <= matches.length; i++) {
+						title = title.replace("(___)", " ( " + i + " ) ");
+					}
+				}
+				return {title: title, size: matches == null ? 0 : matches.length};
+			}
+		},
 		verify: {
 			email: function (email) {
 				return /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{1,8}$/.test(email);

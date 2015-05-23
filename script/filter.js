@@ -98,8 +98,30 @@ Vue.filter('quiz_translate_type', function (value) {
 	return "未知";
 });
 
+/**
+ * 时间戳转换为时间
+ */
 Vue.filter('timestamp_to_date', function (value) {
 	var date = new Date((+value) * 1000);
 	return "" + date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate() + " "
 		+ date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+});
+
+/**
+ * 调用函数生成一个对象
+ */
+Vue.filter('call_func', function (value, func) {
+	var list = func.split(".");
+	var obj = window;
+	for (var i in list) {
+		if (!obj.hasOwnProperty(list[i])) {
+			return null;
+		}
+		obj = obj[list[i]];
+	}
+	if (typeof obj == "function") {
+		return obj(value);
+	} else {
+		return obj;
+	}
 });

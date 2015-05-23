@@ -28,3 +28,28 @@
 .bg-padding {
     padding: 12px 8px;
 }
+
+/*测验多选的选项样式*/
+.quiz-multi-option li, .quiz-single-option li {
+    margin-left: 15px;
+    line-height: 30px;
+}
+
+.quiz-multi-option li button, .quiz-single-option li button {
+    margin: 5px;
+    border-radius: 50%;
+}
+
+.quiz-multi-option li span.display-char {
+    font-size: 20px;
+    padding: 0 5px 0 15px;
+}
+
+.quiz-multi-option li span.display-answer-index {
+    font-size: 18px;
+    padding: 0 2px 0 15px;
+}
+
+.test-title {
+    font-size: 18px;
+}
