@@ -1,0 +1,192 @@
+#Header .profile-info {
+    padding: 0;
+    line-height: 50px;
+    display: inline-block;
+}
+
+#Header .user-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 30px;
+    margin-right: 5px;
+}
+
+#Footer {
+    background-color: #f4f4f4;
+    padding: 30px 18px;
+    margin-top: 50px;
+}
+
+#Footer .container {
+}
+
+.panel-title-button {
+    margin-top: -5px;
+    margin-right: -10px
+}
+
+.bg-padding {
+    padding: 12px 8px;
+}
+
+/*测验多选的选项样式*/
+.quiz-multi-option li, .quiz-single-option li {
+    margin-left: 15px;
+    line-height: 30px;
+}
+
+.quiz-multi-option li button, .quiz-single-option li button {
+    margin: 5px;
+    border-radius: 50%;
+}
+
+.quiz-multi-option li span.display-char {
+    font-size: 20px;
+    padding: 0 5px 0 15px;
+}
+
+.quiz-multi-option li span.display-answer-index {
+    font-size: 18px;
+    padding: 0 2px 0 15px;
+}
+
+.test-title {
+    font-size: 18px;
+}
+
+
+.course-table tbody {
+    background-color: #e6f8fb;
+    color: #666;
+}
+
+.course-table .table > thead > tr > th,
+.course-table .table > tbody > tr > td{
+    text-align: center;
+    vertical-align: middle;
+    border-top: none;
+}
+
+.course-table .table > thead > tr > th {
+    background-color: #5bc0de;
+}
+
+.course-table .table > tbody {
+    border-style: none;
+}
+
+.course-table tbody:nth-of-type(2n) {
+    background: #feeeab;
+}
+
+.course-table .table > thead > tr > th {
+    color: #fff;
+}
+
+.course-table tr {
+    height: 52px;
+}
+
+.course-table .pre, .next {
+    height: 34px;
+}
+
+.course-table .today {
+    background: url(image/today_red.png) no-repeat center center;
+}
+
+.course-table .blue {
+    background-color: #5bc0de;
+    border: 1px solid #28a2c6;
+}
+
+
+.student-course-table > thead > tr > th, td {
+    text-align: center;
+}
+
+.student-course-table caption {
+    font-size: 25px;
+    margin-bottom: 25px;
+}
+
+.student-course-table > thead > tr > th,
+.student-course-table > tbody > tr > td{
+    text-align: center;
+    vertical-align: middle;
+    border-top: none;
+}
+
+.student-course-table tbody {
+    background-color: #e6f8fb;
+}
+
+.student-course-table > tbody + tbody {
+    border-top: 1px solid #fff;
+}
+
+.student-course-table tr {
+    height: 52px;
+    line-height: 52px;
+    color: #5e6061;
+}
+
+.student-course-table .weekly {
+    font-weight: normal;
+    font-size: 15px
+}
+
+.student-course-table tr > td:first-child {
+    background-color: #5bc0de;
+    color: #fff;
+    font-size: 20px;
+}
+
+.student-course-table tr > td:first-child p {
+    color: #fff;
+    font-size: 14px;
+}
+
+.student-course-table > thead > tr > th {
+    background-color: #5bc0de;
+    color: #fff;
+    border: 1px solid #fff;
+}
+
+.student-course-table td {
+    border: 1px solid #fff;
+    text-align: center;
+}
+.student-course-table td:hover{
+    background-color: #d1e3e6;
+}
+
+.student-course-table tbody td h4 {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 5px;
+    text-align: left;
+    margin-left: 20px;
+}
+
+.student-course-table tr td span {
+    display: inline-block;
+    height: 30px;
+    text-align: left;
+    padding-left: 39px;
+    margin: 4px 0 0 20px;
+    color: #666;
+}
+
+.student-course-table tr td .teacher {
+    background: url(image/teacher.png) no-repeat 0 2px;
+    background-size: 24px 20px;
+}
+
+.student-course-table tr td .address {
+    background: url(image/address.png) no-repeat 4px 0;
+    background-size: 16px 20px;
+}
+
+
+
