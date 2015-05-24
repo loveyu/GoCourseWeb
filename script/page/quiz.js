@@ -42,8 +42,7 @@ Page.quiz = function () {
 					index: 0,
 					error: '',
 					warning: '',
-					quiz_list: [],
-					answer: {}
+					quiz_list: []
 				};
 				var parse_id = parseInt(id);
 				if (parse_id < 1 || ("" + parse_id) != id) {

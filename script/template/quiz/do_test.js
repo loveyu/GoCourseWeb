@@ -9,7 +9,6 @@ _methods_ = {
 						obj.warning = "测试列表为空";
 					} else {
 						var list = obj.parse_property(result.data.list);
-						console.log(list);
 						obj.answer = list.answer;
 						obj.quiz_list = list.list;
 					}
@@ -18,6 +17,17 @@ _methods_ = {
 				}
 			}
 		);
+	},
+	createMultiOptionObj: function (size, option_size) {
+		var rt = [];
+		for (var i = 0; i < size; i++) {
+			var option = [];
+			for (var j = 0; j < option_size; j++) {
+				option.push(j);
+			}
+			rt.push({now_index: i, now_option: option});
+		}
+		return rt;
 	},
 	/**
 	 * 解析返回的测验信息列表
@@ -32,11 +42,11 @@ _methods_ = {
 				var title_obj = FUNC.quiz.parse_title(quiz_list[k].quiz.title);
 				quiz_list[k].quiz.title = title_obj.title;
 				quiz_list[k].quiz['size'] = title_obj.size;
-				answer[quiz_list[k].quiz.quizID] = FUNC.createArray(title_obj.size == 0 ? quiz_list[k].options.length : title_obj.size, -1);
-				quiz_list[k]['answer'] = answer[quiz_list[k].quiz.quizID];
+				//必须使用一个对象，否则无效
+				quiz_list[k].quiz['answer'] = FUNC.createArrayObj(title_obj.size == 0 ? quiz_list[k].options.length : title_obj.size, -1);
 			} else {
 				quiz_list[k].quiz['size'] = 1;
-				answer[quiz_list[k].quiz.quizID] = "-1";
+				quiz_list[k].quiz['answer'] = -1;
 			}
 		}
 		return {list: quiz_list, answer: answer};
@@ -44,17 +54,16 @@ _methods_ = {
 	/**
 	 * 单选点击事件
 	 */
-	onSingleClick: function (quizId, optionIndex) {
-		this.answer[quizId] = optionIndex;
+	onSingleClick: function (quiz, optionIndex) {
+		quiz.answer = optionIndex;
 	},
 	/**
 	 * 简单多选点击事件
 	 */
-	onSimpleMultiClick: function (answer, optionIndex) {
-		if (answer[optionIndex] == optionIndex) {
-			answer[optionIndex] = -1;
-		} else {
-			answer[optionIndex] = optionIndex;
-		}
+	onSimpleMultiClick: function (quiz, optionIndex) {
+		quiz.answer[optionIndex] = quiz.answer[optionIndex] == optionIndex ? -1 : optionIndex;
+	},
+	onMultiClick: function (quiz, index, optionIndex) {
+		quiz.answer[index] = optionIndex;
 	}
 };//_methods_

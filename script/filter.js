@@ -110,7 +110,7 @@ Vue.filter('timestamp_to_date', function (value) {
 /**
  * 调用函数生成一个对象
  */
-Vue.filter('call_func', function (value, func) {
+Vue.filter('call_func', function (value, func, param) {
 	var list = func.split(".");
 	var obj = window;
 	for (var i in list) {
@@ -120,7 +120,11 @@ Vue.filter('call_func', function (value, func) {
 		obj = obj[list[i]];
 	}
 	if (typeof obj == "function") {
-		return obj(value);
+		if (typeof param != "undefined") {
+			return obj(value, param);
+		} else {
+			return obj(value);
+		}
 	} else {
 		return obj;
 	}

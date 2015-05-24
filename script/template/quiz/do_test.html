@@ -10,8 +10,8 @@
 		</p>
 		<ul v-if="quiz.type==0" class="quiz-single-option list-unstyled">
 			<li v-repeat="options">
-				<button class="btn btn-sm btn-{{$index==answer[quiz.quizID]?'primary':'default'}}"
-				        v-on="click: onSingleClick(quiz.quizID,$index)">
+				<button class="btn btn-sm btn-{{$index==quiz.answer?'primary':'default'}}"
+				        v-on="click: onSingleClick(quiz,$index)">
 					{{$index|quiz_option_translate_index}}
 				</button>
 				&nbsp;{{description}}
@@ -21,17 +21,19 @@
 			<li v-repeat="options">
 				<span class="display-char">{{$index|quiz_option_translate_index}}.</span>&nbsp;{{description}}
 			</li>
-			<li v-repeat="quiz.size | call_func FUNC.createArray">
+			<li v-repeat="createMultiOptionObj(quiz.size,options.length)">
 				<span class="display-answer-index">({{$index+1}})&nbsp;</span>
-				<button v-repeat="options.length | call_func FUNC.createArray" class="btn btn-sm btn-default">
+				<button v-repeat="now_option"
+				        class="btn btn-sm btn-{{$index==quiz.answer[now_index]?'primary':'default'}}"
+				        v-on="click: onMultiClick(quiz,now_index,$index)">
 					{{$value|quiz_option_translate_index}}
 				</button>
 			</li>
 		</ul>
 		<ul class="quiz-multi-option list-unstyled" v-if="quiz.type==1 && quiz.size==0">
 			<li v-repeat="options">
-				<button class="btn btn-sm btn-{{answer[$index]==$index?'primary':'default'}}"
-				        v-on="click: onSimpleMultiClick(answer,$index)">
+				<button class="btn btn-sm btn-{{$index==quiz.answer[$index]?'primary':'default'}}"
+				        v-on="click: onSimpleMultiClick(quiz,$index)">
 					{{$index|quiz_option_translate_index}}
 				</button>
 				&nbsp;{{description}}
