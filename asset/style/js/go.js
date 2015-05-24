@@ -8,7 +8,12 @@ var CONST_MAP = {
 		{id: 1, status: "未开课"},
 		{id: 2, status: "已结束"}
 	],
-	course_term: [{id: 0, term: "春季"}, {id: 1, term: "秋季"}]
+	course_term: [{id: 0, term: "春季"}, {id: 1, term: "秋季"}],
+	quiz_type: {
+		single: 0,//单选
+		multiple: 1,//多选
+		judge: 2//判断
+	}
 };
 
 
@@ -108,7 +113,7 @@ var DOMAIN = (function () {
 var CONFIG = {
 	site_title: 'GO Course',
 	site_description: '让课程变得更简单',
-	site_url: DOMAIN,
+	site_url: "http://" + document.location.host + "/",
 	api_url: DOMAIN + 'gocourse/',
 	captcha_url: DOMAIN + "gocourse/tools/captcha",
 	api: {
@@ -176,6 +181,9 @@ var CONFIG = {
 			unbind_share_list: "quiz_teacher/unbind_share_list",
 			bind_quiz: "quiz_teacher/bind_quiz",
 			bind_quiz_cancel: "quiz_teacher/bind_quiz_cancel"
+		},
+		quiz_student: {
+			get_test_list: "quiz_student/get_test_list"
 		}
 	},
 	current_week: {	//当前的周次，该数据会依据服务器状态而更新
@@ -313,11 +321,45 @@ Vue.filter('quiz_translate_type', function (value) {
 	return "未知";
 });
 
+/**
+ * 时间戳转换为时间
+ */
 Vue.filter('timestamp_to_date', function (value) {
 	var date = new Date((+value) * 1000);
 	return "" + date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate() + " "
 		+ date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
 });
+
+/**
+ * 调用函数生成一个对象
+ */
+Vue.filter('call_func', function (value, func) {
+	var list = func.split(".");
+	var obj = window;
+	for (var i in list) {
+		if (!obj.hasOwnProperty(list[i])) {
+			return null;
+		}
+		obj = obj[list[i]];
+	}
+	if (typeof obj == "function") {
+		return obj(value);
+	} else {
+		return obj;
+	}
+});
+
+/**
+ * 在控制台输出一个对象
+ */
+Vue.filter('console.log', function (value, param) {
+	console.log(value);
+	if (typeof param != "undefined") {
+		console.log(param);
+	}
+	return value;
+});
+
 
 
 /**
@@ -511,6 +553,37 @@ var FUNC = {
 				}
 			}
 			return rt;
+		},
+		createArray: function (size, init) {
+			var rt = [];
+			if (typeof init == "undefined") {
+				init = 0;
+			}
+			for (var i = 0; i < size; i++) {
+				rt.push(init);
+			}
+			return rt;
+		},
+		createArrayObj: function (size, init) {
+			var rt = {};
+			if (typeof init == "undefined") {
+				init = 0;
+			}
+			for (var i = 0; i < size; i++) {
+				rt[i] = init;
+			}
+			return rt;
+		},
+		quiz: {
+			parse_title: function (title) {
+				var matches = title.match(/\(___\)?/g);
+				if (matches != null && matches.length > 0) {
+					for (var i = 1; i <= matches.length; i++) {
+						title = title.replace("(___)", " ( " + i + " ) ");
+					}
+				}
+				return {title: title, size: matches == null ? 0 : matches.length};
+			}
 		},
 		verify: {
 			email: function (email) {
@@ -1624,10 +1697,11 @@ Page.header = function () {
 					this.name = data.data.name;
 					this.avatar = data.data.avatar;
 					if (this.user_type == "student") {
-						//this.nav_main = [
-						//	FUNC.nav('课程测验', 'quiz.html#/', '开始进行课程测验', FUNC.urlMatch("quiz.html"))
-						//];
+						this.nav_main.push(
+							FUNC.nav('课程测验', 'quiz.html#/', '开始进行课程测验', FUNC.urlMatch("quiz.html"))
+						);
 						this.nav_private = [
+							FUNC.nav('课程测验', 'quiz.html#/', '开始进行课程测验', FUNC.urlMatch("quiz.html")),
 							FUNC.nav("我的课表", "course_student.html#/", "", FUNC.urlMatch("course_student.html"))
 						];
 					} else if (this.user_type == "teacher") {
@@ -2774,32 +2848,136 @@ Page.quiz = function () {
 		el: "#Quiz",
 		data: {
 			result: null,
-			currentView: 'base-loading'
+			currentView: 'base-loading',
+			currentName: "base-loading",
+			menus: {
+				course_table_list: {url: '/', name: '课程测验', active: false},
+				test: {url: '/test', name: '测验记录', active: false},
+				history: {url: '/history', name: '答题记录', active: false},
+				open: {url: '/open', name: '开放性测验', active: false}
+			}
 		},
 		methods: {
-			load: function (data) {
-				if (data.status) {
-					this.currentView = "quiz-list";
-					this.result = {data: data.data};
-				} else {
-					FUNC.alertOnElem(quiz_vm.$el, "无法加载数据");
-				}
+			my: function (data) {
+				var obj = this;
+				FUNC.ajax(CONFIG.api.course_table.search, "get", {
+					search_type: 'student',
+					status: 0
+				}, function (result) {
+					var rt = {
+						error: "",
+						course_table: []
+					};
+					if (result.status) {
+						rt.course_table = result.data.list;
+					} else {
+						rt.error = result.msg;
+					}
+					obj.result = rt;
+					obj.currentView = "course_table_list";
+				});
 			},
-			quiz_by_id: function (id) {
-				this.result = {id: id};
-				this.currentView = "quiz-quiz-by-id";
+			do_test: function (id) {
+				this.result = {
+					id: id,
+					index: 0,
+					error: '',
+					warning: '',
+					quiz_list: [],
+					answer: {}
+				};
+				var parse_id = parseInt(id);
+				if (parse_id < 1 || ("" + parse_id) != id) {
+					this.result.error = "ID参数解析错误";
+				}
+				this.currentView = "do_test";
+				if (!this.result.error) {
+					FUNC.findVueChild(this, "do_test").load_course_table();
+				}
 			},
 			loading: function () {
 				this.currentView = "base-loading";
 			}
+		},
+		components: {
+			course_table_list: {template:"<p class=\"alert alert-danger\" v-if=\"error\">{{error}}<\/p><div class=\"alert alert-warning\" v-if=\"course_table!=null && course_table.length==0\">当前开课列表为空，请先添加课程<\/div><div class=\"course-table\" v-if=\"course_table!=null && course_table.length>0\"><table class=\"table\"><thead><tr><th>课程名称<\/th><th>老师<\/th><th>操作<\/th><\/tr><\/thead><tbody v-repeat=\"course_table\"><tr><td>{{course.courseName}}<\/td><td>{{course.teacherName}}<\/td><td><a class=\"btn btn-success btn-sm\" href=\"#\/do\/{{course.courseTableID}}\">做题<\/a><a class=\"btn btn-primary btn-sm\" href=\"#\/see\/{{course.courseTableID}}\">看题<\/a><button class=\"btn btn-info btn-sm\" href=\"#\/history\/{{course.courseTableID}}\">记录<\/button><\/td><\/tr><\/tbody><\/table><\/div>"},
+			do_test: {template:"<h3 class=\"bg-success bg-padding\">开始答题<\/h3><p v-if=\"error\" class=\"alert alert-danger\">{{error}}<\/p><p v-if=\"warning\" class=\"alert alert-warning\">{{warning}}<\/p><p v-if=\"quiz_list.length==0 && !warning\" class=\"alert alert-info\">加载中<\/p><div v-if=\"quiz_list!=null && quiz_list.length>0\"><div v-repeat=\"quiz_list\"><p class=\"test-title\"><span>{{$index+1}}.<\/span>&nbsp;<spanclass=\"small\">({{quiz.type|quiz_translate_type}})<\/span>&nbsp;{{quiz.title}}<\/p><ul v-if=\"quiz.type==0\" class=\"quiz-single-option list-unstyled\"><li v-repeat=\"options\"><button class=\"btn btn-sm btn-{{$index==answer[quiz.quizID]?'primary':'default'}}\" v-on=\"click: onSingleClick(quiz.quizID,$index)\">{{$index|quiz_option_translate_index}}<\/button>&nbsp;{{description}}<\/li><\/ul><ul class=\"quiz-multi-option list-unstyled\" v-if=\"quiz.type==1 && quiz.size>0\"><li v-repeat=\"options\"><span class=\"display-char\">{{$index|quiz_option_translate_index}}.<\/span>&nbsp;{{description}}<\/li><li v-repeat=\"quiz.size | call_func FUNC.createArray\"><span class=\"display-answer-index\">({{$index+1}})&nbsp;<\/span><button v-repeat=\"options.length | call_func FUNC.createArray\" class=\"btn btn-sm btn-default\">{{$value|quiz_option_translate_index}}<\/button><\/li><\/ul><ul class=\"quiz-multi-option list-unstyled\" v-if=\"quiz.type==1 && quiz.size==0\"><li v-repeat=\"options\"><button class=\"btn btn-sm btn-{{answer[$index]==$index?'primary':'default'}}\" v-on=\"click: onSimpleMultiClick(answer,$index)\">{{$index|quiz_option_translate_index}}<\/button>&nbsp;{{description}}<\/li><\/ul><\/div><\/div>",methods:{
+	load_course_table: function () {
+		var obj = this;
+		FUNC.ajax(CONFIG.api.quiz_student.get_test_list, "get",
+			{course_table_id: this.id},
+			function (result) {
+				if (result.status) {
+					if (FUNC.isEmpty(result.data.list)) {
+						obj.warning = "测试列表为空";
+					} else {
+						var list = obj.parse_property(result.data.list);
+						console.log(list);
+						obj.answer = list.answer;
+						obj.quiz_list = list.list;
+					}
+				} else {
+					obj.error = result.msg;
+				}
+			}
+		);
+	},
+	/**
+	 * 解析返回的测验信息列表
+	 */
+	parse_property: function (quiz_list) {
+		var answer = {};
+		for (var k in quiz_list) {
+			if (!quiz_list.hasOwnProperty(k)) {
+				continue;
+			}
+			if (quiz_list[k].quiz.type == CONST_MAP.quiz_type.multiple) {
+				var title_obj = FUNC.quiz.parse_title(quiz_list[k].quiz.title);
+				quiz_list[k].quiz.title = title_obj.title;
+				quiz_list[k].quiz['size'] = title_obj.size;
+				answer[quiz_list[k].quiz.quizID] = FUNC.createArray(title_obj.size == 0 ? quiz_list[k].options.length : title_obj.size, -1);
+				quiz_list[k]['answer'] = answer[quiz_list[k].quiz.quizID];
+			} else {
+				quiz_list[k].quiz['size'] = 1;
+				answer[quiz_list[k].quiz.quizID] = "-1";
+			}
+		}
+		return {list: quiz_list, answer: answer};
+	},
+	/**
+	 * 单选点击事件
+	 */
+	onSingleClick: function (quizId, optionIndex) {
+		this.answer[quizId] = optionIndex;
+	},
+	/**
+	 * 简单多选点击事件
+	 */
+	onSimpleMultiClick: function (answer, optionIndex) {
+		if (answer[optionIndex] == optionIndex) {
+			answer[optionIndex] = -1;
+		} else {
+			answer[optionIndex] = optionIndex;
+		}
+	}
+}}
 		}
 	});
+	var change_menus_active = function (view) {
+		if (quiz_vm.menus.hasOwnProperty(quiz_vm.currentName)) {
+			quiz_vm.menus[quiz_vm.currentName].active = false;
+		}
+		quiz_vm.currentView = "base-loading";
+		quiz_vm.currentName = view;
+		quiz_vm.menus[view].active = true;
+	};
 	var routes = {
 		'/': function () {
-			FUNC.ajax(CONFIG.api.quiz.list, "get", {}, quiz_vm.load);
+			change_menus_active("course_table_list");
+			quiz_vm.my();
 		},
-		'/quiz/:id': function (id) {
-			quiz_vm.quiz_by_id(id);
+		'/do/:id': function (id) {
+			quiz_vm.do_test(id);
 		}
 	};
 	var router = Router(routes);//初始化一个路由器

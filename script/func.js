@@ -190,10 +190,23 @@ var FUNC = {
 			}
 			return rt;
 		},
-		createArray: function (size) {
+		createArray: function (size, init) {
 			var rt = [];
+			if (typeof init == "undefined") {
+				init = 0;
+			}
 			for (var i = 0; i < size; i++) {
-				rt.push(i);
+				rt.push(init);
+			}
+			return rt;
+		},
+		createArrayObj: function (size, init) {
+			var rt = {};
+			if (typeof init == "undefined") {
+				init = 0;
+			}
+			for (var i = 0; i < size; i++) {
+				rt[i] = init;
 			}
 			return rt;
 		},

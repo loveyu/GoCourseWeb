@@ -125,3 +125,14 @@ Vue.filter('call_func', function (value, func) {
 		return obj;
 	}
 });
+
+/**
+ * 在控制台输出一个对象
+ */
+Vue.filter('console.log', function (value, param) {
+	console.log(value);
+	if (typeof param != "undefined") {
+		console.log(param);
+	}
+	return value;
+});
