@@ -19,12 +19,12 @@
 	</li>
 </ul>
 <div class="tab-content">
-	<div role="tabpane" class="tab-pane active" id="bind">
+	<div class="tab-pane active" id="bind">
 		<div v-if="bindQuiz==null" class="alert alert-info">加载中......</div>
 		<div v-if="bindQuiz!==null && bindQuiz.length==0" class="alert alert-warning">数据为空</div>
 		<div v-if="bindQuiz!==null && bindQuiz.length>0">
 			<div class="panel-group" id="accordion_bind" role="tablist" aria-multiselectable="true">
-				<div v-repeat="bindQuiz"  class="panel panel-default">
+				<div v-repeat="bindQuiz" class="panel panel-default">
 					<div class="panel-heading" role="tab" id="Heading_bind_{{$index}}">
 						<h4 class="panel-title">
 							<a data-toggle="collapse" data-parent="#accordion_bind" href="#collapse_bind_{{$index}}"
@@ -42,9 +42,9 @@
 								</span>
 						</h4>
 					</div>
-					<div id="#collapse_bind_{{$index}}"
+					<div id="collapse_bind_{{$index}}"
 					     class="panel-collapse collapse{{$index==0?' in':''}}"
-					     role="tabpane"
+
 					     aria-labelledby="Heading_bind_{{$index}}">
 						<div class="panel-body" v-with="bindQuiz[$index]" v-component="quiz-item"></div>
 					</div>
@@ -52,7 +52,7 @@
 			</div>
 		</div>
 	</div>
-	<div role="tabpane" class="tab-pane" id="unbind">
+	<div class="tab-pane" id="unbind">
 		<div v-if="unbindQuiz==null" class="alert alert-info">加载中......</div>
 		<div v-if="unbindQuiz!==null && unbindQuiz.length==0" class="alert alert-warning">数据为空</div>
 		<div v-if="unbindQuiz!==null && unbindQuiz.length>0">
@@ -60,7 +60,7 @@
 				<div v-repeat="unbindQuiz" class="panel panel-default">
 					<div class="panel-heading" role="tab" id="Heading_unbind_{{$index}}">
 						<h4 class="panel-title">
-							<a data-toggle="collapse" data-parent="#accordio_nunbind_" href="#collapse_unbind_{{$index}}"
+							<a data-toggle="collapse" data-parent="#accordion_unbind" href="#collapse_unbind_{{$index}}"
 							   aria-expanded="true"
 							   aria-controls="#collapse_unbind_{{$index}}">
 								<i>{{quiz.index}}</i>&nbsp;&nbsp;{{quiz.title}}
@@ -75,7 +75,7 @@
 					</div>
 					<div id="collapse_unbind_{{$index}}"
 					     class="panel-collapse collapse{{$index==0?' in':''}}"
-					     role="tabpane"
+
 					     aria-labelledby="Heading_unbind_{{$index}}">
 						<div class="panel-body" v-with="unbindQuiz[$index]" v-component="quiz-item"></div>
 					</div>
@@ -83,7 +83,7 @@
 			</div>
 		</div>
 	</div>
-	<div role="tabpane" class="tab-pane" id="share">
+	<div class="tab-pane" id="share">
 		<div v-if="shareQuiz==null" class="alert alert-info">加载中......</div>
 		<div v-if="shareQuiz!==null && shareQuiz.length==0" class="alert alert-warning">数据为空</div>
 		<div v-if="shareQuiz!==null && shareQuiz.length>0">
@@ -106,7 +106,7 @@
 					</div>
 					<div id="collapse_share_{{$index}}"
 					     class="panel-collapse collapse{{$index==0?' in':''}}"
-					     role="tabpane"
+
 					     aria-labelledby="Heading_share_{{$index}}">
 						<div class="panel-body" v-with="shareQuiz[$index]" v-component="quiz-item"></div>
 					</div>

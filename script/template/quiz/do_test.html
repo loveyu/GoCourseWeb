@@ -39,6 +39,12 @@
 				&nbsp;{{description}}
 			</li>
 		</ul>
-
+		<div class="quiz-answer-submit" v-if="!quiz.success && checkChoiceStatus(quiz)">
+			<button class="btn btn-sm btn-success" v-on="click:onSubmitSingle($index,quiz)">
+				{{quiz.submit_lock?"提交中":"提交答案"}}
+			</button>
+			<span v-if="quiz.error" class="text-danger">{{quiz.error}}</span>
+		</div>
+		<div v-if="quiz.success" class="alert alert-success">恭喜成功答对</div>
 	</div>
 </div>

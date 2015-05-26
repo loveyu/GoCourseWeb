@@ -16,11 +16,11 @@ Param: `none`
 		"id": 31,                         //用户唯一系统ID
 		"user_type": "student",           //用户类型
 		"name": "发个",                   //用户真实姓名
-		"avatar": "http://xxxxx.com/avatar/middle/031/31.png",  //默认头像
+		"avatar": "http://xxxxx.com/avatar/middle/031/31.png?_t=1432222999",  //默认头像，可以依据地址来判断头像是否有更新，会添加更新参数
 		"avatar_more": {                                        //更多尺寸头像
-			"lager": "http://xxxxx.com/avatar/large/031/31.png",
-			"small": "http://xxxxx.com/avatar/small/031/",
-			"middle": "http://xxxxx.com/avatar/middle/031/31.png"
+			"lager": "http://xxxxx.com/avatar/large/031/31.png?_t=1432222999",
+			"small": "http://xxxxx.com/avatar/small/031/31.png?_t=1432222999",
+			"middle": "http://xxxxx.com/avatar/middle/031/31.png?_t=1432222999"
 		},
 		"email": "xxxxx@qq.com",    //用户邮箱
 		"uid": "121434313",         //用户唯一ID，学号或其他类型

@@ -86,7 +86,8 @@ var CONFIG = {
 			bind_quiz_cancel: "quiz_teacher/bind_quiz_cancel"
 		},
 		quiz_student: {
-			get_test_list: "quiz_student/get_test_list"
+			get_test_list: "quiz_student/get_test_list",
+			do_test: "quiz_student/do_test"
 		}
 	},
 	current_week: {	//当前的周次，该数据会依据服务器状态而更新

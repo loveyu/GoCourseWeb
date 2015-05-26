@@ -54,6 +54,11 @@
     font-size: 18px;
 }
 
+.quiz-answer-submit{
+    padding: 0;
+    margin: 0 0 15px 20px;
+}
+
 
 .course-table tbody {
     background-color: #e6f8fb;
