@@ -1,0 +1,44 @@
+<p class="alert alert-danger" v-if="error">{{error}}</p>
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<strong>全部做题记录</strong>
+	</div>
+	<div class="panel-body">
+		<p v-if="execs===null" class="alert alert-info">加载中</p>
+
+		<p v-if="execs!=null && execs.length==0" class="alert alert-warning">无任何做题记录</p>
+
+		<div v-if="execs!=null && execs.length>0"
+		     class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+			<div v-repeat="answer:execs" class="panel panel-default">
+				<div class="panel-heading" role="tab" id="Heading_{{$index}}">
+					<h4 class="panel-title">
+						<a data-toggle="collapse" data-parent="#accordion" href="#collapse_{{$index}}"
+						   aria-expanded="true"
+						   aria-controls="#collapse_{{$index}}">
+							<i>{{quiz_obj[answer.quizID].quiz.index}}</i>&nbsp;&nbsp;
+							{{quiz_obj[answer.quizID].quiz.title|quiz_title_to_test_title}}
+						</a>
+								<span class="pull-right" aria-hidden="true">
+									<span>{{answer.time|timestamp_to_date}}</span>
+									<button type="button"
+									        class="panel-title-button btn btn-sm"
+									        v-class="answer.isCorrect?'btn-success':'btn-danger'">
+										<span class="glyphicon"
+										      v-class="answer.isCorrect?'glyphicon-ok':'glyphicon-remove'">
+										</span>
+									</button>
+								</span>
+					</h4>
+				</div>
+				<div id="collapse_{{$index}}"
+				     class="panel-collapse collapse"
+				     role="tabpane"
+				     aria-labelledby="Heading_{{$index}}">
+					<div class="panel-body" v-with="quiz_obj[answer.quizID]" v-component="quiz-item"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<pre>{{execs|json}}</pre>

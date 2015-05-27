@@ -149,6 +149,18 @@ var FUNC = {
 					return obj == "";
 			}
 		},
+		/**
+		 * 将数字格式化为指定的长度
+		 * @param num number
+		 * @param length number
+		 */
+		numFormatLen: function (num, length) {
+			num = "" + num;
+			while (length > num.length) {
+				num = "0" + num;
+			}
+			return num;
+		},
 		inArray: function (item, array) {
 			for (var i in array) {
 				if (array[i] == item) {

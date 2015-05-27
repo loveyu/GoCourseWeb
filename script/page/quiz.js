@@ -12,7 +12,7 @@ Page.quiz = function () {
 			menus: {
 				course_table_list: {url: '/', name: '课程测验', active: false},
 				test: {url: '/test', name: '测验记录', active: false},
-				history: {url: '/history', name: '答题记录', active: false},
+				history: {url: '/history', name: '做题记录', active: false},
 				open: {url: '/open', name: '开放性测验', active: false}
 			}
 		},
@@ -53,12 +53,22 @@ Page.quiz = function () {
 					FUNC.findVueChild(this, "do_test").load_course_table();
 				}
 			},
+			history: function () {
+				this.result = {
+					execs: null,
+					quiz_obj: {},
+					error: ''
+				};
+				this.currentView = "history";
+				FUNC.findVueChild(this, "history").load_all();
+			},
 			loading: function () {
 				this.currentView = "base-loading";
 			}
 		},
 		components: {
 			course_table_list: {__require: 'quiz/course_table_list.html'},
+			history: {__require: 'quiz/history.html'},
 			do_test: {__require: 'quiz/do_test.html'}
 		}
 	});
@@ -77,6 +87,10 @@ Page.quiz = function () {
 		},
 		'/do/:id': function (id) {
 			quiz_vm.do_test(id);
+		},
+		'/history': function () {
+			change_menus_active("history");
+			quiz_vm.history();
 		}
 	};
 	var router = Router(routes);//初始化一个路由器

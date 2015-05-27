@@ -103,8 +103,8 @@ Vue.filter('quiz_translate_type', function (value) {
  */
 Vue.filter('timestamp_to_date', function (value) {
 	var date = new Date((+value) * 1000);
-	return "" + date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate() + " "
-		+ date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+	return "" + date.getFullYear() + "-" + FUNC.numFormatLen(date.getMonth(), 2) + "-" + FUNC.numFormatLen(date.getDate(), 2) + " "
+		+ FUNC.numFormatLen(date.getHours(), 2) + ":" + FUNC.numFormatLen(date.getMinutes(), 2) + ":" + FUNC.numFormatLen(date.getSeconds(), 2);
 });
 
 /**
@@ -139,4 +139,8 @@ Vue.filter('console.log', function (value, param) {
 		console.log(param);
 	}
 	return value;
+});
+
+Vue.filter('quiz_title_to_test_title', function (value) {
+	return FUNC.quiz.parse_title(("" + value).replace(/\(___\)/g, "").replace(/__[A-Z]__/g, "(___)")).title;
 });
