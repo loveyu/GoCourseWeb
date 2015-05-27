@@ -13,7 +13,12 @@ var CONST_MAP = {
 		single: 0,//单选
 		multiple: 1,//多选
 		judge: 2//判断
-	}
+	},
+	history_answer_correct: [
+		{id: -1, url: "all", name: "查看全部"},
+		{id: 0, url: "wrong", name: "只看错题"},
+		{id: 1, url: "right", name: "只看答对"}
+	]
 };
 
 
@@ -2946,11 +2951,13 @@ Page.quiz = function () {
 					FUNC.findVueChild(this, "do_test").load_course_table();
 				}
 			},
-			history: function () {
+			history: function (is_correct) {
 				this.result = {
 					execs: null,
 					quiz_obj: {},
-					error: ''
+					error: '',
+					is_correct: is_correct,
+					correct_map: CONST_MAP.history_answer_correct
 				};
 				this.currentView = "history";
 				FUNC.findVueChild(this, "history").load_all();
@@ -2961,11 +2968,13 @@ Page.quiz = function () {
 		},
 		components: {
 			course_table_list: {template:"<p class=\"alert alert-danger\" v-if=\"error\">{{error}}<\/p><div class=\"alert alert-warning\" v-if=\"course_table!=null && course_table.length==0\">当前开课列表为空，请先添加课程<\/div><div class=\"course-table\" v-if=\"course_table!=null && course_table.length>0\"><table class=\"table\"><thead><tr><th>课程名称<\/th><th>老师<\/th><th>操作<\/th><\/tr><\/thead><tbody v-repeat=\"course_table\"><tr><td>{{course.courseName}}<\/td><td>{{course.teacherName}}<\/td><td><a class=\"btn btn-success btn-sm\" href=\"#\/do\/{{course.courseTableID}}\">做题<\/a><a class=\"btn btn-primary btn-sm\" href=\"#\/see\/{{course.courseTableID}}\">看题<\/a><button class=\"btn btn-info btn-sm\" href=\"#\/history\/{{course.courseTableID}}\">记录<\/button><\/td><\/tr><\/tbody><\/table><\/div>"},
-			history: {template:"<p class=\"alert alert-danger\" v-if=\"error\">{{error}}<\/p><div class=\"panel panel-primary\"><div class=\"panel-heading\"><strong>全部做题记录<\/strong><\/div><div class=\"panel-body\"><p v-if=\"execs===null\" class=\"alert alert-info\">加载中<\/p><p v-if=\"execs!=null && execs.length==0\" class=\"alert alert-warning\">无任何做题记录<\/p><div v-if=\"execs!=null && execs.length>0\" class=\"panel-group\" id=\"accordion\" role=\"tablist\" aria-multiselectable=\"true\"><div v-repeat=\"answer:execs\" class=\"panel panel-default\"><div class=\"panel-heading\" role=\"tab\" id=\"Heading_{{$index}}\"><h4 class=\"panel-title\"><a data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#collapse_{{$index}}\" aria-expanded=\"true\" aria-controls=\"#collapse_{{$index}}\"><i>{{quiz_obj[answer.quizID].quiz.index}}<\/i>&nbsp;&nbsp;{{quiz_obj[answer.quizID].quiz.title|quiz_title_to_test_title}}<\/a><span class=\"pull-right\" aria-hidden=\"true\"><span>{{answer.time|timestamp_to_date}}<\/span><button type=\"button\" class=\"panel-title-button btn btn-sm\" v-class=\"answer.isCorrect?'btn-success':'btn-danger'\"><span class=\"glyphicon\" v-class=\"answer.isCorrect?'glyphicon-ok':'glyphicon-remove'\"><\/span><\/button><\/span><\/h4><\/div><div id=\"collapse_{{$index}}\" class=\"panel-collapse collapse\" role=\"tabpane\" aria-labelledby=\"Heading_{{$index}}\"><div class=\"panel-body\"><div v-with=\"answer:answer,quiz: quiz_obj[answer.quizID]\" v-component=\"answer-item\"><\/div><div v-with=\"quiz_obj[answer.quizID]\" v-component=\"quiz-item\"><\/div><\/div><\/div><\/div><\/div><\/div><\/div><pre>{{execs|json}}<\/pre>",methods:{
+			history: {template:"<p class=\"alert alert-danger\" v-if=\"error\">{{error}}<\/p><div class=\"panel panel-primary\"><div class=\"panel-heading\"><a v-repeat=\"correct:correct_map\" class=\"btn-sm bt\" v-class=\"correct.id==is_correct?'btn-success':'btn-default'\" href=\"#\/history\/{{correct.url}}\">{{correct.name}}<\/a><\/div><div class=\"panel-body\"><p v-if=\"execs===null\" class=\"alert alert-info\">加载中<\/p><p v-if=\"execs!=null && execs.length==0\" class=\"alert alert-warning\">无任何做题记录<\/p><div v-if=\"execs!=null && execs.length>0\" class=\"panel-group\" id=\"accordion\" role=\"tablist\" aria-multiselectable=\"true\"><div v-repeat=\"answer:execs\" class=\"panel panel-default\"><div class=\"panel-heading\" role=\"tab\" id=\"Heading_{{$index}}\"><h4 class=\"panel-title\"><a data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#collapse_{{$index}}\" aria-expanded=\"true\" aria-controls=\"#collapse_{{$index}}\"><i>{{quiz_obj[answer.quizID].quiz.index}}<\/i>&nbsp;&nbsp;{{quiz_obj[answer.quizID].quiz.title|quiz_title_to_test_title}}<\/a><span class=\"pull-right\" aria-hidden=\"true\"><span>{{answer.time|timestamp_to_date}}<\/span><button type=\"button\" class=\"panel-title-button btn btn-sm\" v-class=\"answer.isCorrect?'btn-success':'btn-danger'\"><span class=\"glyphicon\" v-class=\"answer.isCorrect?'glyphicon-ok':'glyphicon-remove'\"><\/span><\/button><\/span><\/h4><\/div><div id=\"collapse_{{$index}}\" class=\"panel-collapse collapse\" role=\"tabpane\" aria-labelledby=\"Heading_{{$index}}\"><div class=\"panel-body\"><div v-with=\"answer:answer,quiz: quiz_obj[answer.quizID]\" v-component=\"answer-item\"><\/div><div v-with=\"quiz_obj[answer.quizID]\" v-component=\"quiz-item\"><\/div><\/div><\/div><\/div><\/div><\/div><\/div>",methods:{
 	load_all: function () {
 		var obj = this;
 		obj.error = "";
-		FUNC.ajax(CONFIG.api.quiz_student.history, "get", {}, function (result) {
+		FUNC.ajax(CONFIG.api.quiz_student.history, "get", {
+			is_correct: obj.is_correct
+		}, function (result) {
 			if (result.status) {
 				obj.quiz_obj = result.data.quiz;//必须依照该顺序，否则会导致警告
 				obj.execs = result.data.execs;
@@ -3121,7 +3130,19 @@ Page.quiz = function () {
 		},
 		'/history': function () {
 			change_menus_active("history");
-			quiz_vm.history();
+			quiz_vm.history(-1);
+		},
+		'history/right': function () {
+			change_menus_active("history");
+			quiz_vm.history(1);
+		},
+		'history/wrong': function () {
+			change_menus_active("history");
+			quiz_vm.history(0);
+		},
+		'history/all': function () {
+			change_menus_active("history");
+			quiz_vm.history(-1);
 		}
 	};
 	var router = Router(routes);//初始化一个路由器

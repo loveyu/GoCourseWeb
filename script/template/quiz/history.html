@@ -1,7 +1,9 @@
 <p class="alert alert-danger" v-if="error">{{error}}</p>
 <div class="panel panel-primary">
 	<div class="panel-heading">
-		<strong>全部做题记录</strong>
+		<a v-repeat="correct:correct_map" class="btn-sm bt"
+		   v-class="correct.id==is_correct?'btn-success':'btn-default'"
+		   href="#/history/{{correct.url}}">{{correct.name}}</a>
 	</div>
 	<div class="panel-body">
 		<p v-if="execs===null" class="alert alert-info">加载中</p>
@@ -44,4 +46,3 @@
 		</div>
 	</div>
 </div>
-<pre>{{execs|json}}</pre>

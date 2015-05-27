@@ -53,11 +53,13 @@ Page.quiz = function () {
 					FUNC.findVueChild(this, "do_test").load_course_table();
 				}
 			},
-			history: function () {
+			history: function (is_correct) {
 				this.result = {
 					execs: null,
 					quiz_obj: {},
-					error: ''
+					error: '',
+					is_correct: is_correct,
+					correct_map: CONST_MAP.history_answer_correct
 				};
 				this.currentView = "history";
 				FUNC.findVueChild(this, "history").load_all();
@@ -90,7 +92,19 @@ Page.quiz = function () {
 		},
 		'/history': function () {
 			change_menus_active("history");
-			quiz_vm.history();
+			quiz_vm.history(-1);
+		},
+		'history/right': function () {
+			change_menus_active("history");
+			quiz_vm.history(1);
+		},
+		'history/wrong': function () {
+			change_menus_active("history");
+			quiz_vm.history(0);
+		},
+		'history/all': function () {
+			change_menus_active("history");
+			quiz_vm.history(-1);
 		}
 	};
 	var router = Router(routes);//初始化一个路由器

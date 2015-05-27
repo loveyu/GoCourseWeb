@@ -13,5 +13,10 @@ var CONST_MAP = {
 		single: 0,//单选
 		multiple: 1,//多选
 		judge: 2//判断
-	}
+	},
+	history_answer_correct: [
+		{id: -1, url: "all", name: "查看全部"},
+		{id: 0, url: "wrong", name: "只看错题"},
+		{id: 1, url: "right", name: "只看答对"}
+	]
 };
