@@ -58,3 +58,8 @@
     padding: 0;
     margin: 0 0 15px 20px;
 }
+
+.answer-result-item{
+    border: 1px dashed #658e5b;
+    padding: 5px;
+}

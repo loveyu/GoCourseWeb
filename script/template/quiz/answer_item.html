@@ -1,0 +1,18 @@
+<div class="answer-result-item" xmlns="http://www.w3.org/1999/html">
+	<strong v-if="answer.isCorrect==1" class="text-success">答题正确：</strong>
+
+	<strong v-if="answer.isCorrect==0" class="text-danger">答题错误：</strong>
+	<p v-if="answer.optionID>0">你的选项为：
+		<button class="btn btn-sm btn-{{answer.isCorrect==1?'success':'danger'}}">
+			{{find_option_index(answer.optionID)|quiz_option_translate_index}}
+		</button>
+	</p>
+	<p v-if="answer.optionID==0 && answer.optionMap">
+		你的选项为：
+		<button v-repeat="parse_answer_map(answer)"
+		        class="btn btn-sm"
+		        v-class="answer.isCorrect==1?'btn-success':'btn-danger'">
+			{{$value|quiz_option_translate_index}}
+		</button>
+	</p>
+</div>

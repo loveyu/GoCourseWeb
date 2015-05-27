@@ -78,6 +78,9 @@ Vue.filter('course_location_check_today', function (location, class1, class2) {
  * 转换序号索引为A...B....C....
  */
 Vue.filter('quiz_option_translate_index', function (value) {
+	if (value < 0) {
+		return "错";
+	}
 	value = +value;
 	return String.fromCharCode(+'A'.charCodeAt(0) + value);
 });
@@ -141,6 +144,16 @@ Vue.filter('console.log', function (value, param) {
 	return value;
 });
 
+/**
+ * 解析标题
+ */
 Vue.filter('quiz_title_to_test_title', function (value) {
 	return FUNC.quiz.parse_title(("" + value).replace(/\(___\)/g, "").replace(/__[A-Z]__/g, "(___)")).title;
+});
+
+Vue.filter('split', function (value, str) {
+	var list = value.split(str);
+	console.log(str);
+	console.log(list);
+	return list;
 });

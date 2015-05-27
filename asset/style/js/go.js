@@ -93,6 +93,24 @@ Vue.component('base-login-form', {template:"<form method=\"get\" v-on=\"submit: 
 }});
 Vue.component('base-loading', {template:"<div class=\"jumbotron\"><p class=\"text-center\">加载中.......<\/p><\/div>"});
 Vue.component('quiz-item', {template:"<h4>{{quiz.title}}<\/h4><ul class=\"list-unstyled\"><li v-repeat=\"options\"><p><strong class=\"{{isCorrect?'text-success':''}}\">{{index|quiz_option_translate_index}}:&nbsp;<span class=\"{{isCorrect?'glyphicon glyphicon-ok':''}}\"><\/span>&nbsp;<\/strong>{{description}}<\/p><p v-if=\"feedback\"><small><strong><i>选项解析：<\/i><\/strong>{{feedback}}<\/small><\/p><\/li><\/ul><blockquote style=\"padding: 2px 5px;margin-bottom: 5px\"><p><small>章节: {{quiz.index}},&nbsp;&nbsp;类型: {{quiz.type|quiz_translate_type}},&nbsp;&nbsp;评论: {{quiz.reply}},&nbsp;&nbsp;时间: {{quiz.time|timestamp_to_date}}<\/small><\/p><\/blockquote><p class=\"bg-success\" v-if=\"quiz.desc\" style=\"padding: 10px 5px\"><strong>答题解析：<\/strong>{{quiz.desc}}<\/p>"});
+Vue.component('answer-item', {template:"<div class=\"answer-result-item\" xmlns=\"http:\/\/www.w3.org\/1999\/html\"><strong v-if=\"answer.isCorrect==1\" class=\"text-success\">答题正确：<\/strong><strong v-if=\"answer.isCorrect==0\" class=\"text-danger\">答题错误：<\/strong><p v-if=\"answer.optionID>0\">你的选项为：<button class=\"btn btn-sm btn-{{answer.isCorrect==1?'success':'danger'}}\">{{find_option_index(answer.optionID)|quiz_option_translate_index}}<\/button><\/p><p v-if=\"answer.optionID==0 && answer.optionMap\">你的选项为：<button v-repeat=\"parse_answer_map(answer)\" class=\"btn btn-sm\" v-class=\"answer.isCorrect==1?'btn-success':'btn-danger'\">{{$value|quiz_option_translate_index}}<\/button><\/p><\/div>",methods:{
+	find_option_index: function (optionId) {
+		for (var i in this.quiz.options) {
+			if (this.quiz.options[i].optionID == optionId) {
+				return this.quiz.options[i].index;
+			}
+		}
+		return -1;
+	},
+	parse_answer_map: function (answer) {
+		var list = answer.optionMap.split(',');
+		var rt = [];
+		for (var i in list) {
+			rt.push(this.find_option_index(list[i]));
+		}
+		return rt;
+	}
+}});
 
 
 /**
@@ -184,7 +202,8 @@ var CONFIG = {
 		},
 		quiz_student: {
 			get_test_list: "quiz_student/get_test_list",
-			do_test: "quiz_student/do_test"
+			do_test: "quiz_student/do_test",
+			history:"quiz_student/exec_history"
 		}
 	},
 	current_week: {	//当前的周次，该数据会依据服务器状态而更新
@@ -302,6 +321,9 @@ Vue.filter('course_location_check_today', function (location, class1, class2) {
  * 转换序号索引为A...B....C....
  */
 Vue.filter('quiz_option_translate_index', function (value) {
+	if (value < 0) {
+		return "错";
+	}
 	value = +value;
 	return String.fromCharCode(+'A'.charCodeAt(0) + value);
 });
@@ -327,8 +349,8 @@ Vue.filter('quiz_translate_type', function (value) {
  */
 Vue.filter('timestamp_to_date', function (value) {
 	var date = new Date((+value) * 1000);
-	return "" + date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate() + " "
-		+ date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+	return "" + date.getFullYear() + "-" + FUNC.numFormatLen(date.getMonth(), 2) + "-" + FUNC.numFormatLen(date.getDate(), 2) + " "
+		+ FUNC.numFormatLen(date.getHours(), 2) + ":" + FUNC.numFormatLen(date.getMinutes(), 2) + ":" + FUNC.numFormatLen(date.getSeconds(), 2);
 });
 
 /**
@@ -365,6 +387,19 @@ Vue.filter('console.log', function (value, param) {
 	return value;
 });
 
+/**
+ * 解析标题
+ */
+Vue.filter('quiz_title_to_test_title', function (value) {
+	return FUNC.quiz.parse_title(("" + value).replace(/\(___\)/g, "").replace(/__[A-Z]__/g, "(___)")).title;
+});
+
+Vue.filter('split', function (value, str) {
+	var list = value.split(str);
+	console.log(str);
+	console.log(list);
+	return list;
+});
 
 
 /**
@@ -517,6 +552,18 @@ var FUNC = {
 				default :
 					return obj == "";
 			}
+		},
+		/**
+		 * 将数字格式化为指定的长度
+		 * @param num number
+		 * @param length number
+		 */
+		numFormatLen: function (num, length) {
+			num = "" + num;
+			while (length > num.length) {
+				num = "0" + num;
+			}
+			return num;
 		},
 		inArray: function (item, array) {
 			for (var i in array) {
@@ -2858,7 +2905,7 @@ Page.quiz = function () {
 			menus: {
 				course_table_list: {url: '/', name: '课程测验', active: false},
 				test: {url: '/test', name: '测验记录', active: false},
-				history: {url: '/history', name: '答题记录', active: false},
+				history: {url: '/history', name: '做题记录', active: false},
 				open: {url: '/open', name: '开放性测验', active: false}
 			}
 		},
@@ -2899,12 +2946,35 @@ Page.quiz = function () {
 					FUNC.findVueChild(this, "do_test").load_course_table();
 				}
 			},
+			history: function () {
+				this.result = {
+					execs: null,
+					quiz_obj: {},
+					error: ''
+				};
+				this.currentView = "history";
+				FUNC.findVueChild(this, "history").load_all();
+			},
 			loading: function () {
 				this.currentView = "base-loading";
 			}
 		},
 		components: {
 			course_table_list: {template:"<p class=\"alert alert-danger\" v-if=\"error\">{{error}}<\/p><div class=\"alert alert-warning\" v-if=\"course_table!=null && course_table.length==0\">当前开课列表为空，请先添加课程<\/div><div class=\"course-table\" v-if=\"course_table!=null && course_table.length>0\"><table class=\"table\"><thead><tr><th>课程名称<\/th><th>老师<\/th><th>操作<\/th><\/tr><\/thead><tbody v-repeat=\"course_table\"><tr><td>{{course.courseName}}<\/td><td>{{course.teacherName}}<\/td><td><a class=\"btn btn-success btn-sm\" href=\"#\/do\/{{course.courseTableID}}\">做题<\/a><a class=\"btn btn-primary btn-sm\" href=\"#\/see\/{{course.courseTableID}}\">看题<\/a><button class=\"btn btn-info btn-sm\" href=\"#\/history\/{{course.courseTableID}}\">记录<\/button><\/td><\/tr><\/tbody><\/table><\/div>"},
+			history: {template:"<p class=\"alert alert-danger\" v-if=\"error\">{{error}}<\/p><div class=\"panel panel-primary\"><div class=\"panel-heading\"><strong>全部做题记录<\/strong><\/div><div class=\"panel-body\"><p v-if=\"execs===null\" class=\"alert alert-info\">加载中<\/p><p v-if=\"execs!=null && execs.length==0\" class=\"alert alert-warning\">无任何做题记录<\/p><div v-if=\"execs!=null && execs.length>0\" class=\"panel-group\" id=\"accordion\" role=\"tablist\" aria-multiselectable=\"true\"><div v-repeat=\"answer:execs\" class=\"panel panel-default\"><div class=\"panel-heading\" role=\"tab\" id=\"Heading_{{$index}}\"><h4 class=\"panel-title\"><a data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#collapse_{{$index}}\" aria-expanded=\"true\" aria-controls=\"#collapse_{{$index}}\"><i>{{quiz_obj[answer.quizID].quiz.index}}<\/i>&nbsp;&nbsp;{{quiz_obj[answer.quizID].quiz.title|quiz_title_to_test_title}}<\/a><span class=\"pull-right\" aria-hidden=\"true\"><span>{{answer.time|timestamp_to_date}}<\/span><button type=\"button\" class=\"panel-title-button btn btn-sm\" v-class=\"answer.isCorrect?'btn-success':'btn-danger'\"><span class=\"glyphicon\" v-class=\"answer.isCorrect?'glyphicon-ok':'glyphicon-remove'\"><\/span><\/button><\/span><\/h4><\/div><div id=\"collapse_{{$index}}\" class=\"panel-collapse collapse\" role=\"tabpane\" aria-labelledby=\"Heading_{{$index}}\"><div class=\"panel-body\"><div v-with=\"answer:answer,quiz: quiz_obj[answer.quizID]\" v-component=\"answer-item\"><\/div><div v-with=\"quiz_obj[answer.quizID]\" v-component=\"quiz-item\"><\/div><\/div><\/div><\/div><\/div><\/div><\/div><pre>{{execs|json}}<\/pre>",methods:{
+	load_all: function () {
+		var obj = this;
+		obj.error = "";
+		FUNC.ajax(CONFIG.api.quiz_student.history, "get", {}, function (result) {
+			if (result.status) {
+				obj.quiz_obj = result.data.quiz;//必须依照该顺序，否则会导致警告
+				obj.execs = result.data.execs;
+			} else {
+				obj.error = result.msg;
+			}
+		});
+	}
+}},
 			do_test: {template:"<h3 class=\"bg-success bg-padding\">开始答题<\/h3><p v-if=\"error\" class=\"alert alert-danger\">{{error}}<\/p><p v-if=\"warning\" class=\"alert alert-warning\">{{warning}}<\/p><p v-if=\"quiz_list.length==0 && !warning\" class=\"alert alert-info\">加载中<\/p><div v-if=\"quiz_list!=null && quiz_list.length>0\"><div v-repeat=\"quiz_list\"><p class=\"test-title\"><span>{{$index+1}}.<\/span>&nbsp;<spanclass=\"small\">({{quiz.type|quiz_translate_type}})<\/span>&nbsp;{{quiz.title}}<\/p><ul v-if=\"quiz.type==0\" class=\"quiz-single-option list-unstyled\"><li v-repeat=\"options\"><button class=\"btn btn-sm btn-{{$index==quiz.answer?'primary':'default'}}\" v-on=\"click: onSingleClick(quiz,$index)\">{{$index|quiz_option_translate_index}}<\/button>&nbsp;{{description}}<\/li><\/ul><ul class=\"quiz-multi-option list-unstyled\" v-if=\"quiz.type==1 && quiz.size>0\"><li v-repeat=\"options\"><span class=\"display-char\">{{$index|quiz_option_translate_index}}.<\/span>&nbsp;{{description}}<\/li><li v-repeat=\"createMultiOptionObj(quiz.size,options.length)\"><span class=\"display-answer-index\">({{$index+1}})&nbsp;<\/span><button v-repeat=\"now_option\" class=\"btn btn-sm btn-{{$index==quiz.answer[now_index]?'primary':'default'}}\" v-on=\"click: onMultiClick(quiz,now_index,$index)\">{{$value|quiz_option_translate_index}}<\/button><\/li><\/ul><ul class=\"quiz-multi-option list-unstyled\" v-if=\"quiz.type==1 && quiz.size==0\"><li v-repeat=\"options\"><button class=\"btn btn-sm btn-{{$index==quiz.answer[$index]?'primary':'default'}}\" v-on=\"click: onSimpleMultiClick(quiz,$index)\">{{$index|quiz_option_translate_index}}<\/button>&nbsp;{{description}}<\/li><\/ul><div class=\"quiz-answer-submit\" v-if=\"!quiz.success && checkChoiceStatus(quiz)\"><button class=\"btn btn-sm btn-success\" v-on=\"click:onSubmitSingle($index,quiz)\">{{quiz.submit_lock?\"提交中\":\"提交答案\"}}<\/button><span v-if=\"quiz.error\" class=\"text-danger\">{{quiz.error}}<\/span><\/div><div v-if=\"quiz.success\" class=\"alert alert-success\">恭喜成功答对<\/div><\/div><\/div>",methods:{
 	load_course_table: function () {
 		var obj = this;
@@ -3048,6 +3118,10 @@ Page.quiz = function () {
 		},
 		'/do/:id': function (id) {
 			quiz_vm.do_test(id);
+		},
+		'/history': function () {
+			change_menus_active("history");
+			quiz_vm.history();
 		}
 	};
 	var router = Router(routes);//初始化一个路由器

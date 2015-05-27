@@ -59,6 +59,11 @@
     margin: 0 0 15px 20px;
 }
 
+.answer-result-item{
+    border: 1px dashed #658e5b;
+    padding: 5px;
+}
+
 
 .course-table tbody {
     background-color: #e6f8fb;

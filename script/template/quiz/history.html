@@ -19,23 +19,26 @@
 							<i>{{quiz_obj[answer.quizID].quiz.index}}</i>&nbsp;&nbsp;
 							{{quiz_obj[answer.quizID].quiz.title|quiz_title_to_test_title}}
 						</a>
-								<span class="pull-right" aria-hidden="true">
-									<span>{{answer.time|timestamp_to_date}}</span>
-									<button type="button"
-									        class="panel-title-button btn btn-sm"
-									        v-class="answer.isCorrect?'btn-success':'btn-danger'">
-										<span class="glyphicon"
-										      v-class="answer.isCorrect?'glyphicon-ok':'glyphicon-remove'">
-										</span>
-									</button>
-								</span>
+							<span class="pull-right" aria-hidden="true">
+								<span>{{answer.time|timestamp_to_date}}</span>
+								<button type="button"
+								        class="panel-title-button btn btn-sm"
+								        v-class="answer.isCorrect?'btn-success':'btn-danger'">
+									<span class="glyphicon"
+									      v-class="answer.isCorrect?'glyphicon-ok':'glyphicon-remove'">
+									</span>
+								</button>
+							</span>
 					</h4>
 				</div>
 				<div id="collapse_{{$index}}"
 				     class="panel-collapse collapse"
 				     role="tabpane"
 				     aria-labelledby="Heading_{{$index}}">
-					<div class="panel-body" v-with="quiz_obj[answer.quizID]" v-component="quiz-item"></div>
+					<div class="panel-body">
+						<div v-with="answer:answer,quiz: quiz_obj[answer.quizID]" v-component="answer-item"></div>
+						<div v-with="quiz_obj[answer.quizID]" v-component="quiz-item"></div>
+					</div>
 				</div>
 			</div>
 		</div>
