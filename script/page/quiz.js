@@ -54,14 +54,30 @@ Page.quiz = function () {
 				}
 			},
 			history: function (is_correct) {
-				this.result = {
-					execs: null,
-					quiz_obj: {},
-					error: '',
-					is_correct: is_correct,
-					correct_map: CONST_MAP.history_answer_correct
-				};
-				this.currentView = "history";
+				if (this.currentView != "history") {
+					//如果视图修改
+					this.result = {
+						execs: null,
+						quiz_obj: {},
+						error: '',
+						is_correct: is_correct,
+						correct_map: CONST_MAP.history_answer_correct,
+						course_search: {
+							is_init: true,
+							search: '',
+							title: '指定测验课程',
+							course: -1,
+							courseName: "",
+							error: "",
+							course_list_empty: false,
+							course_list: [],
+							callback: null
+						}
+					};
+					this.currentView = "history";
+				} else {
+					this.result.is_correct = is_correct;
+				}
 				FUNC.findVueChild(this, "history").load_all();
 			},
 			loading: function () {
@@ -75,6 +91,10 @@ Page.quiz = function () {
 		}
 	});
 	var change_menus_active = function (view) {
+		if (quiz_vm.currentView == view) {
+			//如果视图无改变
+			return;
+		}
 		if (quiz_vm.menus.hasOwnProperty(quiz_vm.currentName)) {
 			quiz_vm.menus[quiz_vm.currentName].active = false;
 		}

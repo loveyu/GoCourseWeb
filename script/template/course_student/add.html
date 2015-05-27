@@ -18,7 +18,8 @@
 		<tr v-repeat="locations">
 			<td v-if="$index==0" rowspan="{{locations.length}}">
 				<button v-if="selected>-1" v-on="click:onAdd(course.courseTableID)"
-				        class="btn btn-{{selected==0?'primary':'success'}}">{{selected==0?'添加':'已选'}}
+				        v-class="selected==0?'btn-primary':'btn-success'"
+				        class="btn">{{selected==0?'添加':'已选'}}
 				</button>
 			</td>
 			<td v-if="$index==0" rowspan="{{locations.length}}">{{course.courseName}}</td>

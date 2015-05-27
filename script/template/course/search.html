@@ -1,0 +1,29 @@
+<div class="panel panel-info">
+
+	<div class="panel-heading">{{title}}
+		<form action="" class="form-inline form-group-sm" v-on="submit: onSearch" style="display: inline-block;">
+			<div class="input-group" style="margin-left: 10px;">
+				<input v-model="search" type="text" class="form-control" placeholder="搜索课程">
+      <span class="input-group-btn">
+        <button class="btn btn-primary btn-sm" type="submit">搜索</button>
+      </span>
+			</div>
+		</form>
+	</div>
+	<div class="panel-body">
+
+		<p class="alert-danger alert" v-if="error">{{error}}</p>
+
+		<p v-if="is_init" class="help-block">请先搜索课程</p>
+
+		<p v-if="!is_init && course_list_empty" class="alert alert-warning">无任何课程请重新搜索</p>
+
+		<button v-repeat="course_list"
+		        class="btn" type="button"
+		        v-class="course==$key?'btn-success':'btn-default'"
+		        v-on="click: onCourseClick($key)"
+		        data-id="{{$key}}">
+			{{$value}}
+		</button>
+	</div>
+</div>

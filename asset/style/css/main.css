@@ -63,3 +63,10 @@
     border: 1px dashed #658e5b;
     padding: 5px;
 }
+.answer-result-item p{
+    margin-bottom: 0;
+}
+.answer-result-item button{
+    margin-left: 5px;
+    border-radius: 50%;
+}

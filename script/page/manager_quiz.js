@@ -91,18 +91,23 @@ Page.manager_quiz = function () {
 			},
 			m_share: function () {
 				this.result = {
-					search: '',
-					course: -1,
-					course_list_empty: false,
-					courseName: '',
-					course_list: [],
 					quiz_list: [],
-					is_init: true,
-					error: "",
 					teacher_id: Member.id,
-					error2: ""
+					error2: "",
+					course_search: {
+						is_init: true,
+						search: '',
+						title: '共享的测验',
+						course: -1,
+						courseName: "",
+						error: "",
+						course_list_empty: false,
+						course_list: [],
+						callback: null
+					}
 				};
 				this.currentView = "share";
+				FUNC.findVueChild(this, "share").init();
 			},
 			m_bind: function (table) {
 				this.result = {

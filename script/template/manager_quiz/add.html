@@ -12,7 +12,9 @@
 
 		<p v-if="course_list_empty" class="alert alert-warning">无任何课程数据</p>
 		<button v-repeat="course_list"
-		        class="btn btn-{{model.course==$key?'success':'default'}}" type="button"
+		        class="btn"
+		        v-class="model.course==$key?'btn-success':'btn-default'"
+		        type="button"
 		        v-on="click: onCourseClick($key)"
 		        data-id="{{$key}}">
 			{{$value}}
@@ -22,7 +24,9 @@
 
 <div v-if="is_force_load" class="alert alert-info">
 	<p v-if="courseTableInfo==null" class="alert alert-warning">加载中.....</p>
-	<p v-if="courseTableInfo!=null" ><strong>课程：</strong>{{courseTableInfo.course.courseName}}, {{courseTableInfo.course.deptName}}, {{courseTableInfo.course.enrolYear}}级</p>
+
+	<p v-if="courseTableInfo!=null"><strong>课程：</strong>{{courseTableInfo.course.courseName}},
+		{{courseTableInfo.course.deptName}}, {{courseTableInfo.course.enrolYear}}级</p>
 </div>
 
 <div v-if="model.course>-1 || !quiz_empty" class="panel panel-primary">
@@ -54,7 +58,8 @@
 				<span class="text-warning glyphicon glyphicon-warning-sign">如果只选择一个将作为单选题</span>
 			</p>
 			<button v-repeat="model.quiz_name" v-on="click:onSetCorrect($index)"
-			        class="btn btn-{{correct?'success':'default'}}">{{key}}
+			        class="btn"
+			        v-class="correct?'btn-success':'btn-default'" type="button">{{key}}
 			</button>
 			<button class="btn btn-primary" v-on="click:onQuizAdd" type="button">添加</button>
 			<button class="btn btn-danger" v-on="click:onQuizRemove" type="button">移除</button>

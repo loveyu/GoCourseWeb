@@ -63,7 +63,8 @@
 			<div v-if="!set_new_email">
 				<h5>无法发送接收到邮件么？
 					<a href="#" v-on="click: send_email_again"
-					   class="btn btn-sm btn-{{email_send_status?email_send_status:'warning'}}">
+					   v-class="email_send_status?('btn-'+email_send_status):'btn-warning'"
+					   class="btn btn-sm">
 						{{email_send_notice?email_send_notice:"再次发送邮件"}}
 					</a>
 				</h5>

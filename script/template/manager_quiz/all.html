@@ -11,7 +11,9 @@
 
 		<p v-if="course_list_empty" class="alert alert-warning">无任何课程数据</p>
 		<button v-repeat="course_list"
-		        class="btn btn-{{model.course==$key?'success':'default'}}" type="button"
+		        class="btn"
+		        v-class="model.course==$key?'btn-success':'btn-default'"
+		        type="button"
 		        v-on="click: onCourseClick($key)"
 		        data-id="{{$key}}">
 			{{$value}}
@@ -43,7 +45,8 @@
 									<span class="glyphicon glyphicon-remove-circle text-danger"
 									      style="margin-left: 5px;margin-right: 5px"></span>
 									<button type="button" v-on="click: onShare($index)"
-									        class=" panel-title-button btn btn-sm btn-{{quiz.status?'warning':'info'}}">
+									        v-class="quiz.status?'btn-warning':'btn-info'"
+									        class=" panel-title-button btn btn-sm">
 										{{quiz.status?'取消共享':'共享测验'}}
 									</button>
 								</span>
