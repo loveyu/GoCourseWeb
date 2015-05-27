@@ -21,13 +21,21 @@ _methods_ = {
 		this.week_list = table.sort(function (a, b) {
 			return a - b;
 		});
-		this.setWeek(CONFIG.current_week.week)
+		this.setWeek(CONFIG.current_week.week, null);
 	},
 	/**
 	 * 切换到某一周的数据
 	 * @param week
+	 * @param event 事件
 	 */
-	setWeek: function (week) {
+	setWeek: function (week, event) {
+		if (event != null && typeof event == "object") {
+			event.preventDefault();
+		}
+		if (this.week_current == week) {
+			return;
+		}
+		this.has_course = false;
 		var table = [], arr = [];
 		var i, j;
 		for (i = 0; i < 6; i++) {
@@ -50,8 +58,11 @@ _methods_ = {
 				}
 			}
 		}
-		this.has_course = flag;
-		this.week_table = table;
-		this.week_current = week;
+		if (flag) {
+			this.week_table = table;
+			this.week_current = week;
+			this.has_course = true;
+		}
+		return false;
 	}
 };//_methods_

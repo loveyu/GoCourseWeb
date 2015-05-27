@@ -4,7 +4,7 @@
 		<ul class="pagination pagination-lg">
 			<li class="disabled"><a href="javascript:void(0)">周次</a></li>
 			<li v-repeat="week_list" v-class="$value==week_current?'active':''">
-				<a href="#" v-on="click: setWeek($value)">{{$value}}</a>
+				<a href="#" v-on="click: setWeek($value, $event)">{{$value}}</a>
 			</li>
 		</ul>
 	</nav>
