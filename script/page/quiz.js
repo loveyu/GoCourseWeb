@@ -12,6 +12,7 @@ Page.quiz = function () {
 			menus: {
 				course_table_list: {url: '/', name: '课程测验', active: false},
 				test: {url: '/test', name: '测验记录', active: false},
+				ct_history: {url: '', name: '课程测验记录', active: false},
 				history: {url: '/history', name: '做题记录', active: false},
 				open: {url: '/open', name: '开放性测验', active: false}
 			}
@@ -80,12 +81,39 @@ Page.quiz = function () {
 				}
 				FUNC.findVueChild(this, "history").load_all();
 			},
+			course_table_history: function (is_correct, courseTableId) {
+				var flag = this.currentView == "course_table_history"
+					&& (typeof this.result.course_table_id != "undefined")
+					&& courseTableId == this.result.course_table_id;
+				if (!flag) {
+					this.result = {
+						correct_map: CONST_MAP.history_answer_correct,
+						loading: true,
+						course_info: null,
+						is_correct: null,
+						course_table_id: courseTableId,
+						execs: null,
+						ct_info: null,
+						error: ""
+					};
+					this.currentView = "course_table_history";
+				}
+				var child = FUNC.findVueChild(this, "course_table_history");
+				if (!flag) {
+					child.init();
+				}
+				child.set_correct(+is_correct);
+			},
+			now_url: function () {
+				return window.location.hash.substr(1);
+			},
 			loading: function () {
 				this.currentView = "base-loading";
 			}
 		},
 		components: {
 			course_table_list: {__require: 'quiz/course_table_list.html'},
+			course_table_history: {__require: 'quiz/course_table_history.html'},
 			history: {__require: 'quiz/history.html'},
 			do_test: {__require: 'quiz/do_test.html'}
 		}
@@ -93,6 +121,10 @@ Page.quiz = function () {
 	var change_menus_active = function (view) {
 		if (quiz_vm.currentView == view) {
 			//如果视图无改变
+			return;
+		}
+		if (!quiz_vm.menus.hasOwnProperty(view)) {
+			//如果无视图
 			return;
 		}
 		if (quiz_vm.menus.hasOwnProperty(quiz_vm.currentName)) {
@@ -125,6 +157,18 @@ Page.quiz = function () {
 		'history/all': function () {
 			change_menus_active("history");
 			quiz_vm.history(-1);
+		},
+		'ct_history/right/:id': function (id) {
+			change_menus_active("ct_history");
+			quiz_vm.course_table_history(1, id);
+		},
+		'ct_history/wrong/:id': function (id) {
+			change_menus_active("ct_history");
+			quiz_vm.course_table_history(0, id);
+		},
+		'ct_history/all/:id': function (id) {
+			change_menus_active("ct_history");
+			quiz_vm.course_table_history(-1, id);
 		}
 	};
 	var router = Router(routes);//初始化一个路由器

@@ -1,12 +1,14 @@
 <p class="alert alert-danger" v-if="error">{{error}}</p>
-<div v-with="course_search" v-component="course-search"></div>
-<div class="panel panel-primary">
+<p v-if="loading" class="alert alert-info">加载中......</p>
+<div v-if="!loading" class="alert alert-info">
+	<p v-if="ct_info!=null"><strong>课程：</strong>{{ct_info.course.courseName}},
+		{{ct_info.course.deptName}}, {{ct_info.course.enrolYear}}级</p>
+</div>
+<div v-if="!loading" class="panel panel-primary">
 	<div class="panel-heading">
-		<span v-if="course_search.courseName">有关<strong>{{course_search.courseName}}</strong>的测验&nbsp;&nbsp;</span>
-		<strong v-if="!course_search.courseName">全部测验&nbsp;&nbsp;</strong>
 		<a v-repeat="correct:correct_map" class="btn-sm"
 		   v-class="correct.id==is_correct?'btn-success':'btn-default'"
-		   href="#/history/{{correct.url}}">{{correct.name}}</a>
+		   href="#/ct_history/{{correct.url}}/{{course_table_id}}">{{correct.name}}</a>
 	</div>
 	<div class="panel-body">
 		<p v-if="execs===null" class="alert alert-info">加载中</p>
