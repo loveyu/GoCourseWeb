@@ -1,10 +1,13 @@
 <p class="alert alert-danger" v-if="error">{{error}}</p>
+<button
+value="xx"
+class="btn"></button>
 <div v-with="course_search" v-component="course-search"></div>
 <div class="panel panel-primary">
 	<div class="panel-heading">
 		<span v-if="course_search.courseName">有关<strong>{{course_search.courseName}}</strong>的测验&nbsp;&nbsp;</span>
 		<strong v-if="!course_search.courseName">全部测验&nbsp;&nbsp;</strong>
-		<a v-repeat="correct:correct_map" class="btn-sm bt"
+		<a v-repeat="correct:correct_map" class="btn-sm"
 		   v-class="correct.id==is_correct?'btn-success':'btn-default'"
 		   href="#/history/{{correct.url}}">{{correct.name}}</a>
 	</div>
