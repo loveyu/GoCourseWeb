@@ -7,6 +7,7 @@
 $file = isset($argv[1]) ? $argv[1] : "G:\\J2EE\\GoCourseServer\\doc\\api.md";
 $path = isset($argv[2]) ? $argv[2] : "G:\\J2EE\\GoCourseServer\\doc\\api\\";
 echo file_get_contents($file);
+echo "\r\n## 数据库字段及描述\r\n[链接: mysql_table.html](mysql_table.html)\r\n";
 echo "\r\n## API错误状态代码\r\n[链接: status_code.html](status_code.html)\r\n";
 echo "\r\n## API列表导航\r\n";
 $i = 1;

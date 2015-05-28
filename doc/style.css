@@ -839,6 +839,29 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
     color: #aaa;
 }
 
+/*自定义样式*/
+
 body {
     margin: 0 20px;
+}
+
+table{
+    width: 100%;
+}
+table th {
+    font-weight: bold;
+}
+table th, table td {
+    border: 1px solid #CCCCCC;
+    padding: 6px 13px;
+}
+table tr {
+    background-color: #FFFFFF;
+    border-top: 1px solid #CCCCCC;
+}
+table tr:nth-child(2n) {
+    background-color: #F8F8F8;
+}
+table tr:hover{
+    background-color: #efefef;
 }

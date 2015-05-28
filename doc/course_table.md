@@ -1,4 +1,4 @@
-# 课程表添加
+# 课程表的查询与添加
 基本路径：`course_table`
 
 ## /course_table/add

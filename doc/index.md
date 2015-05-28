@@ -60,13 +60,16 @@ Session ID 必须使用Cookie进行传递，且默认名称为`JSESSIONID`，该
 ### 数据分页说明
 **提示：** 目前服务端未实现分页的接口，如果数据量较大请自行先预留分页的操作，接口会在data字段中添加相应的属性。
 
+## 数据库字段及描述
+[链接: mysql_table.html](mysql_table.html)
+
 ## API错误状态代码
 [链接: status_code.html](status_code.html)
 
 ## API列表导航
 1. [获取专业等各种信息](college.html), `/college/`
 2. [基础课表名的操作](course.html), `/course/`
-3. [课程表添加](course_table.html), `/course_table/`
+3. [课程表的查询与添加](course_table.html), `/course_table/`
 4. [教师的测验管理](quiz_teacher.html), `/quiz_teacher/`
 5. [课程安排的时间](schedule.html), `/schedule/`
 6. [获取服务器状态信息](server_status.html), `/server_status/`

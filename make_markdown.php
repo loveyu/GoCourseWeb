@@ -5,6 +5,7 @@
  * Time: 23:44
  */
 system("php gen_status_code.php > doc/status_code.md");
+system("php gen_mysql_table.php > doc/mysql_table.md");
 system("php gen_api_index.php > doc/index.md");
 $status_code = unserialize(file_get_contents("test/status_code.serialize"));
 foreach (glob("G:\\J2EE\\GoCourseServer\\doc\\api\\*.md") as $v) {
