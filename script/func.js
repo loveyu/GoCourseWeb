@@ -231,6 +231,31 @@ var FUNC = {
 					}
 				}
 				return {title: title, size: matches == null ? 0 : matches.length};
+			},
+			/**
+			 * 解析返回的测验信息列表
+			 */
+			parse_test_property: function (quiz_list) {
+				var answer = {};
+				for (var k in quiz_list) {
+					if (!quiz_list.hasOwnProperty(k)) {
+						continue;
+					}
+					if (quiz_list[k].quiz.type == CONST_MAP.quiz_type.multiple) {
+						var title_obj = FUNC.quiz.parse_title(quiz_list[k].quiz.title);
+						quiz_list[k].quiz.title = title_obj.title;
+						quiz_list[k].quiz['size'] = title_obj.size;
+						//必须使用一个对象，否则无效
+						quiz_list[k].quiz['answer'] = FUNC.createArrayObj(title_obj.size == 0 ? quiz_list[k].options.length : title_obj.size, -1);
+					} else {
+						quiz_list[k].quiz['size'] = 1;
+						quiz_list[k].quiz['answer'] = -1;
+					}
+					quiz_list[k].quiz['submit_lock'] = false;
+					quiz_list[k].quiz['error'] = '';
+					quiz_list[k].quiz['success'] = '';
+				}
+				return {list: quiz_list, answer: answer};
 			}
 		},
 		verify: {

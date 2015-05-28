@@ -11,10 +11,11 @@ Page.quiz = function () {
 			currentName: "base-loading",
 			menus: {
 				course_table_list: {url: '/', name: '课程测验', active: false},
-				test: {url: '/test', name: '测验记录', active: false},
+				do_test: {url: '', name: '答题模式', active: false},
+				quiz_history: {url: '/quiz_history', name: '测验记录', active: false},
 				ct_history: {url: '', name: '课程测验记录', active: false},
 				history: {url: '/history', name: '做题记录', active: false},
-				open: {url: '/open', name: '开放性测验', active: false}
+				open_test: {url: '/open_test', name: '开放性测验', active: false}
 			}
 		},
 		methods: {
@@ -43,7 +44,7 @@ Page.quiz = function () {
 					index: 0,
 					error: '',
 					warning: '',
-					quiz_list: []
+					test_obj: {}
 				};
 				var parse_id = parseInt(id);
 				if (parse_id < 1 || ("" + parse_id) != id) {
@@ -106,6 +107,35 @@ Page.quiz = function () {
 				}
 				child.set_correct(+is_correct);
 			},
+			open_test: function (id) {
+				if (this.currentView != "open_test") {
+					this.result = {
+						error: '',
+						warning: '',
+						test_obj: '',
+						course_search: {
+							is_init: true,
+							search: '',
+							title: '搜索课程的名称',
+							course: -1,
+							courseName: "",
+							error: "",
+							course_list_empty: false,
+							course_list: [],
+							callback: null
+						}
+					};
+					this.currentView = "open_test";
+				}
+				var child = FUNC.findVueChild(this, "open_test");
+				if (id > 0 && id != this.result.course_search.course) {
+					child.init_search(id);
+				}
+				child.search(id);
+			},
+			quiz_history: function (is_correct) {
+				this.currentView = "quiz_history";
+			},
 			now_url: function () {
 				return window.location.hash.substr(1);
 			},
@@ -117,7 +147,9 @@ Page.quiz = function () {
 			course_table_list: {__require: 'quiz/course_table_list.html'},
 			ct_history: {__require: 'quiz/course_table_history.html'},
 			history: {__require: 'quiz/history.html'},
-			do_test: {__require: 'quiz/do_test.html'}
+			quiz_history: {__require: 'quiz/quiz_history.html'},
+			do_test: {__require: 'quiz/do_test.html'},
+			open_test: {__require: 'quiz/open_test.html'}
 		}
 	});
 	var change_menus_active = function (view) {
@@ -142,6 +174,7 @@ Page.quiz = function () {
 			quiz_vm.my();
 		},
 		'/do/:id': function (id) {
+			change_menus_active("do_test");
 			quiz_vm.do_test(id);
 		},
 		'/history': function () {
@@ -171,6 +204,30 @@ Page.quiz = function () {
 		'ct_history/all/:id': function (id) {
 			change_menus_active("ct_history");
 			quiz_vm.course_table_history(-1, id);
+		},
+		'open_test': function () {
+			change_menus_active("open_test");
+			quiz_vm.open_test(0);
+		},
+		'open_test/:id': function (id) {
+			change_menus_active("open_test");
+			quiz_vm.open_test(+id);
+		},
+		'quiz_history': function () {
+			change_menus_active("quiz_history");
+			quiz_vm.quiz_history(-1);
+		},
+		'quiz_history/all': function () {
+			change_menus_active("quiz_history");
+			quiz_vm.quiz_history(-1);
+		},
+		'quiz_history/right': function () {
+			change_menus_active("quiz_history");
+			quiz_vm.quiz_history(1);
+		},
+		'quiz_history/wrong': function () {
+			change_menus_active("quiz_history");
+			quiz_vm.quiz_history(0);
 		}
 	};
 	var router = Router(routes);//初始化一个路由器

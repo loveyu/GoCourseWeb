@@ -117,8 +117,15 @@ Vue.component('answer-item', {template:"<div class=\"answer-result-item\" xmlns=
 	}
 }});
 Vue.component('course-search', {template:"<div class=\"panel panel-info\"> <div class=\"panel-heading\">{{title}} <form action=\"\" class=\"form-inline form-group-sm\" v-on=\"submit: onSearch\" style=\"display: inline-block;\"> <div class=\"input-group\" style=\"margin-left: 10px;\"> <input v-model=\"search\" type=\"text\" class=\"form-control\" placeholder=\"搜索课程\"> <span class=\"input-group-btn\"> <button class=\"btn btn-primary btn-sm\" type=\"submit\">搜索<\/button> <\/span> <\/div> <\/form> <\/div> <div class=\"panel-body\"> <p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p> <p v-if=\"is_init\" class=\"help-block\">请先搜索课程<\/p> <p v-if=\"!is_init && course_list_empty\" class=\"alert alert-warning\">无任何课程请重新搜索<\/p> <button v-repeat=\"course_list\" class=\"btn\" type=\"button\" v-class=\"course==$key?'btn-success':'btn-default'\" v-on=\"click: onCourseClick($key)\" data-id=\"{{$key}}\"> {{$value}} <\/button> <\/div> <\/div>",methods:{
-	onSearch: function (event) {
-		event.preventDefault();
+	/**
+	 * @param event 可以手动调用搜索参数，如果event值为null,同时手动设置search对象
+	 * @param call 成功后的回调函数，对象参数this
+	 * @returns {boolean}
+	 */
+	onSearch: function (event, call) {
+		if (event != null) {
+			event.preventDefault();
+		}
 		var obj = this;
 		obj.error = "";
 		FUNC.ajax(CONFIG.api.course.search, "get", {query: this.search}, function (result) {
@@ -126,6 +133,9 @@ Vue.component('course-search', {template:"<div class=\"panel panel-info\"> <div 
 			if (result.status) {
 				obj.course_list = result.data;
 				obj.course_list_empty = FUNC.isEmpty(result.data);
+				if (typeof call == "function") {
+					call(obj);
+				}
 			} else {
 				obj.error = result.msg;
 			}
@@ -143,6 +153,88 @@ Vue.component('course-search', {template:"<div class=\"panel panel-info\"> <div 
 			} else {
 				console.warn("未定义搜索回调函数")
 			}
+		}
+	}
+}});
+Vue.component('test-list', {template:"<div v-if=\"list!=null && list.length>0\"> <div v-repeat=\"list\"> <p class=\"test-title\"><span>{{$index+1}}.<\/span>&nbsp;<span class=\"small\">({{quiz.type|quiz_translate_type}})<\/span>&nbsp; {{quiz.title}} <\/p> <ul v-if=\"quiz.type==0\" class=\"quiz-single-option list-unstyled\"> <li v-repeat=\"options\"> <button class=\"btn btn-sm btn-{{$index==quiz.answer?'primary':'default'}}\" v-on=\"click: onSingleClick(quiz,$index)\"> {{$index|quiz_option_translate_index}} <\/button> &nbsp;{{description}} <\/li> <\/ul> <ul class=\"quiz-multi-option list-unstyled\" v-if=\"quiz.type==1 && quiz.size>0\"> <li v-repeat=\"options\"> <span class=\"display-char\">{{$index|quiz_option_translate_index}}.<\/span>&nbsp;{{description}} <\/li> <li v-repeat=\"createMultiOptionObj(quiz.size,options.length)\"> <span class=\"display-answer-index\">({{$index+1}})&nbsp;<\/span> <button v-repeat=\"now_option\" class=\"btn btn-sm btn-{{$index==quiz.answer[now_index]?'primary':'default'}}\" v-on=\"click: onMultiClick(quiz,now_index,$index)\"> {{$value|quiz_option_translate_index}} <\/button> <\/li> <\/ul> <ul class=\"quiz-multi-option list-unstyled\" v-if=\"quiz.type==1 && quiz.size==0\"> <li v-repeat=\"options\"> <button class=\"btn btn-sm btn-{{$index==quiz.answer[$index]?'primary':'default'}}\" v-on=\"click: onSimpleMultiClick(quiz,$index)\"> {{$index|quiz_option_translate_index}} <\/button> &nbsp;{{description}} <\/li> <\/ul> <div class=\"quiz-answer-submit\" v-if=\"!quiz.success && checkChoiceStatus(quiz)\"> <button class=\"btn btn-sm btn-success\" v-on=\"click:onSubmitSingle($index,quiz)\"> {{quiz.submit_lock?\"提交中\":\"提交答案\"}} <\/button> <span v-if=\"quiz.error\" class=\"text-danger\">{{quiz.error}}<\/span> <\/div> <div v-if=\"quiz.success\" class=\"alert alert-success\">恭喜成功答对<\/div> <\/div> <\/div>",methods:{
+	createMultiOptionObj: function (size, option_size) {
+		var rt = [];
+		for (var i = 0; i < size; i++) {
+			var option = [];
+			for (var j = 0; j < option_size; j++) {
+				option.push(j);
+			}
+			rt.push({now_index: i, now_option: option});
+		}
+		return rt;
+	},
+	checkChoiceStatus: function (quiz) {
+		if (typeof quiz.answer == "object") {
+			if (quiz.size == 0) {
+				for (var i in quiz.answer) {
+					if (quiz.answer[i] > -1) {
+						return true;
+					}
+				}
+			} else {
+				for (var i in quiz.answer) {
+					//复杂性的，必须全有效
+					if (quiz.answer[i] == -1) {
+						return false;
+					}
+				}
+				return true;
+			}
+		} else if (typeof quiz.answer == "number") {
+			return quiz.answer > -1;
+		}
+	},
+	/**
+	 * 单选点击事件
+	 */
+	onSingleClick: function (quiz, optionIndex) {
+		quiz.answer = optionIndex;
+	},
+	/**
+	 * 简单多选点击事件
+	 */
+	onSimpleMultiClick: function (quiz, optionIndex) {
+		quiz.answer[optionIndex] = quiz.answer[optionIndex] == optionIndex ? -1 : optionIndex;
+	},
+	onMultiClick: function (quiz, index, optionIndex) {
+		quiz.answer[index] = optionIndex;
+	},
+	onSubmitSingle: function (index, quiz) {
+		if (quiz['submit_lock']) {
+			alert("提交中，勿重复");
+			return false;
+		}
+		quiz['error'] = '';
+		quiz['submit_lock'] = true;
+		FUNC.ajax(CONFIG.api.quiz_student.do_test, "post", {
+			quiz_id: quiz.quizID,
+			answer: this.compOptionWithIndex(index, quiz.answer)
+		}, function (result) {
+			quiz['submit_lock'] = false;
+			if (result.status) {
+				quiz['success'] = true;
+			} else {
+				quiz['error'] = result.msg;
+			}
+		});
+		return true;
+	},
+	compOptionWithIndex: function (quiz_index, list_arr) {
+		if (typeof list_arr == "number") {
+			return this.list[quiz_index].options[list_arr].optionID;
+		} else {
+			var arr = [];
+			for (var i in list_arr) {
+				if (list_arr[i] > -1) {
+					arr.push(this.list[quiz_index].options[list_arr[i]].optionID);
+				}
+			}
+			return arr.join(",");
 		}
 	}
 }});
@@ -237,8 +329,9 @@ var CONFIG = {
 		},
 		quiz_student: {
 			get_test_list: "quiz_student/get_test_list",
+			get_share_test_list: "quiz_student/get_share_test_list",
 			do_test: "quiz_student/do_test",
-			history:"quiz_student/exec_history"
+			history: "quiz_student/exec_history"
 		}
 	},
 	current_week: {	//当前的周次，该数据会依据服务器状态而更新
@@ -670,6 +763,31 @@ var FUNC = {
 					}
 				}
 				return {title: title, size: matches == null ? 0 : matches.length};
+			},
+			/**
+			 * 解析返回的测验信息列表
+			 */
+			parse_test_property: function (quiz_list) {
+				var answer = {};
+				for (var k in quiz_list) {
+					if (!quiz_list.hasOwnProperty(k)) {
+						continue;
+					}
+					if (quiz_list[k].quiz.type == CONST_MAP.quiz_type.multiple) {
+						var title_obj = FUNC.quiz.parse_title(quiz_list[k].quiz.title);
+						quiz_list[k].quiz.title = title_obj.title;
+						quiz_list[k].quiz['size'] = title_obj.size;
+						//必须使用一个对象，否则无效
+						quiz_list[k].quiz['answer'] = FUNC.createArrayObj(title_obj.size == 0 ? quiz_list[k].options.length : title_obj.size, -1);
+					} else {
+						quiz_list[k].quiz['size'] = 1;
+						quiz_list[k].quiz['answer'] = -1;
+					}
+					quiz_list[k].quiz['submit_lock'] = false;
+					quiz_list[k].quiz['error'] = '';
+					quiz_list[k].quiz['success'] = '';
+				}
+				return {list: quiz_list, answer: answer};
 			}
 		},
 		verify: {
@@ -2975,7 +3093,7 @@ Page.quiz = function () {
 					index: 0,
 					error: '',
 					warning: '',
-					quiz_list: []
+					test_obj: {}
 				};
 				var parse_id = parseInt(id);
 				if (parse_id < 1 || ("" + parse_id) != id) {
@@ -3041,6 +3159,9 @@ Page.quiz = function () {
 			open_test: function (id) {
 				if (this.currentView != "open_test") {
 					this.result = {
+						error: '',
+						warning: '',
+						test_obj: '',
 						course_search: {
 							is_init: true,
 							search: '',
@@ -3056,7 +3177,7 @@ Page.quiz = function () {
 					this.currentView = "open_test";
 				}
 				var child = FUNC.findVueChild(this, "open_test");
-				if (id > 0) {
+				if (id > 0 && id != this.result.course_search.course) {
 					child.init_search(id);
 				}
 				child.search(id);
@@ -3137,7 +3258,7 @@ Page.quiz = function () {
 	}
 }},
 			quiz_history: {template:"<h4>测验记录<\/h4> <p class=\"alert alert-warning\">等待教师测验完成<\/p>"},
-			do_test: {template:"<h3 class=\"bg-success bg-padding\">开始答题<\/h3> <p v-if=\"error\" class=\"alert alert-danger\">{{error}}<\/p> <p v-if=\"warning\" class=\"alert alert-warning\">{{warning}}<\/p> <p v-if=\"quiz_list.length==0 && !warning\" class=\"alert alert-info\">加载中<\/p> <div v-if=\"quiz_list!=null && quiz_list.length>0\"> <div v-repeat=\"quiz_list\"> <p class=\"test-title\"><span>{{$index+1}}.<\/span>&nbsp;<span class=\"small\">({{quiz.type|quiz_translate_type}})<\/span>&nbsp; {{quiz.title}} <\/p> <ul v-if=\"quiz.type==0\" class=\"quiz-single-option list-unstyled\"> <li v-repeat=\"options\"> <button class=\"btn btn-sm btn-{{$index==quiz.answer?'primary':'default'}}\" v-on=\"click: onSingleClick(quiz,$index)\"> {{$index|quiz_option_translate_index}} <\/button> &nbsp;{{description}} <\/li> <\/ul> <ul class=\"quiz-multi-option list-unstyled\" v-if=\"quiz.type==1 && quiz.size>0\"> <li v-repeat=\"options\"> <span class=\"display-char\">{{$index|quiz_option_translate_index}}.<\/span>&nbsp;{{description}} <\/li> <li v-repeat=\"createMultiOptionObj(quiz.size,options.length)\"> <span class=\"display-answer-index\">({{$index+1}})&nbsp;<\/span> <button v-repeat=\"now_option\" class=\"btn btn-sm btn-{{$index==quiz.answer[now_index]?'primary':'default'}}\" v-on=\"click: onMultiClick(quiz,now_index,$index)\"> {{$value|quiz_option_translate_index}} <\/button> <\/li> <\/ul> <ul class=\"quiz-multi-option list-unstyled\" v-if=\"quiz.type==1 && quiz.size==0\"> <li v-repeat=\"options\"> <button class=\"btn btn-sm btn-{{$index==quiz.answer[$index]?'primary':'default'}}\" v-on=\"click: onSimpleMultiClick(quiz,$index)\"> {{$index|quiz_option_translate_index}} <\/button> &nbsp;{{description}} <\/li> <\/ul> <div class=\"quiz-answer-submit\" v-if=\"!quiz.success && checkChoiceStatus(quiz)\"> <button class=\"btn btn-sm btn-success\" v-on=\"click:onSubmitSingle($index,quiz)\"> {{quiz.submit_lock?\"提交中\":\"提交答案\"}} <\/button> <span v-if=\"quiz.error\" class=\"text-danger\">{{quiz.error}}<\/span> <\/div> <div v-if=\"quiz.success\" class=\"alert alert-success\">恭喜成功答对<\/div> <\/div> <\/div>",methods:{
+			do_test: {template:"<h3 class=\"bg-success bg-padding\">开始答题<\/h3> <p v-if=\"error\" class=\"alert alert-danger\">{{error}}<\/p> <p v-if=\"warning\" class=\"alert alert-warning\">{{warning}}<\/p> <p v-if=\"test_obj==null && !warning && !error\" class=\"alert alert-info\">加载中<\/p> <div v-if=\"test_obj!=null\" v-with=\"test_obj\" v-component=\"test-list\"><\/div>",methods:{
 	load_course_table: function () {
 		var obj = this;
 		FUNC.ajax(CONFIG.api.quiz_student.get_test_list, "get",
@@ -3145,136 +3266,58 @@ Page.quiz = function () {
 			function (result) {
 				if (result.status) {
 					if (FUNC.isEmpty(result.data.list)) {
+						obj.test_obj = null;
 						obj.warning = "测试列表为空";
 					} else {
-						var list = obj.parse_property(result.data.list);
-						obj.answer = list.answer;
-						obj.quiz_list = list.list;
+						obj.test_obj = FUNC.quiz.parse_test_property(result.data.list);
 					}
 				} else {
 					obj.error = result.msg;
 				}
 			}
 		);
-	},
-	createMultiOptionObj: function (size, option_size) {
-		var rt = [];
-		for (var i = 0; i < size; i++) {
-			var option = [];
-			for (var j = 0; j < option_size; j++) {
-				option.push(j);
-			}
-			rt.push({now_index: i, now_option: option});
-		}
-		return rt;
-	},
-	/**
-	 * 解析返回的测验信息列表
-	 */
-	parse_property: function (quiz_list) {
-		var answer = {};
-		for (var k in quiz_list) {
-			if (!quiz_list.hasOwnProperty(k)) {
-				continue;
-			}
-			if (quiz_list[k].quiz.type == CONST_MAP.quiz_type.multiple) {
-				var title_obj = FUNC.quiz.parse_title(quiz_list[k].quiz.title);
-				quiz_list[k].quiz.title = title_obj.title;
-				quiz_list[k].quiz['size'] = title_obj.size;
-				//必须使用一个对象，否则无效
-				quiz_list[k].quiz['answer'] = FUNC.createArrayObj(title_obj.size == 0 ? quiz_list[k].options.length : title_obj.size, -1);
-			} else {
-				quiz_list[k].quiz['size'] = 1;
-				quiz_list[k].quiz['answer'] = -1;
-			}
-			quiz_list[k].quiz['submit_lock'] = false;
-			quiz_list[k].quiz['error'] = '';
-			quiz_list[k].quiz['success'] = '';
-		}
-		return {list: quiz_list, answer: answer};
-	},
-	checkChoiceStatus: function (quiz) {
-		if (typeof quiz.answer == "object") {
-			if (quiz.size == 0) {
-				for (var i in quiz.answer) {
-					if (quiz.answer[i] > -1) {
-						return true;
-					}
-				}
-			} else {
-				for (var i in quiz.answer) {
-					//复杂性的，必须全有效
-					if (quiz.answer[i] == -1) {
-						return false;
-					}
-				}
-				return true;
-			}
-		} else if (typeof quiz.answer == "number") {
-			return quiz.answer > -1;
-		}
-	},
-	/**
-	 * 单选点击事件
-	 */
-	onSingleClick: function (quiz, optionIndex) {
-		quiz.answer = optionIndex;
-	},
-	/**
-	 * 简单多选点击事件
-	 */
-	onSimpleMultiClick: function (quiz, optionIndex) {
-		quiz.answer[optionIndex] = quiz.answer[optionIndex] == optionIndex ? -1 : optionIndex;
-	},
-	onMultiClick: function (quiz, index, optionIndex) {
-		quiz.answer[index] = optionIndex;
-	},
-	onSubmitSingle: function (index, quiz) {
-		if (quiz['submit_lock']) {
-			alert("提交中，勿重复");
-			return false;
-		}
-		quiz['error'] = '';
-		quiz['submit_lock'] = true;
-		FUNC.ajax(CONFIG.api.quiz_student.do_test, "post", {
-			quiz_id: quiz.quizID,
-			answer: this.compOptionWithIndex(index, quiz.answer)
-		}, function (result) {
-			quiz['submit_lock'] = false;
-			if (result.status) {
-				quiz['success'] = true;
-			} else {
-				quiz['error'] = result.msg;
-			}
-		});
-		return true;
-	},
-	compOptionWithIndex: function (quiz_index, list_arr) {
-		if (typeof list_arr == "number") {
-			return this.quiz_list[quiz_index].options[list_arr].optionID;
-		} else {
-			var arr = [];
-			for (var i in list_arr) {
-				if (list_arr[i] > -1) {
-					arr.push(this.quiz_list[quiz_index].options[list_arr[i]].optionID);
-				}
-			}
-			return arr.join(",");
-		}
 	}
 }},
-			open_test: {template:"<div v-with=\"course_search\" v-component=\"course-search\"><\/div>",methods:{
+			open_test: {template:"<div v-with=\"course_search\" v-component=\"course-search\"><\/div> <p v-if=\"error\" class=\"alert alert-danger\">{{error}}<\/p> <p v-if=\"warning\" class=\"alert alert-warning\">{{warning}}<\/p> <div v-if=\"test_obj!=null\" v-with=\"test_obj\" v-component=\"test-list\"><\/div>",methods:{
 	init_search: function (id) {
-
+		var child = FUNC.findVueChild(this, "course-search");
+		if (child.course == id) {
+			//不动态修改
+			return;
+		}
+		if (child) {
+			child.search = id;
+			child.onSearch(null, function (obj) {
+				obj.onCourseClick(id);
+			});
+		}
 	},
 	search: function (id) {
 		if (this.course_search.callback == null) {
-			this.course_search.callback = this.search;
+			this.course_search.callback = function (id) {
+				FUNC.redirect("#/open_test/" + id);
+			};
 		}
 		if (id == 0) {
 			return;
 		}
-		console.log(id);
+		var obj = this;
+		obj.error = "";
+		FUNC.ajax(CONFIG.api.quiz_student.get_share_test_list, "get",
+			{course_id: id},
+			function (result) {
+				if (result.status) {
+					if (FUNC.isEmpty(result.data.list)) {
+						obj.test_obj = null;
+						obj.warning = "测试列表为空";
+					} else {
+						obj.test_obj = FUNC.quiz.parse_test_property(result.data.list);
+					}
+				} else {
+					obj.error = result.msg;
+				}
+			}
+		);
 	}
 }}
 		}
