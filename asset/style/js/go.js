@@ -3093,7 +3093,7 @@ Page.quiz = function () {
 					index: 0,
 					error: '',
 					warning: '',
-					test_obj: {}
+					test_obj: null
 				};
 				var parse_id = parseInt(id);
 				if (parse_id < 1 || ("" + parse_id) != id) {
@@ -3161,7 +3161,7 @@ Page.quiz = function () {
 					this.result = {
 						error: '',
 						warning: '',
-						test_obj: '',
+						test_obj: null,
 						course_search: {
 							is_init: true,
 							search: '',
@@ -3278,7 +3278,7 @@ Page.quiz = function () {
 		);
 	}
 }},
-			open_test: {template:"<div v-with=\"course_search\" v-component=\"course-search\"><\/div> <p v-if=\"error\" class=\"alert alert-danger\">{{error}}<\/p> <p v-if=\"warning\" class=\"alert alert-warning\">{{warning}}<\/p> <div v-if=\"test_obj!=null\" v-with=\"test_obj\" v-component=\"test-list\"><\/div>",methods:{
+			open_test: {template:"<div v-with=\"course_search\" v-component=\"course-search\"><\/div> <p v-if=\"error\" class=\"alert alert-danger\">{{error}}<\/p> <p v-if=\"warning\" class=\"alert alert-warning\">{{warning}}<\/p> <p v-if=\"test_obj==null && !warning && !error && course_search.course>0\" class=\"alert alert-info\">加载中<\/p> <div v-if=\"test_obj!=null\" v-with=\"test_obj\" v-component=\"test-list\"><\/div>",methods:{
 	init_search: function (id) {
 		var child = FUNC.findVueChild(this, "course-search");
 		if (child.course == id) {

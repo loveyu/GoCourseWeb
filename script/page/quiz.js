@@ -44,7 +44,7 @@ Page.quiz = function () {
 					index: 0,
 					error: '',
 					warning: '',
-					test_obj: {}
+					test_obj: null
 				};
 				var parse_id = parseInt(id);
 				if (parse_id < 1 || ("" + parse_id) != id) {
@@ -112,7 +112,7 @@ Page.quiz = function () {
 					this.result = {
 						error: '',
 						warning: '',
-						test_obj: '',
+						test_obj: null,
 						course_search: {
 							is_init: true,
 							search: '',
