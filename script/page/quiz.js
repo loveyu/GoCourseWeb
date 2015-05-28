@@ -82,7 +82,7 @@ Page.quiz = function () {
 				FUNC.findVueChild(this, "history").load_all();
 			},
 			course_table_history: function (is_correct, courseTableId) {
-				var flag = this.currentView == "course_table_history"
+				var flag = this.currentView == "ct_history"
 					&& (typeof this.result.course_table_id != "undefined")
 					&& courseTableId == this.result.course_table_id;
 				if (!flag) {
@@ -93,12 +93,14 @@ Page.quiz = function () {
 						is_correct: null,
 						course_table_id: courseTableId,
 						execs: null,
+						quiz_obj: {},
 						ct_info: null,
-						error: ""
+						error1: "",
+						error2: ""
 					};
-					this.currentView = "course_table_history";
+					this.currentView = "ct_history";
 				}
-				var child = FUNC.findVueChild(this, "course_table_history");
+				var child = FUNC.findVueChild(this, "ct_history");
 				if (!flag) {
 					child.init();
 				}
@@ -113,7 +115,7 @@ Page.quiz = function () {
 		},
 		components: {
 			course_table_list: {__require: 'quiz/course_table_list.html'},
-			course_table_history: {__require: 'quiz/course_table_history.html'},
+			ct_history: {__require: 'quiz/course_table_history.html'},
 			history: {__require: 'quiz/history.html'},
 			do_test: {__require: 'quiz/do_test.html'}
 		}

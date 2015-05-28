@@ -1,4 +1,4 @@
-<p class="alert alert-danger" v-if="error">{{error}}</p>
+<p class="alert alert-danger" v-if="error1">{{error1}}</p>
 <p v-if="loading" class="alert alert-info">加载中......</p>
 <div v-if="!loading" class="alert alert-info">
 	<p v-if="ct_info!=null"><strong>课程：</strong>{{ct_info.course.courseName}},
@@ -11,6 +11,8 @@
 		   href="#/ct_history/{{correct.url}}/{{course_table_id}}">{{correct.name}}</a>
 	</div>
 	<div class="panel-body">
+		<p class="alert alert-danger" v-if="error2">{{error2}}</p>
+
 		<p v-if="execs===null" class="alert alert-info">加载中</p>
 
 		<p v-if="execs!=null && execs.length==0" class="alert alert-warning">无任何做题记录</p>
