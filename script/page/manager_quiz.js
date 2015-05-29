@@ -131,14 +131,7 @@ Page.manager_quiz = function () {
 			share: {__require: 'manager_quiz/share.html'}
 		}
 	});
-	var change_menus_active = function (view) {
-		if (mq_vm.menus.hasOwnProperty(mq_vm.currentName)) {
-			mq_vm.menus[mq_vm.currentName].active = false;
-		}
-		mq_vm.currentView = "base-loading";
-		mq_vm.currentName = view;
-		mq_vm.menus[view].active = true;
-	};
+	var change_menus_active = FUNC.createMenuChangeFunc(mq_vm);
 	var routes = {
 		'/': function () {
 			change_menus_active("my");

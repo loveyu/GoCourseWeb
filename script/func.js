@@ -180,6 +180,29 @@ var FUNC = {
 			}
 			return null;
 		},
+		/**
+		 * 创建动态菜单修改函数，必须含有下列对象中的函数
+		 * @param vue_vm 当前的Vue对象
+		 * @returns {Function}
+		 */
+		createMenuChangeFunc: function (vue_vm) {
+			return function (view) {
+				if (vue_vm.currentView == view) {
+					//如果视图无改变
+					return;
+				}
+				if (!vue_vm.menus.hasOwnProperty(view)) {
+					//如果无视图
+					return;
+				}
+				if (vue_vm.menus.hasOwnProperty(vue_vm.currentName)) {
+					vue_vm.menus[vue_vm.currentName].active = false;
+				}
+				vue_vm.currentView = "base-loading";
+				vue_vm.currentName = view;
+				vue_vm.menus[view].active = true;
+			}
+		},
 		parseWeek: function (str) {
 			var list = str.split(/[,|，]/);
 			var rt = [];

@@ -102,14 +102,7 @@ Page.home = function () {
 			email_bind: {__require: 'home/email_bind.html'}
 		}
 	});
-	var change_menus_active = function (view) {
-		if (home_vm.menus.hasOwnProperty(home_vm.currentName)) {
-			home_vm.menus[home_vm.currentName].active = false;
-		}
-		home_vm.currentView = "base-loading";
-		home_vm.currentName = view;
-		home_vm.menus[view].active = true;
-	};
+	var change_menus_active = FUNC.createMenuChangeFunc(home_vm);
 	var routes = {
 		'/': function () {
 			if (home_vm.is_student) {

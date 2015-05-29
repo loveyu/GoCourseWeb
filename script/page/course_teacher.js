@@ -176,14 +176,7 @@ Page.course_teacher = function () {
 			schedule_add: {__require: 'course_teacher/schedule_add.html'}
 		}
 	});
-	var change_menus_active = function (view) {
-		if (ct_vm.menus.hasOwnProperty(ct_vm.currentName)) {
-			ct_vm.menus[ct_vm.currentName].active = false;
-		}
-		ct_vm.currentView = "base-loading";
-		ct_vm.currentName = view;
-		ct_vm.menus[view].active = true;
-	};
+	var change_menus_active = FUNC.createMenuChangeFunc(ct_vm);
 	var routes = {
 		'/': function () {
 			change_menus_active("my");

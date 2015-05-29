@@ -152,22 +152,7 @@ Page.quiz = function () {
 			open_test: {__require: 'quiz/open_test.html'}
 		}
 	});
-	var change_menus_active = function (view) {
-		if (quiz_vm.currentView == view) {
-			//如果视图无改变
-			return;
-		}
-		if (!quiz_vm.menus.hasOwnProperty(view)) {
-			//如果无视图
-			return;
-		}
-		if (quiz_vm.menus.hasOwnProperty(quiz_vm.currentName)) {
-			quiz_vm.menus[quiz_vm.currentName].active = false;
-		}
-		quiz_vm.currentView = "base-loading";
-		quiz_vm.currentName = view;
-		quiz_vm.menus[view].active = true;
-	};
+	var change_menus_active = FUNC.createMenuChangeFunc(quiz_vm);
 	var routes = {
 		'/': function () {
 			change_menus_active("course_table_list");

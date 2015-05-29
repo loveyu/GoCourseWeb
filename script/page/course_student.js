@@ -89,14 +89,7 @@ Page.course_student = function () {
 			}
 		})
 		;
-	var change_menus_active = function (view) {
-		if (cs_vm.menus.hasOwnProperty(cs_vm.currentName)) {
-			cs_vm.menus[cs_vm.currentName].active = false;
-		}
-		cs_vm.currentView = "base-loading";
-		cs_vm.currentName = view;
-		cs_vm.menus[view].active = true;
-	};
+	var change_menus_active = FUNC.createMenuChangeFunc(cs_vm);
 	var routes = {
 		'/': function () {
 			change_menus_active("my");
