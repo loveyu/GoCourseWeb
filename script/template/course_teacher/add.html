@@ -22,7 +22,7 @@
 		</select>
 	</div>
 </div>
-<div class="form-inline form-group" v-if="college.classes">
+<div class="form-inline form-group" v-if="college.classes && form.year">
 	<strong>班级 : </strong>
 	<span v-if="college.classes.length==0">无数据</span>
 	<label v-repeat="college.classes">
