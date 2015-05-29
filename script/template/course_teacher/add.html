@@ -32,7 +32,7 @@
 <div class="form-inline form-group">
 	<div class="input-group">
 		<span class="input-group-addon">课程搜索</span>
-		<input type="text" name="course" v-model="search.name" class="form-control">
+		<input type="text" name="course" v-model="search.name" v-on="blur: onSearchName" class="form-control">
 	</div>
 	<button class="btn btn-primary" type="button" v-on="click: onSearchName">查询当前可添加课程
 	</button>
