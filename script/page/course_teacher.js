@@ -156,7 +156,7 @@ Page.course_teacher = function () {
 							obj.result.data.departments = result.status ? FUNC.mapToObjArr(result.data.departments, "id", "name") : [];
 							obj.currentView = "schedule_search";
 							obj.result.form.year = new Date().getFullYear();
-							obj.result.form.term = 0;
+							obj.result.form.term = -1;
 							obj.result.form.status = -1;
 						});
 					} else {

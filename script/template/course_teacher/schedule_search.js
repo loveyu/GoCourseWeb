@@ -11,7 +11,7 @@ _methods_ = {
 			obj.error = "开课年份选择不正确";
 			return false;
 		}
-		if (obj.form.term != "0" && obj.form.term != 1) {
+		if (obj.form.term < -1 || obj.form.term > 1) {
 			obj.error = "请选择合适的开学季度";
 			return false;
 		}
