@@ -5,6 +5,8 @@
  * Time: 23:12
  */
 
+define('SET_MIN_FILE', false);
+
 function get_header($title)
 {
 	include(__DIR__ . "/header.php");
@@ -17,13 +19,20 @@ function get_footer($name = '', $footer_content = '')
 
 function get_asset($path, $auto_cnd = true)
 {
-	if ($auto_cnd && set_cdn()) {
-		$path_info = pathinfo($path, PATHINFO_EXTENSION);
-		$new_path = preg_replace("/\\." . $path_info . "$/", ".min." . $path_info, $path);
-		if (is_file($new_path)) {
-			$path = $new_path;
+	if ($auto_cnd) {
+		$is_cdn = set_cdn();
+		if ($is_cdn || SET_MIN_FILE) {
+			//如果设置了CDN或者允许最小化文件
+			$path_info = pathinfo($path, PATHINFO_EXTENSION);
+			$new_path = preg_replace("/\\." . $path_info . "$/", ".min." . $path_info, $path);
+			if (is_file($new_path)) {
+				$path = $new_path;
+			}
 		}
-		return "http://7xizmm.com1.z0.glb.clouddn.com/" . $path;
+		if ($is_cdn) {
+			//返回CDN地址
+			return "http://7xizmm.com1.z0.glb.clouddn.com/" . $path;
+		}
 	}
 	return $path;
 }

@@ -101,6 +101,11 @@ Vue.component('base-login-form', {template:"<form method=\"get\" v-on=\"submit: 
 	}
 }});
 Vue.component('base-loading', {template:"<div class=\"jumbotron\"> <p class=\"text-center\">加载中.......<\/p> <\/div>"});
+Vue.component('base-page-menu', {template:"<!--component page_menu--> <div style=\"margin-bottom: 15px\"> <ul class=\"nav nav-pills\"> <li v-repeat=\"menus\" role=\"presentation\" v-show=\"url!='' || active\" v-class=\"active?'active':''\"> <a href=\"#{{url==''?now_url():url}}\">{{name}}<\/a> <\/li> <\/ul> <\/div>",methods:{
+	now_url: function () {
+		return window.location.hash.substr(1);
+	}
+}});
 Vue.component('quiz-item', {template:"<h4>{{quiz.title}}<\/h4> <ul class=\"list-unstyled\"> <li v-repeat=\"options\"> <p><strong class=\"{{isCorrect?'text-success':''}}\"> {{index|quiz_option_translate_index}}:&nbsp; <span class=\"{{isCorrect?'glyphicon glyphicon-ok':''}}\"><\/span>&nbsp; <\/strong> {{description}}<\/p> <p v-if=\"feedback\"> <small><strong><i>选项解析：<\/i><\/strong>{{feedback}}<\/small> <\/p> <\/li> <\/ul> <blockquote style=\"padding: 2px 5px;margin-bottom: 5px\"> <p> <small> 章节: {{quiz.index}},&nbsp;&nbsp; 类型: {{quiz.type|quiz_translate_type}},&nbsp;&nbsp; 评论: {{quiz.reply}},&nbsp;&nbsp; 时间: {{quiz.time|timestamp_to_date}} <\/small> <\/p> <\/blockquote> <p class=\"bg-success\" v-if=\"quiz.desc\" style=\"padding: 10px 5px\"> <strong>答题解析：<\/strong>{{quiz.desc}} <\/p>"});
 Vue.component('answer-item', {template:"<div class=\"answer-result-item\" xmlns=\"http:\/\/www.w3.org\/1999\/html\"> <strong v-if=\"answer.isCorrect==1\" class=\"text-success\">答题正确：<\/strong> <strong v-if=\"answer.isCorrect==0\" class=\"text-danger\">答题错误：<\/strong> <p v-if=\"answer.optionID>0\">你的选项为： <button class=\"btn btn-sm btn-{{answer.isCorrect==1?'success':'danger'}}\"> {{find_option_index(answer.optionID)|quiz_option_translate_index}} <\/button> <\/p> <p v-if=\"answer.optionID==0 && answer.optionMap\"> 你的选项为： <button v-repeat=\"parse_answer_map(answer)\" class=\"btn btn-sm\" v-class=\"answer.isCorrect==1?'btn-success':'btn-danger'\"> {{$value|quiz_option_translate_index}} <\/button> <\/p> <\/div>",methods:{
 	find_option_index: function (optionId) {
@@ -716,6 +721,29 @@ var FUNC = {
 			}
 			return null;
 		},
+		/**
+		 * 创建动态菜单修改函数，必须含有下列对象中的函数
+		 * @param vue_vm 当前的Vue对象
+		 * @returns {Function}
+		 */
+		createMenuChangeFunc: function (vue_vm) {
+			return function (view) {
+				if (vue_vm.currentView == view) {
+					//如果视图无改变
+					return;
+				}
+				if (!vue_vm.menus.hasOwnProperty(view)) {
+					//如果无视图
+					return;
+				}
+				if (vue_vm.menus.hasOwnProperty(vue_vm.currentName)) {
+					vue_vm.menus[vue_vm.currentName].active = false;
+				}
+				vue_vm.currentView = "base-loading";
+				vue_vm.currentName = view;
+				vue_vm.menus[view].active = true;
+			}
+		},
 		parseWeek: function (str) {
 			var list = str.split(/[,|，]/);
 			var rt = [];
@@ -1201,14 +1229,7 @@ Page.course_student = function () {
 			}
 		})
 		;
-	var change_menus_active = function (view) {
-		if (cs_vm.menus.hasOwnProperty(cs_vm.currentName)) {
-			cs_vm.menus[cs_vm.currentName].active = false;
-		}
-		cs_vm.currentView = "base-loading";
-		cs_vm.currentName = view;
-		cs_vm.menus[view].active = true;
-	};
+	var change_menus_active = FUNC.createMenuChangeFunc(cs_vm);
 	var routes = {
 		'/': function () {
 			change_menus_active("my");
@@ -1265,7 +1286,8 @@ Page.course_teacher = function () {
 				add: {url: '/add', name: '添加课表', active: false},
 				schedule_add: {url: '/schedule_add', name: '添加课程', active: false},
 				schedule_search: {url: '/schedule_search', name: '课程搜索', active: false},
-				course_list: {url: '/course_list', name: '课程名列表', active: false}
+				course_list: {url: '/course_list', name: '课程名列表', active: false},
+				new_sign: {url: '', name: '新的签到', active: false}
 			}
 		},
 		methods: {
@@ -1333,7 +1355,7 @@ Page.course_teacher = function () {
 						obj.currentView = "schedule_add";
 						obj.result.form.openYear = new Date().getFullYear();
 						obj.result.form.openTerm = 0;
-						obj._children[obj._children.length - 1].setDept(result.data.college.collegeID);
+						FUNC.findVueChild(obj, "schedule_add").setDept(result.data.college.collegeID);
 					} else {
 						obj.m_load_error(result.msg);
 					}
@@ -1367,7 +1389,7 @@ Page.course_teacher = function () {
 							college: FUNC.objMerge(result.data.college, {departments: [], classes: [], years: []})
 						};
 						obj.currentView = "add";
-						obj._children[obj._children.length - 1].setDept(result.data.college.collegeID);
+						FUNC.findVueChild(obj, "add").setDept(result.data.college.collegeID);
 					} else {
 						obj.m_load_error(result.msg);
 					}
@@ -1408,12 +1430,16 @@ Page.course_teacher = function () {
 					}
 				});
 			},
+			m_new_sign: function (courseTableId) {
+				this.currentView = "new_sign";
+
+			},
 			m_load_error: function (msg) {
 				FUNC.alertOnElem(this.$el, msg ? msg : "非法访问");
 			}
 		},
 		components: {
-			my: {template:"<h3>教师课表<\/h3> <div class=\"course-table\"> <table class=\"table\"> <thead> <tr> <th>&nbsp;<\/th> <th>课程名称<\/th> <th>班级<\/th> <th>周次<\/th> <th>星期<\/th> <th>节次<\/th> <th>地点<\/th> <th>操作<\/th> <\/tr> <\/thead> <tbody v-repeat=\"list\"> <tr v-repeat=\"locations\"> <td class=\"{{locations[$index] | course_location_check_today today none}}\"><\/td> <td v-if=\"$index==0\" rowspan=\"{{locations.length}}\">{{course.courseName}}<\/td> <td v-if=\"$index==0\" rowspan=\"{{locations.length}}\"> <span v-repeat=\"classes_info\" class=\"btn-block\">{{className}}<\/span> <\/td> <td>{{week}}<\/td> <td>{{day|course_week_parse}}<\/td> <td><strong>{{slot}}<\/strong>大节<\/td> <td>{{location}}<\/td> <td v-if=\"$index==0\" rowspan=\"{{locations.length}}\"> <button class=\"btn btn-primary btn-sm\">编辑<\/button> <\/td> <\/tr> <\/tbody> <\/table> <\/div>"},
+			my: {template:"<h3>教师课表<\/h3> <div class=\"course-table\"> <table class=\"table\"> <thead> <tr> <th>&nbsp;<\/th> <th>课程名称<\/th> <th>班级<\/th> <th>周次<\/th> <th>星期<\/th> <th>节次<\/th> <th>地点<\/th> <th>操作<\/th> <\/tr> <\/thead> <tbody v-repeat=\"list\"> <tr v-repeat=\"locations\"> <td class=\"{{locations[$index] | course_location_check_today today none}}\"><\/td> <td v-if=\"$index==0\" rowspan=\"{{locations.length}}\">{{course.courseName}}<\/td> <td v-if=\"$index==0\" rowspan=\"{{locations.length}}\"> <span v-repeat=\"classes_info\" class=\"btn-block\">{{className}}<\/span> <\/td> <td>{{week}}<\/td> <td>{{day|course_week_parse}}<\/td> <td><strong>{{slot}}<\/strong>大节<\/td> <td>{{location}}<\/td> <td v-if=\"$index==0\" rowspan=\"{{locations.length}}\"> <button class=\"btn btn-primary btn-sm\">编辑<\/button> <a class=\"btn btn-success btn-sm\" href=\"#\/new_sign\/{{course.courseTableID}}\">新签到<\/a> <\/td> <\/tr> <\/tbody> <\/table> <\/div>"},
 			add: {template:"<h3>添加课表<\/h3> <p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p> <p class=\"alert-success alert\" v-if=\"success\">{{success}}<\/p> <div class=\"form-inline form-group\"> <select class=\"form-control\" disabled> <option>{{college.uniNickname}}<\/option> <\/select> <select class=\"form-control\" disabled> <option>{{college.collegeName}}<\/option> <\/select> <select class=\"form-control\" name=\"dept\" v-model=\"form.department\" v-on=\"change:departmentChange\"> <option value=\"\">--请选择--<\/option> <option v-repeat=\"college.departments\" value=\"{{id}}\">{{name}}<\/option> <\/select> <div class=\"input-group\"> <span class=\"input-group-addon\">年级<\/span> <select class=\"form-control\" name=\"year\" v-model=\"form.year\" v-on=\"change:yearChange\"> <option value=\"\">--请选择--<\/option> <option v-repeat=\"college.years\" value=\"{{year}}\">{{year}}<\/option> <\/select> <\/div> <\/div> <div class=\"form-inline form-group\" v-if=\"college.classes && form.year\"> <strong>班级 : <\/strong> <span v-if=\"college.classes.length==0\">无数据<\/span> <label v-repeat=\"college.classes\"> <input class=\"checkbox\" type=\"checkbox\" v-on=\"change:classChange\" value=\"{{id}}\"> {{name}}&nbsp;&nbsp;&nbsp; <\/label> <\/div> <div class=\"form-inline form-group\"> <div class=\"input-group\"> <span class=\"input-group-addon\">课程搜索<\/span> <input type=\"text\" name=\"course\" v-model=\"search.name\" v-on=\"blur: onSearchName\" class=\"form-control\"> <\/div> <button class=\"btn btn-primary\" type=\"button\" v-on=\"click: onSearchName\">查询当前可添加课程 <\/button> <\/div> <p v-if=\"data.course_name!=null && data.course_name.length==0\" class=\"alert alert-warning\">当前查询结果为空<\/p> <div class=\"form-group form-inline\" v-if=\"data.course_name!=null && data.course_name.length>0\"> <strong>选择课程 : &nbsp;&nbsp;<\/strong> <label v-repeat=\"data.course_name\"> <input type=\"radio\" name=\"my_schedule\" value=\"{{scheduleID}}\" v-model=\"form.scheduleID\"\/>{{courseName}},{{openTerm?\"秋季\":\"春季\"}}{{fromWeek}}-{{endWeek}}周&nbsp;&nbsp; <\/label> <\/div> <div class=\"form-group\"> <label>该课程表的附加介绍信息:<\/label> <textarea class=\"form-control\" v-model=\"form.notice\"><\/textarea> <\/div> <div class=\"form-group\"> <strong>上课地点：<\/strong> <button class=\"btn btn-success\" v-on=\"click:addLocation\">添加<\/button> <\/div> <div v-repeat=\"location\"> <div class=\"form-group form-inline\"> <button class=\"btn btn-danger\" v-on=\"click:removeLocation($index)\">移除<\/button> <div class=\"input-group\"> <span class=\"input-group-addon\">上课地点<\/span> <input type=\"text\" name=\"location\" placeholder=\"如果：13-A-303\" v-model=\"location\" class=\"form-control\"> <\/div> <div class=\"input-group\"> <span class=\"input-group-addon\">节次<\/span> <select name=\"slot\" v-model=\"slot\" class=\"form-control\"> <option>1<\/option> <option>2<\/option> <option>3<\/option> <option>4<\/option> <option>5<\/option> <option>6<\/option> <\/select> <\/div> <div class=\"input-group\"> <span class=\"input-group-addon\">星期<\/span> <select name=\"slot\" v-model=\"day\" class=\"form-control\"> <option value=\"1\">一<\/option> <option value=\"2\">二<\/option> <option value=\"3\">三<\/option> <option value=\"4\">四<\/option> <option value=\"5\">五<\/option> <option value=\"6\">六<\/option> <option value=\"7\">日<\/option> <\/select> <\/div> <\/div> <div class=\"form-group\"> <div class=\"input-group\"> <span class=\"input-group-addon\">周次规则<\/span> <input type=\"text\" class=\"form-control\" placeholder=\"如:1,2,3或者1-4,5-9,这两种形式\" v-model=\"week\"\/> <\/div> <\/div> <div class=\"form-group\"> <textarea placeholder=\"备注提示\" name=\"notice\" rows=\"2\" v-model=\"notice\" class=\"form-control\"><\/textarea> <\/div> <hr> <\/div> <div class=\"form-group form-inline\"> <button class=\"btn btn-primary\" v-on=\"click:onSubmit\">创建课程表<\/button> <\/div>",methods:{
 	setDept: function (college_id) {
 		var obj = this;
@@ -1704,17 +1730,11 @@ Page.course_teacher = function () {
 		});
 		return false;
 	}
-}}
+}},
+			new_sign: {template:"<h3>创建一个新的签到<\/h3> "}
 		}
 	});
-	var change_menus_active = function (view) {
-		if (ct_vm.menus.hasOwnProperty(ct_vm.currentName)) {
-			ct_vm.menus[ct_vm.currentName].active = false;
-		}
-		ct_vm.currentView = "base-loading";
-		ct_vm.currentName = view;
-		ct_vm.menus[view].active = true;
-	};
+	var change_menus_active = FUNC.createMenuChangeFunc(ct_vm);
 	var routes = {
 		'/': function () {
 			change_menus_active("my");
@@ -1735,6 +1755,14 @@ Page.course_teacher = function () {
 		'/course_list': function () {
 			change_menus_active("course_list");
 			ct_vm.m_course_list();
+		},
+		'/new_sign/:id': function (id) {
+			id = +id;
+			if (id < 1) {
+				return;
+			}
+			change_menus_active("new_sign");
+			ct_vm.m_new_sign(id);
 		}
 	};
 	var router = Router(routes);//初始化一个路由器
@@ -2367,14 +2395,7 @@ Page.home = function () {
 }}
 		}
 	});
-	var change_menus_active = function (view) {
-		if (home_vm.menus.hasOwnProperty(home_vm.currentName)) {
-			home_vm.menus[home_vm.currentName].active = false;
-		}
-		home_vm.currentView = "base-loading";
-		home_vm.currentName = view;
-		home_vm.menus[view].active = true;
-	};
+	var change_menus_active = FUNC.createMenuChangeFunc(home_vm);
 	var routes = {
 		'/': function () {
 			if (home_vm.is_student) {
@@ -2995,14 +3016,7 @@ Page.manager_quiz = function () {
 }}
 		}
 	});
-	var change_menus_active = function (view) {
-		if (mq_vm.menus.hasOwnProperty(mq_vm.currentName)) {
-			mq_vm.menus[mq_vm.currentName].active = false;
-		}
-		mq_vm.currentView = "base-loading";
-		mq_vm.currentName = view;
-		mq_vm.menus[view].active = true;
-	};
+	var change_menus_active = FUNC.createMenuChangeFunc(mq_vm);
 	var routes = {
 		'/': function () {
 			change_menus_active("my");
@@ -3189,9 +3203,6 @@ Page.quiz = function () {
 			quiz_history: function (is_correct) {
 				this.currentView = "quiz_history";
 			},
-			now_url: function () {
-				return window.location.hash.substr(1);
-			},
 			loading: function () {
 				this.currentView = "base-loading";
 			}
@@ -3326,22 +3337,7 @@ Page.quiz = function () {
 }}
 		}
 	});
-	var change_menus_active = function (view) {
-		if (quiz_vm.currentView == view) {
-			//如果视图无改变
-			return;
-		}
-		if (!quiz_vm.menus.hasOwnProperty(view)) {
-			//如果无视图
-			return;
-		}
-		if (quiz_vm.menus.hasOwnProperty(quiz_vm.currentName)) {
-			quiz_vm.menus[quiz_vm.currentName].active = false;
-		}
-		quiz_vm.currentView = "base-loading";
-		quiz_vm.currentName = view;
-		quiz_vm.menus[view].active = true;
-	};
+	var change_menus_active = FUNC.createMenuChangeFunc(quiz_vm);
 	var routes = {
 		'/': function () {
 			change_menus_active("course_table_list");

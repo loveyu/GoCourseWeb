@@ -136,9 +136,6 @@ Page.quiz = function () {
 			quiz_history: function (is_correct) {
 				this.currentView = "quiz_history";
 			},
-			now_url: function () {
-				return window.location.hash.substr(1);
-			},
 			loading: function () {
 				this.currentView = "base-loading";
 			}

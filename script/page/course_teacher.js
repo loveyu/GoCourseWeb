@@ -21,7 +21,8 @@ Page.course_teacher = function () {
 				add: {url: '/add', name: '添加课表', active: false},
 				schedule_add: {url: '/schedule_add', name: '添加课程', active: false},
 				schedule_search: {url: '/schedule_search', name: '课程搜索', active: false},
-				course_list: {url: '/course_list', name: '课程名列表', active: false}
+				course_list: {url: '/course_list', name: '课程名列表', active: false},
+				new_sign: {url: '', name: '新的签到', active: false}
 			}
 		},
 		methods: {
@@ -89,7 +90,7 @@ Page.course_teacher = function () {
 						obj.currentView = "schedule_add";
 						obj.result.form.openYear = new Date().getFullYear();
 						obj.result.form.openTerm = 0;
-						obj._children[obj._children.length - 1].setDept(result.data.college.collegeID);
+						FUNC.findVueChild(obj, "schedule_add").setDept(result.data.college.collegeID);
 					} else {
 						obj.m_load_error(result.msg);
 					}
@@ -123,7 +124,7 @@ Page.course_teacher = function () {
 							college: FUNC.objMerge(result.data.college, {departments: [], classes: [], years: []})
 						};
 						obj.currentView = "add";
-						obj._children[obj._children.length - 1].setDept(result.data.college.collegeID);
+						FUNC.findVueChild(obj, "add").setDept(result.data.college.collegeID);
 					} else {
 						obj.m_load_error(result.msg);
 					}
@@ -164,6 +165,10 @@ Page.course_teacher = function () {
 					}
 				});
 			},
+			m_new_sign: function (courseTableId) {
+				this.currentView = "new_sign";
+
+			},
 			m_load_error: function (msg) {
 				FUNC.alertOnElem(this.$el, msg ? msg : "非法访问");
 			}
@@ -173,7 +178,8 @@ Page.course_teacher = function () {
 			add: {__require: 'course_teacher/add.html'},
 			course_list: {__require: 'course_teacher/course_list.html'},
 			schedule_search: {__require: 'course_teacher/schedule_search.html'},
-			schedule_add: {__require: 'course_teacher/schedule_add.html'}
+			schedule_add: {__require: 'course_teacher/schedule_add.html'},
+			new_sign: {__require: 'course_teacher/new_sign.html'}
 		}
 	});
 	var change_menus_active = FUNC.createMenuChangeFunc(ct_vm);
@@ -197,6 +203,14 @@ Page.course_teacher = function () {
 		'/course_list': function () {
 			change_menus_active("course_list");
 			ct_vm.m_course_list();
+		},
+		'/new_sign/:id': function (id) {
+			id = +id;
+			if (id < 1) {
+				return;
+			}
+			change_menus_active("new_sign");
+			ct_vm.m_new_sign(id);
 		}
 	};
 	var router = Router(routes);//初始化一个路由器
