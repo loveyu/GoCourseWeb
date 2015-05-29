@@ -1,4 +1,6 @@
 # GoCourse数据库结构说明
+快速跳转：[tb_classes](#tb_classes "班级信息"), [tb_colleges](#tb_colleges "学院信息"), [tb_course_classes](#tb_course_classes "班级课程对应信息"), [tb_course_location](#tb_course_location "课程的上课地点信息"), [tb_course_select](#tb_course_select "选课信息"), [tb_course_table](#tb_course_table "上课时间对应表"), [tb_courses](#tb_courses "课程信息，相当于一张索引表"), [tb_departments](#tb_departments "专业信息"), [tb_lectures](#tb_lectures ""), [tb_likes](#tb_likes ""), [tb_quiz_course](#tb_quiz_course "课程表对应的测验表"), [tb_quiz_exec](#tb_quiz_exec "测验反馈结果"), [tb_quiz_options](#tb_quiz_options "选项列表"), [tb_quizes](#tb_quizes "测验基本信息表"), [tb_reviews](#tb_reviews ""), [tb_schedules](#tb_schedules "课程的安排表，首先存在该表，然后老师从该表建立课程表"), [tb_signins](#tb_signins "签到信息"), [tb_task](#tb_task ""), [tb_task_sign](#tb_task_sign "签到任务表，用于保存一个签到任务的详细信息"), [tb_universities](#tb_universities "学校信息列表"), [tb_users](#tb_users "用户信息表"), [tb_week](#tb_week "周次信息，用于通过数据库维护WEB端当前的课程周")
+
 ## tb_classes
 班级信息
 
@@ -217,6 +219,23 @@ latitude|decimal|最大值|不允许| |签到纬度
 字段名|类型|长度|允许空|主键|说明
 ---|---|---|---|---|---
 taskID|int|最大值|不允许|是|任务ID
+name|varchar|255|不允许| |任务名称，用于对任务的描述
+description|varchar|4095|允许| |任务细节描述
+time|int|最大值|不允许| |任务发布时间
+expireTime|int|最大值|不允许| |任务过期时间
+type|tinyint|最大值|不允许| |任务类型：0签到，1课程测验
+userID|int|11|不允许| |任务发布者ID
+flag|tinyint|最大值|不允许| |任务状态:0正常,1删除
+
+
+## tb_task_sign
+签到任务表，用于保存一个签到任务的详细信息
+
+字段名|类型|长度|允许空|主键|说明
+---|---|---|---|---|---
+signID|int|最大值|不允许|是|签到的ID
+taskID|int|最大值|不允许| |每个签到对应的任务ID
+courseTableID|int|最大值|不允许| |签到对应的课程表ID
 
 
 ## tb_universities

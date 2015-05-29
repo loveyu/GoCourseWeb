@@ -15,6 +15,12 @@ $stmt = $pdo->query("SELECT TABLE_NAME,TABLE_COMMENT FROM INFORMATION_SCHEMA.TAB
 $list = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $stmt->closeCursor();
 echo "# GoCourse数据库结构说明\r\n";
+
+$link = [];
+foreach ($list as $table) {
+	$link[] = "[{$table['TABLE_NAME']}](#{$table['TABLE_NAME']} \"" . quote_comment($table['TABLE_COMMENT']) . "\")";
+}
+echo "快速跳转：",implode(", ", $link), "\r\n\r\n";
 foreach ($list as $table) {
 	echo "## ", $table['TABLE_NAME'], "\r\n", $table['TABLE_COMMENT'] ? (quote_comment($table['TABLE_COMMENT']) . "\r\n\r\n") : "\r\n";
 	echo "字段名|类型|长度|允许空|主键|说明\r\n";
