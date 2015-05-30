@@ -17,7 +17,19 @@ _methods_ = {
 			obj.error = "签到名称不能为空";
 			return false;
 		}
-
+		var t = +obj.form.time;
+		if (isNaN(t) || t < 1 || t > 1000) {
+			obj.error = "有效时间为1~1000之间";
+			return false;
+		}
+		obj.form.time = t;
+		FUNC.ajax(CONFIG.api.sign.create, "post", obj.form, function (result) {
+			if (result.status) {
+				obj.result = result.data;
+			} else {
+				obj.error = result.msg;
+			}
+		});
 		return false;
 	}
 };//_methods_

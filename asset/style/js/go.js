@@ -22,6 +22,9 @@ var CONST_MAP = {
 		{id: -1, url: "all", name: "查看全部"},
 		{id: 0, url: "wrong", name: "只看错题"},
 		{id: 1, url: "right", name: "只看答对"}
+	],
+	weekMap: [
+		'日', '一', '二', '三', '四', '五', '六'
 	]
 };
 
@@ -106,6 +109,7 @@ Vue.component('base-page-menu', {template:"<!--component page_menu--> <div style
 		return window.location.hash.substr(1);
 	}
 }});
+Vue.component('base-error', {template:"<h3>请求发生了一些错误<\/h3> <div class=\"alert alert-danger\"> <p v-if=\"code\">错误代码: <code>{{code}}<\/code><\/p> <p>{{error?error:'未知错误'}}<\/p> <\/div>"});
 Vue.component('quiz-item', {template:"<h4>{{quiz.title}}<\/h4> <ul class=\"list-unstyled\"> <li v-repeat=\"options\"> <p><strong class=\"{{isCorrect?'text-success':''}}\"> {{index|quiz_option_translate_index}}:&nbsp; <span class=\"{{isCorrect?'glyphicon glyphicon-ok':''}}\"><\/span>&nbsp; <\/strong> {{description}}<\/p> <p v-if=\"feedback\"> <small><strong><i>选项解析：<\/i><\/strong>{{feedback}}<\/small> <\/p> <\/li> <\/ul> <blockquote style=\"padding: 2px 5px;margin-bottom: 5px\"> <p> <small> 章节: {{quiz.index}},&nbsp;&nbsp; 类型: {{quiz.type|quiz_translate_type}},&nbsp;&nbsp; 评论: {{quiz.reply}},&nbsp;&nbsp; 时间: {{quiz.time|timestamp_to_date}} <\/small> <\/p> <\/blockquote> <p class=\"bg-success\" v-if=\"quiz.desc\" style=\"padding: 10px 5px\"> <strong>答题解析：<\/strong>{{quiz.desc}} <\/p>"});
 Vue.component('answer-item', {template:"<div class=\"answer-result-item\" xmlns=\"http:\/\/www.w3.org\/1999\/html\"> <strong v-if=\"answer.isCorrect==1\" class=\"text-success\">答题正确：<\/strong> <strong v-if=\"answer.isCorrect==0\" class=\"text-danger\">答题错误：<\/strong> <p v-if=\"answer.optionID>0\">你的选项为： <button class=\"btn btn-sm btn-{{answer.isCorrect==1?'success':'danger'}}\"> {{find_option_index(answer.optionID)|quiz_option_translate_index}} <\/button> <\/p> <p v-if=\"answer.optionID==0 && answer.optionMap\"> 你的选项为： <button v-repeat=\"parse_answer_map(answer)\" class=\"btn btn-sm\" v-class=\"answer.isCorrect==1?'btn-success':'btn-danger'\"> {{$value|quiz_option_translate_index}} <\/button> <\/p> <\/div>",methods:{
 	find_option_index: function (optionId) {
@@ -341,6 +345,10 @@ var CONFIG = {
 			get_share_test_list: "quiz_student/get_share_test_list",
 			do_test: "quiz_student/do_test",
 			history: "quiz_student/exec_history"
+		},
+		sign: {
+			prepare: "sign/prepare",
+			create: "sign/create"
 		}
 	},
 	current_week: {	//当前的周次，该数据会依据服务器状态而更新
@@ -1431,11 +1439,44 @@ Page.course_teacher = function () {
 				});
 			},
 			m_new_sign: function (courseTableId) {
-				this.currentView = "new_sign";
-
+				var obj = this;
+				FUNC.ajax(CONFIG.api.sign.prepare, "post", {course_table_id: courseTableId}, function (result) {
+					if (result.status) {
+						obj.result = {
+							course_data: result.data.course,
+							week: result.data.week,
+							error: null,
+							result: null,
+							class_info: result.data.classInfo,
+							form: {
+								course_table_id: courseTableId,
+								name: '',
+								detail: '',
+								time: 45
+							}
+						};
+						obj.currentView = "new_sign";
+						FUNC.findVueChild(obj, "new_sign").set_course_info();
+					} else {
+						obj.m_load_error(result);
+					}
+				}, this.m_load_error);
 			},
-			m_load_error: function (msg) {
-				FUNC.alertOnElem(this.$el, msg ? msg : "非法访问");
+			m_load_error: function (msg, global) {
+				if (typeof global != "undefined" && global === true) {
+					FUNC.alertOnElem(this.$el, msg ? msg : "非法访问");
+				} else {
+					if (typeof msg == "string") {
+						this.result = {error: msg};
+					} else if (msg.hasOwnProperty('msg') && msg.hasOwnProperty('code')) {
+						this.result = {error: msg.msg, code: msg.code};
+					} else if (msg.hasOwnProperty('msg')) {
+						this.result = {error: msg.msg};
+					} else {
+						this.result = {error: "未知错误"};
+					}
+					this.currentView = "base-error";
+				}
 			}
 		},
 		components: {
@@ -1731,7 +1772,41 @@ Page.course_teacher = function () {
 		return false;
 	}
 }},
-			new_sign: {template:"<h3>创建一个新的签到<\/h3> "}
+			new_sign: {template:"<h3>创建一个新的签到<\/h3> <p class=\"alert alert-danger\" v-if=\"error\">{{error}}<\/p> <div v-if=\"result\" class=\"alert alert-success\"> <p>成功创建了签到任务:<\/p> <p>签到ID为：<strong class=\"text-danger\">{{result.signID}}<\/strong><\/p> <p>有效期为: <small>{{result.beginTime|timestamp_to_date}}<\/small> - <small>{{result.endTime|timestamp_to_date}}<\/small><\/p> <\/div> <form v-if=\"!result\" method=\"post\" v-on=\"submit:onSubmit\"> <div class=\"form-group\"> <p><strong>课程：<\/strong>{{course_data.courseName}}, {{course_data.deptName}}, {{course_data.enrolYear}}级<\/p> <p><strong>班级：<\/strong><span v-repeat=\"class_info\" class=\"label label-info\">{{className}}<\/span><\/p> <\/div> <div class=\"form-group\"> <label class=\"control-label\" for=\"InputName\">签到名称<\/label> <input id=\"InputName\" type=\"text\" v-model=\"form.name\" class=\"form-control\"\/> <\/div> <div class=\"form-group\"> <label class=\"control-label\" for=\"InputDetail\">细节<\/label> <textarea id=\"InputDetail\" v-model=\"form.detail\" placeholder=\"可留空\" class=\"form-control\"><\/textarea> <\/div> <div class=\"form-group form-inline\"> <div class=\"input-group\"> <span class=\"input-group-addon\">有效时间<\/span> <div class=\"input-group-btn\"> <button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\">{{form.time>0?(form.time+'分钟'):'无效时间'}}<span class=\"caret\"><\/span> <\/button> <ul class=\"dropdown-menu\" role=\"menu\"> <li><a href=\"javascript:void(0)\" v-on=\"click:form.time=30\">30分钟<\/a><\/li> <li><a href=\"javascript:void(0)\" v-on=\"click:form.time=90\">90分钟<\/a><\/li> <li><a href=\"javascript:void(0)\" v-on=\"click:form.time=45\">45分钟<\/a><\/li> <li><a href=\"javascript:void(0)\" v-on=\"click:form.time=15\">15分钟<\/a><\/li> <\/ul> <\/div> <input type=\"number\" class=\"form-control\" placeholder=\"有效时间，分钟\" v-model=\"form.time\" aria-describedby=\"basic-addon1\"> <\/div> <\/div> <div class=\"form-group\"> <button class=\"btn btn-primary\" type=\"submit\">创建一个签到<\/button> <\/div> <\/form>",methods:{
+	/**
+	 * 设置当前的课程信息
+	 */
+	set_course_info: function () {
+		var obj = this;
+		obj.form.name = obj.course_data.courseName +
+		"(" + obj.course_data.teacherName + ")"
+		+ "，第" + obj.week.week + "周上课签到，" +
+		"星期" + CONST_MAP.weekMap[(new Date()).getDay()];
+	},
+	onSubmit: function (event) {
+		event.preventDefault();
+		var obj = this;
+		obj.error = null;
+		if (obj.form.name == "") {
+			obj.error = "签到名称不能为空";
+			return false;
+		}
+		var t = +obj.form.time;
+		if (isNaN(t) || t < 1 || t > 1000) {
+			obj.error = "有效时间为1~1000之间";
+			return false;
+		}
+		obj.form.time = t;
+		FUNC.ajax(CONFIG.api.sign.create, "post", obj.form, function (result) {
+			if (result.status) {
+				obj.result = result.data;
+			} else {
+				obj.error = result.msg;
+			}
+		});
+		return false;
+	}
+}}
 		}
 	});
 	var change_menus_active = FUNC.createMenuChangeFunc(ct_vm);
@@ -1757,8 +1832,8 @@ Page.course_teacher = function () {
 			ct_vm.m_course_list();
 		},
 		'/new_sign/:id': function (id) {
-			id = +id;
-			if (id < 1) {
+			id = parseInt(id);
+			if (isNaN(id) || id < 1) {
 				return;
 			}
 			change_menus_active("new_sign");
@@ -3114,7 +3189,7 @@ Page.quiz = function () {
 					test_obj: null
 				};
 				var parse_id = parseInt(id);
-				if (parse_id < 1 || ("" + parse_id) != id) {
+				if (isNaN(parse_id) || parse_id < 1 || ("" + parse_id) != id) {
 					this.result.error = "ID参数解析错误";
 				}
 				this.currentView = "do_test";
@@ -3344,6 +3419,10 @@ Page.quiz = function () {
 			quiz_vm.my();
 		},
 		'/do/:id': function (id) {
+			id = parseInt(id);
+			if (isNaN(id) || id < 1) {
+				return;
+			}
 			change_menus_active("do_test");
 			quiz_vm.do_test(id);
 		},
@@ -3364,14 +3443,26 @@ Page.quiz = function () {
 			quiz_vm.history(-1);
 		},
 		'ct_history/right/:id': function (id) {
+			id = parseInt(id);
+			if (isNaN(id) || id < 1) {
+				return;
+			}
 			change_menus_active("ct_history");
 			quiz_vm.course_table_history(1, id);
 		},
 		'ct_history/wrong/:id': function (id) {
+			id = parseInt(id);
+			if (isNaN(id) || id < 1) {
+				return;
+			}
 			change_menus_active("ct_history");
 			quiz_vm.course_table_history(0, id);
 		},
 		'ct_history/all/:id': function (id) {
+			id = parseInt(id);
+			if (isNaN(id) || id < 1) {
+				return;
+			}
 			change_menus_active("ct_history");
 			quiz_vm.course_table_history(-1, id);
 		},
@@ -3380,8 +3471,12 @@ Page.quiz = function () {
 			quiz_vm.open_test(0);
 		},
 		'open_test/:id': function (id) {
+			id = parseInt(id);
+			if (isNaN(id) || id < 1) {
+				return;
+			}
 			change_menus_active("open_test");
-			quiz_vm.open_test(+id);
+			quiz_vm.open_test(id);
 		},
 		'quiz_history': function () {
 			change_menus_active("quiz_history");

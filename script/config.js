@@ -92,7 +92,8 @@ var CONFIG = {
 			history: "quiz_student/exec_history"
 		},
 		sign: {
-			prepare: "sign/prepare"
+			prepare: "sign/prepare",
+			create: "sign/create"
 		}
 	},
 	current_week: {	//当前的周次，该数据会依据服务器状态而更新

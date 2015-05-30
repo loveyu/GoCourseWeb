@@ -170,12 +170,13 @@ Page.course_teacher = function () {
 				FUNC.ajax(CONFIG.api.sign.prepare, "post", {course_table_id: courseTableId}, function (result) {
 					if (result.status) {
 						obj.result = {
-							course_table_id: courseTableId,
 							course_data: result.data.course,
 							week: result.data.week,
 							error: null,
+							result: null,
 							class_info: result.data.classInfo,
 							form: {
+								course_table_id: courseTableId,
 								name: '',
 								detail: '',
 								time: 45

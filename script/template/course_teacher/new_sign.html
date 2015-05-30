@@ -1,6 +1,11 @@
 <h3>创建一个新的签到</h3>
 <p class="alert alert-danger" v-if="error">{{error}}</p>
-<form method="post" v-on="submit:onSubmit">
+<div v-if="result" class="alert alert-success">
+	<p>成功创建了签到任务:</p>
+	<p>签到ID为：<strong class="text-danger">{{result.signID}}</strong></p>
+	<p>有效期为: <small>{{result.beginTime|timestamp_to_date}}</small> - <small>{{result.endTime|timestamp_to_date}}</small></p>
+</div>
+<form v-if="!result" method="post" v-on="submit:onSubmit">
 	<div class="form-group">
 		<p><strong>课程：</strong>{{course_data.courseName}},
 			{{course_data.deptName}}, {{course_data.enrolYear}}级</p>
@@ -30,7 +35,7 @@
 					<li><a href="javascript:void(0)" v-on="click:form.time=15">15分钟</a></li>
 				</ul>
 			</div>
-			<input type="text" class="form-control" placeholder="有效时间，分钟" v-model="form.time"
+			<input type="number" class="form-control" placeholder="有效时间，分钟" v-model="form.time"
 			       aria-describedby="basic-addon1">
 		</div>
 	</div>

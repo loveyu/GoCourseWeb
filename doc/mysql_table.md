@@ -220,7 +220,7 @@ latitude|decimal|最大值|不允许| |签到纬度
 ---|---|---|---|---|---
 taskID|int|最大值|不允许|是|任务ID
 name|varchar|255|不允许| |任务名称，用于对任务的描述
-description|varchar|4095|允许| |任务细节描述
+detail|varchar|4095|允许| |任务细节描述
 time|int|最大值|不允许| |任务发布时间
 expireTime|int|最大值|不允许| |任务过期时间
 type|tinyint|最大值|不允许| |任务类型：0签到，1课程测验
@@ -236,6 +236,8 @@ flag|tinyint|最大值|不允许| |任务状态:0正常,1删除
 signID|int|最大值|不允许|是|签到的ID
 taskID|int|最大值|不允许| |每个签到对应的任务ID
 courseTableID|int|最大值|不允许| |签到对应的课程表ID
+count|int|最大值|不允许| |签到统计，即签到的人数总计
+append|text|最大值|允许| |附加信息，一个JSON格式数组，可多次更新,由{time:xxx,data:'xxx'}组成
 
 
 ## tb_universities
@@ -260,9 +262,9 @@ userEmail|varchar|30|不允许| |用户邮箱
 userEmailVerify|tinyint|最大值|允许| |用户邮箱是否经过验证，0：未验证，1：已验证
 userSlat|char|32|不允许| |密码加密随机数
 userPsw|char|64|不允许| |用户密码
-userGender|bit|1|允许| |用户性别0: male, 1: female
+userGender|tinyint|4|允许| |用户性别0: male, 1: female
 userIcon|varchar|50|允许| |用户头像，路径存储
-userType|bit|1|允许| |用户类型，0: student, 1: teacher, 10:超级管理员
+userType|tinyint|4|允许| |用户类型，0: student, 1: teacher, 10:超级管理员
 userDescription|varchar|300|允许| |用户个人描述信息
 userAccessTime|int|最大值|允许| |唯一访问控制符的过期时间
 userAccess|varchar|64|允许| |用于访问的唯一标示符
