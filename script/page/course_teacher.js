@@ -166,11 +166,43 @@ Page.course_teacher = function () {
 				});
 			},
 			m_new_sign: function (courseTableId) {
-				this.currentView = "new_sign";
-
+				var obj = this;
+				FUNC.ajax(CONFIG.api.sign.prepare, "post", {course_table_id: courseTableId}, function (result) {
+					if (result.status) {
+						obj.result = {
+							course_table_id: courseTableId,
+							course_data: result.data.course,
+							week: result.data.week,
+							error: null,
+							class_info: result.data.classInfo,
+							form: {
+								name: '',
+								detail: '',
+								time: 45
+							}
+						};
+						obj.currentView = "new_sign";
+						FUNC.findVueChild(obj, "new_sign").set_course_info();
+					} else {
+						obj.m_load_error(result);
+					}
+				}, this.m_load_error);
 			},
-			m_load_error: function (msg) {
-				FUNC.alertOnElem(this.$el, msg ? msg : "非法访问");
+			m_load_error: function (msg, global) {
+				if (typeof global != "undefined" && global === true) {
+					FUNC.alertOnElem(this.$el, msg ? msg : "非法访问");
+				} else {
+					if (typeof msg == "string") {
+						this.result = {error: msg};
+					} else if (msg.hasOwnProperty('msg') && msg.hasOwnProperty('code')) {
+						this.result = {error: msg.msg, code: msg.code};
+					} else if (msg.hasOwnProperty('msg')) {
+						this.result = {error: msg.msg};
+					} else {
+						this.result = {error: "未知错误"};
+					}
+					this.currentView = "base-error";
+				}
 			}
 		},
 		components: {
@@ -205,8 +237,8 @@ Page.course_teacher = function () {
 			ct_vm.m_course_list();
 		},
 		'/new_sign/:id': function (id) {
-			id = +id;
-			if (id < 1) {
+			id = parseInt(id);
+			if (isNaN(id) || id < 1) {
 				return;
 			}
 			change_menus_active("new_sign");

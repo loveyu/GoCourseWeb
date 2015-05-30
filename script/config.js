@@ -90,6 +90,9 @@ var CONFIG = {
 			get_share_test_list: "quiz_student/get_share_test_list",
 			do_test: "quiz_student/do_test",
 			history: "quiz_student/exec_history"
+		},
+		sign: {
+			prepare: "sign/prepare"
 		}
 	},
 	current_week: {	//当前的周次，该数据会依据服务器状态而更新

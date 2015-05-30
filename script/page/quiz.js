@@ -47,7 +47,7 @@ Page.quiz = function () {
 					test_obj: null
 				};
 				var parse_id = parseInt(id);
-				if (parse_id < 1 || ("" + parse_id) != id) {
+				if (isNaN(parse_id) || parse_id < 1 || ("" + parse_id) != id) {
 					this.result.error = "ID参数解析错误";
 				}
 				this.currentView = "do_test";
@@ -156,6 +156,10 @@ Page.quiz = function () {
 			quiz_vm.my();
 		},
 		'/do/:id': function (id) {
+			id = parseInt(id);
+			if (isNaN(id) || id < 1) {
+				return;
+			}
 			change_menus_active("do_test");
 			quiz_vm.do_test(id);
 		},
@@ -176,14 +180,26 @@ Page.quiz = function () {
 			quiz_vm.history(-1);
 		},
 		'ct_history/right/:id': function (id) {
+			id = parseInt(id);
+			if (isNaN(id) || id < 1) {
+				return;
+			}
 			change_menus_active("ct_history");
 			quiz_vm.course_table_history(1, id);
 		},
 		'ct_history/wrong/:id': function (id) {
+			id = parseInt(id);
+			if (isNaN(id) || id < 1) {
+				return;
+			}
 			change_menus_active("ct_history");
 			quiz_vm.course_table_history(0, id);
 		},
 		'ct_history/all/:id': function (id) {
+			id = parseInt(id);
+			if (isNaN(id) || id < 1) {
+				return;
+			}
 			change_menus_active("ct_history");
 			quiz_vm.course_table_history(-1, id);
 		},
@@ -192,8 +208,12 @@ Page.quiz = function () {
 			quiz_vm.open_test(0);
 		},
 		'open_test/:id': function (id) {
+			id = parseInt(id);
+			if (isNaN(id) || id < 1) {
+				return;
+			}
 			change_menus_active("open_test");
-			quiz_vm.open_test(+id);
+			quiz_vm.open_test(id);
 		},
 		'quiz_history': function () {
 			change_menus_active("quiz_history");

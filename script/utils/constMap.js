@@ -22,5 +22,8 @@ var CONST_MAP = {
 		{id: -1, url: "all", name: "查看全部"},
 		{id: 0, url: "wrong", name: "只看错题"},
 		{id: 1, url: "right", name: "只看答对"}
+	],
+	weekMap: [
+		'日', '一', '二', '三', '四', '五', '六'
 	]
 };

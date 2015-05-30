@@ -1,1 +1,40 @@
 <h3>创建一个新的签到</h3>
+<p class="alert alert-danger" v-if="error">{{error}}</p>
+<form method="post" v-on="submit:onSubmit">
+	<div class="form-group">
+		<p><strong>课程：</strong>{{course_data.courseName}},
+			{{course_data.deptName}}, {{course_data.enrolYear}}级</p>
+
+		<p><strong>班级：</strong><span v-repeat="class_info" class="label label-info">{{className}}</span></p>
+	</div>
+	<div class="form-group">
+		<label class="control-label" for="InputName">签到名称</label>
+		<input id="InputName" type="text" v-model="form.name" class="form-control"/>
+	</div>
+	<div class="form-group">
+		<label class="control-label" for="InputDetail">细节</label>
+		<textarea id="InputDetail" v-model="form.detail" placeholder="可留空" class="form-control"></textarea>
+	</div>
+	<div class="form-group form-inline">
+		<div class="input-group">
+			<span class="input-group-addon">有效时间</span>
+
+			<div class="input-group-btn">
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+				        aria-expanded="false">{{form.time>0?(form.time+'分钟'):'无效时间'}}<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" role="menu">
+					<li><a href="javascript:void(0)" v-on="click:form.time=30">30分钟</a></li>
+					<li><a href="javascript:void(0)" v-on="click:form.time=90">90分钟</a></li>
+					<li><a href="javascript:void(0)" v-on="click:form.time=45">45分钟</a></li>
+					<li><a href="javascript:void(0)" v-on="click:form.time=15">15分钟</a></li>
+				</ul>
+			</div>
+			<input type="text" class="form-control" placeholder="有效时间，分钟" v-model="form.time"
+			       aria-describedby="basic-addon1">
+		</div>
+	</div>
+	<div class="form-group">
+		<button class="btn btn-primary" type="submit">创建一个签到</button>
+	</div>
+</form>
