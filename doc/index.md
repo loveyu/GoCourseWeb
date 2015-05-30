@@ -7,6 +7,7 @@
 * [http://10.109.0.47/gocourse/](http://10.109.0.47/gocourse/) 校园网内网地址
 * [http://10.109.0.47:8080/gocourse/](http://10.109.0.47:8080/gocourse/) 非反向代理地址
 
+如果需要服务端JavaDoc文件请访问: [JavaDoc](../javadoc)
 
 ### 数据格式说明
 服务器端采用的Json格式数据返回，通用格式如下：
