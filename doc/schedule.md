@@ -3,7 +3,9 @@
 
 ## /schedule/add
 Desc: 添加一个课程安排
+
 Method: POST
+
 Param: 所以参数均不能为空，课程会进行冲突检测
 * department(require) 专业ID
 * name(require) 课程名称，需在课程列表中存在
@@ -30,7 +32,7 @@ Param: 所以参数均不能为空，课程会进行冲突检测
 
 
 
-**数据对象引用: ** [*TbSchedule*](../javadoc/index.html?com/katoa/gocourse/model/entity/TbSchedule.html)
+**数据对象引用：** [*TbSchedule*](../javadoc/index.html?com/katoa/gocourse/model/entity/TbSchedule.html)
 
 ```js
 {
@@ -55,7 +57,9 @@ Param: 所以参数均不能为空，课程会进行冲突检测
 
 ## /schedule/search
 Desc: 搜索当前课程时间表
+
 Method: Default
+
 Param: 
 * department(require) 专业ID
 * course_name(可选) 课程名称

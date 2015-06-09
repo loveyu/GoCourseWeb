@@ -387,12 +387,12 @@ a.tabnav-extra:hover{color:#4078c0;text-decoration:none;}
 .markdown-body h4{font-size:1.25em;}
 .markdown-body h5{font-size:1em;}
 .markdown-body h6{font-size:1em;color:#777;}
-.markdown-body p,.markdown-body blockquote,.markdown-body ul,.markdown-body ol,.markdown-body dl,.markdown-body table,.markdown-body pre{margin-top:0;margin-bottom:16px;}
+.markdown-body p,.markdown-body blockquote,.markdown-body ul,.markdown-body ol,.markdown-body dl,.markdown-body table,.markdown-body pre{margin-top:0;margin-bottom:8px;}
 .markdown-body hr{height:4px;padding:0;margin:16px 0;background-color:#e7e7e7;border:0 none;}
 .markdown-body ul,.markdown-body ol{padding-left:2em;}
 .markdown-body ul.no-list,.markdown-body ol.no-list{padding:0;list-style-type:none;}
 .markdown-body ul ul,.markdown-body ul ol,.markdown-body ol ol,.markdown-body ol ul{margin-top:0;margin-bottom:0;}
-.markdown-body li > p{margin-top:16px;}
+.markdown-body li > p{margin-top:4px;}
 .markdown-body dl{padding:0;}
 .markdown-body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:700;}
 .markdown-body dl dd{padding:0 16px;margin-bottom:16px;}

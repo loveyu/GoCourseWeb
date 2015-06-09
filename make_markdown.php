@@ -54,7 +54,7 @@ function set_error_code($content)
 	if (preg_match_all("/@DATA_REF\\(([a-zA-Z._-]+)\\/([a-zA-Z._-]+)\\)@/", $content, $matcher, PREG_SET_ORDER) > 0) {
 		foreach ($matcher as $v) {
 			$package = implode("/", array_filter(array_map("trim", explode(".", $v[1]))));
-			$content = str_replace($v[0], "\r\n**数据对象引用: ** [*{$v[2]}*](../javadoc/index.html?{$package}/{$v[2]}.html)", $content);
+			$content = str_replace($v[0], "\r\n**数据对象引用：** [*{$v[2]}*](../javadoc/index.html?{$package}/{$v[2]}.html)", $content);
 		}
 	}
 	return $content;

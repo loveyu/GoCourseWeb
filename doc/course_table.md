@@ -3,7 +3,9 @@
 
 ## /course_table/add
 Desc: 添加一个课程表
+
 Method: POST
+
 Param: *该方法需要提交多个复杂类型的参数* 
 * department(require) 专业ID
 * year(require) 专业学生的入学年份，即专业年级
@@ -68,8 +70,10 @@ Return:
 ```
 ## /course_table/get/{courseTableId}
 Desc: 查询某一门课程的信息
+
 Method: Default
-Param: *提示：* 此处参数与`search`的有部分重合
+
+Param: **提示：** 此处参数与`search`的有部分重合
 * set_class_id (可选) 是否显示班级ID信息，即可选班级的数组ID，默认不显示，参数`1`显示
 * set_class_info (可选) 是否显示班级的详细信息，包含名称，默认不显示，参数`1`显示
 * set_location (可选) 是否显示上课地点，默认不显示，参数`1`显示
@@ -77,7 +81,7 @@ Param: *提示：* 此处参数与`search`的有部分重合
 
 **提示：** `{courseTableId}`指此处需要使用字符替换，如果课程表ID为10请求地址为`/course_table/get/10`
 
-*提示：*如果未找到，会返回一个错误状态
+**提示：** 如果未找到，会返回一个错误状态
 
 #### 错误状态，错误标记`129`
 * `12900` 学生只允许查询自己的课表
@@ -89,7 +93,7 @@ Param: *提示：* 此处参数与`search`的有部分重合
 
 
 
-**数据对象引用: ** [*DataCourseTable*](../javadoc/index.html?com/katoa/gocourse/model/data/DataCourseTable.html)
+**数据对象引用：** [*DataCourseTable*](../javadoc/index.html?com/katoa/gocourse/model/data/DataCourseTable.html)
 
 ```js
 {
@@ -147,7 +151,9 @@ Param: *提示：* 此处参数与`search`的有部分重合
 
 ## /course_table/search
 Desc: 课程表搜索
+
 Method: Default
+
 Param:
 * search_type (require) 当前搜索的类型，目前可选值：`teacher`,`student`，使用对应的用户权限进行查询
 * set_class_id (可选) 是否显示班级ID信息，即可选班级的数组ID，默认不显示，参数`1`显示
@@ -167,7 +173,7 @@ Param:
 
 
 
-**数据对象引用: ** [*DataCourseTableSearch*](../javadoc/index.html?com/katoa/gocourse/model/data/DataCourseTableSearch.html)
+**数据对象引用：** [*DataCourseTableSearch*](../javadoc/index.html?com/katoa/gocourse/model/data/DataCourseTableSearch.html)
 
 ```js
 //注意data数组中的对象属性
@@ -292,7 +298,9 @@ Param:
 
 ## /course_table/student_selected
 Desc: 学生依据已有的ID查询当前课程是否已经选了
+
 Method: Default
+
 Param: 
 * ids (require) 课程表的ID列表，通过`,`英文逗号进行连接如`1,2,3,4,6`
 
@@ -320,7 +328,9 @@ Param:
 
 ## /course_table/student_select_add
 Desc: 学生添加一个选课信息，必须为学生权限
+
 Method: POST
+
 Param:
 * id (require) 课程表的ID，为courseTableId的值
 

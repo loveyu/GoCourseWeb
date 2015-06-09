@@ -3,7 +3,9 @@
 
 ## /sign/prepare
 Desc: 获取一个签到准备数据
+
 Method: Default
+
 Param:
 * course_table_id(require) 课程表ID
 
@@ -16,7 +18,7 @@ Param:
 
 
 
-**数据对象引用: ** [*DataSignPrepare*](../javadoc/index.html?com/katoa/gocourse/model/data/DataSignPrepare.html)
+**数据对象引用：** [*DataSignPrepare*](../javadoc/index.html?com/katoa/gocourse/model/data/DataSignPrepare.html)
 
 ```js
 //返回对象为DataSignPrepare
@@ -62,7 +64,9 @@ Param:
 
 ## /sign/create
 Desc: 创建一个签到任务
+
 Method: POST
+
 Param:
 * course_table_id (require) 对应的课程表ID
 * name (require) 签到名称
@@ -84,7 +88,7 @@ Param:
 
 
 
-**数据对象引用: ** [*DataSignCreate*](../javadoc/index.html?com/katoa/gocourse/model/data/DataSignCreate.html)
+**数据对象引用：** [*DataSignCreate*](../javadoc/index.html?com/katoa/gocourse/model/data/DataSignCreate.html)
 
 ```js
 {

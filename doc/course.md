@@ -3,7 +3,9 @@
 
 ## /course/add
 Desc: 添加一个课表名
+
 Method: POST
+
 Param:
 * name(require) 课程的名称，唯一名称，如`计算机网络`,`人工智能`
 
@@ -29,7 +31,9 @@ Param:
 
 ## /course/list
 Desc: 获取课程名称列表
+
 Method: GET
+
 Param: __分页参数待定__
 
 #### 错误状态，错误标记`114`
@@ -55,7 +59,9 @@ Param: __分页参数待定__
 
 ## /course/del
 Desc: 删除一个课程名称
+
 Method: POST
+
 Param:
 * id(require) 课程ID
 
@@ -78,7 +84,9 @@ Param:
 
 ## /course/search
 Desc: 搜索课程名称
+
 Method: Default
+
 Param:
 * query (require) 查询参数，会匹配3种模式，完整的课程名，拼音首字母前缀，全拼前缀查询，如果是数字ID，将完全匹配ID进行查询
 

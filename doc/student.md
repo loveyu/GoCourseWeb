@@ -3,7 +3,9 @@
 
 ## /student/info
 Desc: 获取当前登录学生的基本信息
+
 Method: Default
+
 Param: `none`
 
 #### 错误状态，错误标记`103`
@@ -13,7 +15,7 @@ Param: `none`
 
 
 
-**数据对象引用: ** [*DataStudentInfo*](../javadoc/index.html?com/katoa/gocourse/model/data/DataStudentInfo.html)
+**数据对象引用：** [*DataStudentInfo*](../javadoc/index.html?com/katoa/gocourse/model/data/DataStudentInfo.html)
 
 ```js
 {
@@ -50,7 +52,9 @@ Param: `none`
 
 ## /student/bind_info
 Desc: 绑定学生基本信息,用于信息不完全时的补充，描述条件就是姓名为空
+
 Method: POST
+
 Param: 一个数据列表全部不能为空，如下面的结构
 ```js
 {
@@ -87,7 +91,9 @@ Return:
 
 ## /student/update_info
 Desc: 更新学生基本信息
+
 Method: POST
+
 Param:
 * user_description(require) 用户描述信息
 
@@ -108,13 +114,16 @@ Param:
 
 ## /student/my_course
 Desc: 获取学生自己的课程表信息，会返回该学期所有的课程，数据量比较大
+
 Method: Default
+
 Param: 
 * year(可选) 课程的年份，默认当前年份
 * term(可选) 课程的季度（0春季，1秋季），默认当前季度
 * detail(可选) 是否显示细节信息，默认不显示，值为`1`时显示
 
 **警告：** year和term参数应该同时使用，同为空或同不为空
+
 **提示：** 在显示细节时，课程对象中的`requirement`,`content`的不为`null`，`location`中的`notice`不为`null`，在使用默认值时这几个字段将置为`null`
 
 #### 错误状态，错误标记`129`
@@ -127,7 +136,7 @@ Param:
 
 
 
-**数据对象引用: ** [*DataStudentCourse*](../javadoc/index.html?com/katoa/gocourse/model/data/DataStudentCourse.html)
+**数据对象引用：** [*DataStudentCourse*](../javadoc/index.html?com/katoa/gocourse/model/data/DataStudentCourse.html)
 
 ```js
 //注意数据的细节设置

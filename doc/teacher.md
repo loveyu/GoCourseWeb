@@ -3,7 +3,9 @@
 
 ## /student/info
 Desc: 获取当前登录教师的基本信息
+
 Method: Default
+
 Param: `none`
 
 #### 错误状态，错误标记`111`
@@ -12,7 +14,7 @@ Param: `none`
 
 
 
-**数据对象引用: ** [*DataTeacherInfo*](../javadoc/index.html?com/katoa/gocourse/model/data/DataTeacherInfo.html)
+**数据对象引用：** [*DataTeacherInfo*](../javadoc/index.html?com/katoa/gocourse/model/data/DataTeacherInfo.html)
 
 ```js
 //注意分析事实数据，后期可能会有改动
@@ -45,7 +47,9 @@ Param: `none`
 
 ## /teacher/update_info
 Desc: 更新教师基本信息
+
 Method: POST
+
 Param:
 * user_description(require) 用户描述信息
 

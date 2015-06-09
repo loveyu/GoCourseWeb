@@ -3,7 +3,9 @@
 
 ## /user_action/login
 Desc: 用户登录
+
 Method: POST
+
 Param:
 * username(require) 用户名，支持两种类型，邮箱和个人ID，ID可能是学号也可能是字符串类型
 * password(require) 用户密码 6-32位长度
@@ -34,7 +36,9 @@ Param:
 
 ## /user_action/logout
 Desc: 用户退出登录，会清除`token` Cookie
+
 Method: Default
+
 Param: `none`
 
 ```js
@@ -48,7 +52,9 @@ Param: `none`
 
 ## /user_action/register
 Desc: 用户简单注册，初步用于测试
+
 Method: POST
+
 Param:
 * email(require), 用户唯一邮箱
 * password(require), 用户密码
@@ -72,8 +78,11 @@ Param:
 
 ## /user_action/forget_password/send_mail
 Desc: 发送密码重置邮件
-Session: true
+
+Session:: true
+
 Method: POST
+
 Param:
 * email(require) 邮箱地址
 * captcha(require) 验证码值
@@ -107,8 +116,11 @@ Param:
 
 ## /user_action/forget_password/check_code
 Desc: 检查当前验证码是否正确
-Session: true
+
+Session:: true
+
 Method: POST
+
 Param:
 * code(require) 验证码
 
@@ -126,8 +138,11 @@ Param:
 
 ## /user_action/forget_password/reset
 Desc:  重置密码
-Session: true
+
+Session:: true
+
 Method: POST
+
 Param:
 * code(password) 新的密码
 

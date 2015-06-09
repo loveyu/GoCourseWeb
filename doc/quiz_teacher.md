@@ -3,7 +3,9 @@
 
 ## /quiz_teacher/course_list
 Desc: 获取教师的课程名称列表
+
 Method: Default
+
 Param: 
 * status(require) 课程的状态 -1全部（默认），0开课中，1未开课，2已结束
 
@@ -31,7 +33,9 @@ Param:
 
 ## /quiz_teacher/quiz_add
 Desc: 添加一个课程测验
+
 Method: POST
+
 Param:
 * course_id (require) 课程ID
 * quiz_json (require) 测验数据对象,JSON对象
@@ -93,7 +97,9 @@ Return:
 
 ## /quiz_teacher/quiz_list
 Desc: 查询教师的测验列表
+
 Method: Default
+
 Param:
 * course_id (require) 课程ID
 
@@ -105,7 +111,7 @@ Param:
 
 
 
-**数据对象引用: ** [*DataQuizList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataQuizList.html)
+**数据对象引用：** [*DataQuizList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataQuizList.html)
 
 ```js
 {
@@ -175,7 +181,9 @@ Param:
 
 ## /quiz_teacher/quiz_share_list
 Desc: 查询教师的共享的测验列表，包括查询教师自己的
+
 Method: Default
+
 Param:
 * course_id (require) 课程ID
 
@@ -188,7 +196,7 @@ Param:
 *返回数据格式与`quiz_list`一致*
 
 
-**数据对象引用: ** [*DataQuizList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataQuizList.html)
+**数据对象引用：** [*DataQuizList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataQuizList.html)
 
 ```js
 {
@@ -258,7 +266,9 @@ Param:
 
 ## /quiz_teacher/quiz_share
 Desc: 分享某一课程测验
+
 Method: POST
+
 Param: 
 * quiz_id (require) 测验ID
 
@@ -284,7 +294,9 @@ Param:
 
 ## /quiz_teacher/quiz_share_cancel
 Desc: 取消分享某一课程测验
+
 Method: POST
+
 Param: 
 * quiz_id (require) 测验ID
 
@@ -301,7 +313,9 @@ Param:
 
 ## /quiz_teacher/bind_list
 Desc: 获取某一课程表绑定的测验列表，包括共享的测验
+
 Method: Default
+
 Param:
 * course_table (require) 课程表ID
 
@@ -314,7 +328,7 @@ Param:
 *返回数据格式与`quiz_list`一致*
 
 
-**数据对象引用: ** [*DataQuizList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataQuizList.html)
+**数据对象引用：** [*DataQuizList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataQuizList.html)
 
 ```js
 {
@@ -384,7 +398,9 @@ Param:
 
 ## /quiz_teacher/unbind_list
 Desc: 获取某一课程表未绑定的测验列表，仅仅包含教师自己的测验
+
 Method: Default
+
 Param:
 * course_table (require) 课程表ID
 
@@ -397,7 +413,7 @@ Param:
 *返回数据格式与`quiz_list`一致*
 
 
-**数据对象引用: ** [*DataQuizList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataQuizList.html)
+**数据对象引用：** [*DataQuizList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataQuizList.html)
 
 ```js
 {
@@ -468,7 +484,9 @@ Param:
 
 ## /quiz_teacher/unbind_share_list
 Desc: 获取某一课程表未绑定的**共享**测验列表
+
 Method: Default
+
 Param:
 * course_table (require) 课程表ID
 
@@ -477,7 +495,7 @@ Param:
 *返回数据格式与`quiz_list`一致*
 
 
-**数据对象引用: ** [*DataQuizList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataQuizList.html)
+**数据对象引用：** [*DataQuizList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataQuizList.html)
 
 ```js
 {
@@ -547,7 +565,9 @@ Param:
 
 ## /quiz_teacher/bind_quiz
 Desc: 绑定课程表与测验之间的关系
+
 Method: POST
+
 Param:
 * course_table (require) 课程表ID
 * quiz_id (require) 测验ID，非自己的测验，会检测共享状态
@@ -582,7 +602,9 @@ Param:
 
 ## /quiz_teacher/bind_quiz_cancel
 Desc: 取消课程表与测验之间的绑定关系
+
 Method: POST
+
 Param:
 * course_table (require) 课程表ID
 * quiz_id (require) 测验ID，不检查测验的共享状态

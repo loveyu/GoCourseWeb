@@ -3,11 +3,13 @@
 
 ## /user/info
 Desc: 读取登录用户基本信息
+
 Method: Default
+
 Param: `none`
 
 
-**数据对象引用: ** [*DataUserInfo*](../javadoc/index.html?com/katoa/gocourse/model/data/DataUserInfo.html)
+**数据对象引用：** [*DataUserInfo*](../javadoc/index.html?com/katoa/gocourse/model/data/DataUserInfo.html)
 
 ```js
 //注意事实分析数据类型，可能会有更新
@@ -36,7 +38,9 @@ Param: `none`
 
 ## /user/change_password
 Desc: 修改密码，修改成功后返回新的Token值
+
 Method: POST
+
 Param:
 * old_pwd(require): 原始密码
 * new_pwd(require): 新密码
@@ -51,7 +55,7 @@ Param:
 
 
 
-**数据对象引用: ** [*DataToken*](../javadoc/index.html?com/katoa/gocourse/model/data/DataToken.html)
+**数据对象引用：** [*DataToken*](../javadoc/index.html?com/katoa/gocourse/model/data/DataToken.html)
 
 ```js
 {
@@ -67,7 +71,9 @@ Param:
 
 ## /user/refresh_token
 Desc: 刷新当前Token
+
 Method: POST
+
 Param:
 * confirm(require): 确认时间戳，与系统时间相差不应超过10秒
 
@@ -78,7 +84,7 @@ Param:
 
 
 
-**数据对象引用: ** [*DataToken*](../javadoc/index.html?com/katoa/gocourse/model/data/DataToken.html)
+**数据对象引用：** [*DataToken*](../javadoc/index.html?com/katoa/gocourse/model/data/DataToken.html)
 
 ```js
 {
@@ -94,7 +100,9 @@ Param:
 
 ## /user/set_token_cookie
 Desc: 利用Token返回一个服务器COOKIE设置，cookie名称为`token`
+
 Method: Default
+
 Param: `none`
 
 ```js
@@ -108,7 +116,9 @@ Param: `none`
 
 ## /user/upload_avatar
 Desc: 上传用户头像给当前用户
+
 Method: Post
+
 Param: **上传必须使用HTML文件类型表单**
 * avatar(require) 文件字段名
 
@@ -130,7 +140,7 @@ Param: **上传必须使用HTML文件类型表单**
 
 
 
-**数据对象引用: ** [*DataUserInfo*](../javadoc/index.html?com/katoa/gocourse/model/data/DataUserInfo.html)
+**数据对象引用：** [*DataUserInfo*](../javadoc/index.html?com/katoa/gocourse/model/data/DataUserInfo.html)
 
 ```js
 //此处返回信息和用户基本信息是一致的
@@ -159,7 +169,9 @@ Param: **上传必须使用HTML文件类型表单**
 
 ## /user/email/status
 Desc: 用户当前邮箱的状态
+
 Method: default
+
 Param: `none`
 
 ```js
@@ -176,8 +188,10 @@ Param: `none`
 
 ## /email/send
 Desc: 邮件的发送操作
+
 Method: POST
 SESSION: true
+
 Param: 
 * type (require),可选值如下:
 ```js
@@ -220,8 +234,11 @@ Return:
 
 ## /user/email/bind
 Desc: 绑定用户的邮箱
-Session: true
+
+Session:: true
+
 Method: POST
+
 Param:
 * captcha (require) 验证码，长度为10位
 
@@ -240,8 +257,11 @@ Return:
 
 ## /user/email/new
 Desc: 在未绑定邮箱的状态下，设置一个新的邮箱
-Session: true
+
+Session:: true
+
 Method: POST
+
 Param: 
 * email (require) 用户新的邮箱
 
@@ -259,8 +279,11 @@ Param:
 
 ## /user/email/unbind
 Desc: 在已经绑定邮箱的状态下，设置一个新的邮箱，会同时发送邮件到新的邮箱和旧的邮箱
-Session: true
+
+Session:: true
+
 Method: POST
+
 Param: 
 * new_email(require) 新的邮箱地址
 
@@ -278,8 +301,11 @@ Param:
 
 ## /user/email/unbind_confirm
 Desc: 在解绑时，将两个两个新的验证码发送到服务器
-Session: true
+
+Session:: true
+
 Method: POST
+
 Param:
 * old_captcha(require)旧邮箱的验证码
 * new_captcha(require)新邮箱的验证码

@@ -3,7 +3,9 @@
 
 ## /quiz_student/get_test_list
 Desc: 获取测验列表
+
 Method: Default
+
 Param:
 * course_table_id(require) 课程表ID
 
@@ -14,7 +16,7 @@ Param:
 
 
 
-**数据对象引用: ** [*DataTestList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataTestList.html)
+**数据对象引用：** [*DataTestList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataTestList.html)
 
 ```js
 //包含多个选项，type描述了选项的类型
@@ -139,7 +141,9 @@ Param:
 
 ## /quiz_student/get_share_test_list
 Desc: 获取某一课程共享的测验，即测验被设置为共享，然后所以学生即可参与此类题目
+
 Method: Default
+
 Param: 
 * course_id(require) 课程ID
 
@@ -150,7 +154,7 @@ Param:
 
 
 
-**数据对象引用: ** [*DataTestList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataTestList.html)
+**数据对象引用：** [*DataTestList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataTestList.html)
 
 ```js
 //包含多个选项，type描述了选项的类型，返回的数据格式与get_test_list是一致的
@@ -275,7 +279,9 @@ Param:
 
 ## /quiz_student/do_test
 Desc: 开始做测试题目
+
 Method: POST
+
 Param:
 * quiz_id(require) 测验的ID
 * answer(require)  回答的列表，用`,`逗号分隔，传入的数据为选项ID(optionID)，不是ABCD也不是0123序号，如果多选题，有严格的传入顺序，如多选`125,127,128`，单选`125`
@@ -308,7 +314,9 @@ Param:
 
 ## /quiz_student/exec_history
 Desc: 做题历史记录
+
 Method: Default
+
 Param: **所以参数可均不提交，即查询全部**
 * course_table_id (可选) 依据某一课程表查询，优先该参数
 * course_id (可选) 依据某一课程的ID查询，需要course_table_id参数为空
@@ -325,7 +333,7 @@ Param: **所以参数可均不提交，即查询全部**
 
 
 
-**数据对象引用: ** [*DataTestExecList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataTestExecList.html)
+**数据对象引用：** [*DataTestExecList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataTestExecList.html)
 
 ```js
 //返回的对象为`DataTestExecList`,对象有为List<TbQuizExec> execs,Map<Integer, DataQuizEntity> quiz;
