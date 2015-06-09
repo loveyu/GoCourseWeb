@@ -13,7 +13,7 @@ Param:
 
 
 
-```
+```js
 {
   "status": true,
   "code": 0,
@@ -39,7 +39,7 @@ Param:
 * course_table_id (可选) 是否添加到指定的课程表中，默认不添加，当ID合法时有效。如果该参数有效则`add_my_course`无效
 
 **提示：** quiz_json 对象格式如下
-```
+```js
 {
   "title": "国际形势",
   "options": [
@@ -82,7 +82,7 @@ Param:
 
 
 Return:
-```
+```js
 {
   "status": true,
   "code": 0,
@@ -104,7 +104,10 @@ Param:
 
 
 
-```
+
+**数据对象引用: ** [*DataQuizList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataQuizList.html)
+
+```js
 {
   "status": true,
   "code": 0,
@@ -184,7 +187,10 @@ Param:
 
 *返回数据格式与`quiz_list`一致*
 
-```
+
+**数据对象引用: ** [*DataQuizList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataQuizList.html)
+
+```js
 {
   "status": true,
   "code": 0,
@@ -267,7 +273,7 @@ Param:
 
 
 
-```
+```js
 {
   "status": true,
   "code": 0,
@@ -284,7 +290,7 @@ Param:
 
 #### 错误状态，参考前文标记`143`
 
-```
+```js
 {
   "status": true,
   "code": 0,
@@ -307,7 +313,10 @@ Param:
 
 *返回数据格式与`quiz_list`一致*
 
-```
+
+**数据对象引用: ** [*DataQuizList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataQuizList.html)
+
+```js
 {
   "status": true,
   "code": 0,
@@ -387,7 +396,10 @@ Param:
 
 *返回数据格式与`quiz_list`一致*
 
-```
+
+**数据对象引用: ** [*DataQuizList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataQuizList.html)
+
+```js
 {
   "status": true,
   "code": 0,
@@ -464,7 +476,10 @@ Param:
 
 *返回数据格式与`quiz_list`一致*
 
-```
+
+**数据对象引用: ** [*DataQuizList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataQuizList.html)
+
+```js
 {
   "status": true,
   "code": 0,
@@ -556,7 +571,7 @@ Param:
 
 
 
-```
+```js
 {
   "status": true,
   "code": 0,
@@ -574,7 +589,7 @@ Param:
 
 #### 错误状态，参考前文标记`148`
 
-```
+```js
 {
   "status": true,
   "code": 0,

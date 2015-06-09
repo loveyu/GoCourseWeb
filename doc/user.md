@@ -6,7 +6,10 @@ Desc: 读取登录用户基本信息
 Method: Default
 Param: `none`
 
-```
+
+**数据对象引用: ** [*DataUserInfo*](../javadoc/index.html?com/katoa/gocourse/model/data/DataUserInfo.html)
+
+```js
 //注意事实分析数据类型，可能会有更新
 {
 	"status": true,
@@ -47,7 +50,10 @@ Param:
 
 
 
-```
+
+**数据对象引用: ** [*DataToken*](../javadoc/index.html?com/katoa/gocourse/model/data/DataToken.html)
+
+```js
 {
     "status": true,
     "code": 0,
@@ -71,7 +77,10 @@ Param:
 
 
 
-```
+
+**数据对象引用: ** [*DataToken*](../javadoc/index.html?com/katoa/gocourse/model/data/DataToken.html)
+
+```js
 {
     "status": true,
     "code": 0,
@@ -88,7 +97,7 @@ Desc: 利用Token返回一个服务器COOKIE设置，cookie名称为`token`
 Method: Default
 Param: `none`
 
-```
+```js
 {
     "status": true,
     "code": 0,
@@ -120,7 +129,10 @@ Param: **上传必须使用HTML文件类型表单**
 
 
 
-```
+
+**数据对象引用: ** [*DataUserInfo*](../javadoc/index.html?com/katoa/gocourse/model/data/DataUserInfo.html)
+
+```js
 //此处返回信息和用户基本信息是一致的
 {
 	"status": true,
@@ -150,7 +162,7 @@ Desc: 用户当前邮箱的状态
 Method: default
 Param: `none`
 
-```
+```js
 {
 	"status": true,
 	"code": 0,
@@ -168,7 +180,7 @@ Method: POST
 SESSION: true
 Param: 
 * type (require),可选值如下:
-```
+```js
 {
 	"old_send_again"	//从新发送激活邮件，如果账户为激活
 	//其他值待定
@@ -197,7 +209,7 @@ Param:
 
 
 Return:
-```
+```js
 {
 	"status": true,
 	"code": 0,
@@ -216,7 +228,7 @@ Param:
 #### 错误状态，参考前文标记`108`
 
 Return:
-```
+```js
 //如果是移动端，不抓取COOKIE记得保存数据
 {
 	"status": true,
@@ -235,7 +247,7 @@ Param:
 
 #### 错误状态，参考前文标记`108`
 
-```
+```js
 //如果是移动端，不抓取COOKIE记得保存数据
 {
 	"status": true,
@@ -254,7 +266,7 @@ Param:
 
 #### 错误状态，参考前文标记`108`
 
-```
+```js
 //如果是移动端，不抓取COOKIE记得保存数据
 {
 	"status": true,
@@ -274,7 +286,7 @@ Param:
 
 #### 错误状态，参考前文标记`108`
 
-```
+```js
 //如果是移动端，不抓取COOKIE记得保存数据
 {
 	"status": true,

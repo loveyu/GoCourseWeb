@@ -32,7 +32,7 @@ Param: 所以参数均不能为空，课程会进行冲突检测
 
 **数据对象引用: ** [*TbSchedule*](../javadoc/index.html?com/katoa/gocourse/model/entity/TbSchedule.html)
 
-```
+```js
 {
 	"status": true,
 	"code": 0,
@@ -72,7 +72,7 @@ Param:
 
 
 
-```
+```js
 //完整模式
 {
 	"status": true,
@@ -109,7 +109,7 @@ Param:
 }
 ```
 
-```
+```js
 //精简模式
 {
 	"status": true,
@@ -142,7 +142,7 @@ Param:
 }
 ```
 
-```
+```js
 //超级精简模式
 {
 	"status": true,

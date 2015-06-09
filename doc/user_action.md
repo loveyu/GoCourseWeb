@@ -20,7 +20,7 @@ Param:
 
 
 
-```
+```js
 {
     "status": true,
     "code": 0,
@@ -37,7 +37,7 @@ Desc: 用户退出登录，会清除`token` Cookie
 Method: Default
 Param: `none`
 
-```
+```js
 {
     "status": true,
     "code": 0,
@@ -61,7 +61,7 @@ Param:
 
 
 
-```
+```js
 {
     "status": true,
     "code": 0,
@@ -95,7 +95,7 @@ Param:
 
 
 
-```
+```js
 //无法处理COOKIE，记得保存值
 {
 	"status": true,
@@ -114,7 +114,7 @@ Param:
 
 #### 错误状态，参考前文标记`110`
 
-```
+```js
 //无法处理COOKIE，记得保存值
 {
 	"status": true,
@@ -133,7 +133,7 @@ Param:
 
 #### 错误状态，参考前文标记`110`
 
-```
+```js
 //无法处理COOKIE，记得保存值
 {
 	"status": true,

@@ -15,7 +15,7 @@ Param:
 
 
 
-```
+```js
 {
 	"status": true,
 	"code": 0,
@@ -39,7 +39,7 @@ Param: __分页参数待定__
 
 
 
-```
+```js
 {
 	"status": true,
 	"code": 0,
@@ -67,7 +67,7 @@ Param:
 
 
 
-```
+```js
 {
 	"status": true,
 	"code": 0,
@@ -84,7 +84,7 @@ Param:
 
 #### 错误状态，参考前文标记`114`
 
-```
+```js
 {
 	"status": true,
 	"code": 0,

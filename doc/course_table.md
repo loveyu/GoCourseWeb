@@ -15,7 +15,7 @@ Param: *该方法需要提交多个复杂类型的参数*
 	* class[]=1003 
 	
 * location(require) 上课地点，这里是长传一个json格式化的对象，否则数据太复杂，下面给出样例
-```
+```js
 //location 上课地点JSON对象，应对其进行压缩
 [
 	//对象是一个数组，最少允许一个地点，最多不限制
@@ -58,7 +58,7 @@ Param: *该方法需要提交多个复杂类型的参数*
 
 
 Return:
-```
+```js
 {
 	"status": true,
 	"code": 0,
@@ -91,7 +91,7 @@ Param: *提示：* 此处参数与`search`的有部分重合
 
 **数据对象引用: ** [*DataCourseTable*](../javadoc/index.html?com/katoa/gocourse/model/data/DataCourseTable.html)
 
-```
+```js
 {
   "status": true,
   "code": 0,
@@ -169,7 +169,7 @@ Param:
 
 **数据对象引用: ** [*DataCourseTableSearch*](../javadoc/index.html?com/katoa/gocourse/model/data/DataCourseTableSearch.html)
 
-```
+```js
 //注意data数组中的对象属性
 {
   "status": true,
@@ -302,7 +302,7 @@ Param:
 
 
 
-```
+```js
 //如传入数据为：ids:'4,5,9,12,13'
 {
 	"status": true,
@@ -332,7 +332,7 @@ Param:
 
 
 
-```
+```js
 {
 	"status": true,
 	"code": 0,

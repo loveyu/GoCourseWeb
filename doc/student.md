@@ -12,7 +12,10 @@ Param: `none`
 
 
 
-```
+
+**数据对象引用: ** [*DataStudentInfo*](../javadoc/index.html?com/katoa/gocourse/model/data/DataStudentInfo.html)
+
+```js
 {
     "status": true,
     "code": 0,
@@ -49,7 +52,7 @@ Param: `none`
 Desc: 绑定学生基本信息,用于信息不完全时的补充，描述条件就是姓名为空
 Method: POST
 Param: 一个数据列表全部不能为空，如下面的结构
-```
+```js
 {
     name: "",  //姓名
     sid: "",   //学号
@@ -73,7 +76,7 @@ Param: 一个数据列表全部不能为空，如下面的结构
 
 
 Return:
-```
+```js
 {
     "status": true,
     "code": 0,
@@ -94,7 +97,7 @@ Param:
 
 
 
-```
+```js
 {
     "status": true,
     "code": 0,
@@ -123,7 +126,10 @@ Param:
 
 
 
-```
+
+**数据对象引用: ** [*DataStudentCourse*](../javadoc/index.html?com/katoa/gocourse/model/data/DataStudentCourse.html)
+
+```js
 //注意数据的细节设置
 {
 	"status": true,

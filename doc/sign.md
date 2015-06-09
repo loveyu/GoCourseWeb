@@ -18,7 +18,7 @@ Param:
 
 **数据对象引用: ** [*DataSignPrepare*](../javadoc/index.html?com/katoa/gocourse/model/data/DataSignPrepare.html)
 
-```
+```js
 //返回对象为DataSignPrepare
 {
   "status": true,
@@ -86,7 +86,7 @@ Param:
 
 **数据对象引用: ** [*DataSignCreate*](../javadoc/index.html?com/katoa/gocourse/model/data/DataSignCreate.html)
 
-```
+```js
 {
   "status": true,
   "code": 0,

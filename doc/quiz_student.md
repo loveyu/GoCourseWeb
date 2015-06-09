@@ -13,7 +13,10 @@ Param:
 
 
 
-```
+
+**数据对象引用: ** [*DataTestList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataTestList.html)
+
+```js
 //包含多个选项，type描述了选项的类型
 {
   "status": true,
@@ -146,7 +149,10 @@ Param:
 
 
 
-```
+
+**数据对象引用: ** [*DataTestList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataTestList.html)
+
+```js
 //包含多个选项，type描述了选项的类型，返回的数据格式与get_test_list是一致的
 {
   "status": true,
@@ -291,7 +297,7 @@ Param:
 
 
 
-```
+```js
 {
 	"status": true,
 	"code": 0,
@@ -317,8 +323,12 @@ Param: **所以参数可均不提交，即查询全部**
 
 
 
-```
-返回的对象为`DataTestExecList`,对象有为List<TbQuizExec> execs,Map<Integer, DataQuizEntity> quiz;
+
+
+**数据对象引用: ** [*DataTestExecList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataTestExecList.html)
+
+```js
+//返回的对象为`DataTestExecList`,对象有为List<TbQuizExec> execs,Map<Integer, DataQuizEntity> quiz;
 {
   "status": true,
   "code": 0,

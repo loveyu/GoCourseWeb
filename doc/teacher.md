@@ -11,7 +11,10 @@ Param: `none`
 
 
 
-```
+
+**数据对象引用: ** [*DataTeacherInfo*](../javadoc/index.html?com/katoa/gocourse/model/data/DataTeacherInfo.html)
+
+```js
 //注意分析事实数据，后期可能会有改动
 {
     "status": true,
@@ -52,7 +55,7 @@ Param:
 
 
 
-```
+```js
 {
     "status": true,
     "code": 0,

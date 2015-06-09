@@ -16,7 +16,7 @@ Param: `none`
 
 
 
-```
+```js
 {
     "status": true,
     "code": 0,
@@ -35,7 +35,7 @@ Param: uni_id(require)学校ID
 
 #### 错误状态，参考前文标记`180`
 
-```
+```js
 {
 	"status": true,
 	"code": 0,
@@ -58,7 +58,7 @@ Param:
 
 #### 错误状态，参考前文标记`180`
 
-```
+```js
 {
 	"status": true,
 	"code": 0,
@@ -82,7 +82,7 @@ Param:
 
 #### 错误状态，参考前文标记`180`
 
-```
+```js
 {
 	"status": true,
 	"code": 0,
@@ -106,7 +106,7 @@ Param:
 
 #### 错误状态，参考前文标记`180`
 
-```
+```js
 {
 	"status": true,
 	"code": 0,
@@ -135,7 +135,7 @@ Param:
 
 **数据对象引用: ** [*DataClassAllInfo*](../javadoc/index.html?com/katoa/gocourse/model/data/DataClassAllInfo.html)
 
-```
+```js
 //主要数据为classes字段
 {
   "status": true,
