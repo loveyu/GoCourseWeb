@@ -29,6 +29,9 @@ Param: 所以参数均不能为空，课程会进行冲突检测
 
 
 
+
+**数据对象引用: ** [*TbSchedule*](../javadoc/index.html?com/katoa/gocourse/model/entity/TbSchedule.html)
+
 ```
 {
 	"status": true,

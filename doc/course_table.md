@@ -88,6 +88,9 @@ Param: *提示：* 此处参数与`search`的有部分重合
 
 
 
+
+**数据对象引用: ** [*DataCourseTable*](../javadoc/index.html?com/katoa/gocourse/model/data/DataCourseTable.html)
+
 ```
 {
   "status": true,
@@ -162,6 +165,9 @@ Param:
 * `12604` 课程表搜索失败，参数检查异常
 
 
+
+
+**数据对象引用: ** [*DataCourseTableSearch*](../javadoc/index.html?com/katoa/gocourse/model/data/DataCourseTableSearch.html)
 
 ```
 //注意data数组中的对象属性

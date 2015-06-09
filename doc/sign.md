@@ -15,6 +15,9 @@ Param:
 
 
 
+
+**数据对象引用: ** [*DataSignPrepare*](../javadoc/index.html?com/katoa/gocourse/model/data/DataSignPrepare.html)
+
 ```
 //返回对象为DataSignPrepare
 {
@@ -79,6 +82,9 @@ Param:
 * `17109` 无法创建签到关联事件
 
 
+
+
+**数据对象引用: ** [*DataSignCreate*](../javadoc/index.html?com/katoa/gocourse/model/data/DataSignCreate.html)
 
 ```
 {
