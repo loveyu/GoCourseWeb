@@ -8,6 +8,7 @@ avatar/middle/
 doc/*.html
 javadoc/
 javadoc.zip
+doc.zip
 node_modules/
 doc/asset/all.*
 asset/style/*/*.min.*

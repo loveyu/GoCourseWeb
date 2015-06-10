@@ -55,7 +55,7 @@ gulp.task('doc', ['doc_css', 'doc_js']);
  * 课程项目的CSS
  */
 gulp.task("course_css", function () {
-	gulp.src('asset/style/css/style.css', {read: false})
+	gulp.src('asset/style/css/style.min.css', {read: false})
 		.pipe(clean());
 	gulp.src(['asset/style/css/style.css'])
 		.pipe(rename({suffix: '.min'}))
@@ -66,7 +66,7 @@ gulp.task("course_css", function () {
  * 课程项目的JS
  */
 gulp.task("course_js", function () {
-	gulp.src('asset/style/js/go.js', {read: false})
+	gulp.src('asset/style/js/go.min.js', {read: false})
 		.pipe(clean());
 	gulp.src(['asset/style/js/go.js'])
 		.pipe(uglify())
