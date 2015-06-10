@@ -19,19 +19,26 @@ function get_footer($name = '', $footer_content = '')
 
 function get_asset($path, $auto_cnd = true)
 {
-	if ($auto_cnd) {
-		$is_cdn = set_cdn();
-		if ($is_cdn || SET_MIN_FILE) {
-			//如果设置了CDN或者允许最小化文件
-			$path_info = pathinfo($path, PATHINFO_EXTENSION);
-			$new_path = preg_replace("/\\." . $path_info . "$/", ".min." . $path_info, $path);
-			if (is_file($new_path)) {
-				$path = $new_path;
-			}
+	$set_min = function ($path) {
+		$path_info = pathinfo($path, PATHINFO_EXTENSION);
+		$new_path = preg_replace("/\\." . $path_info . "$/", ".min." . $path_info, $path);
+		if (is_file($new_path)) {
+			$path = $new_path;
 		}
+		return $path;
+	};
+	$set_cdn_url = function ($path) {
+		return "http://7xizmm.com1.z0.glb.clouddn.com/" . $path;
+	};
+	$is_cdn = set_cdn();
+	if ($auto_cnd) {
+		$path = $set_min($path);
 		if ($is_cdn) {
-			//返回CDN地址
-			return "http://7xizmm.com1.z0.glb.clouddn.com/" . $path;
+			$path = $set_cdn_url($path);
+		}
+	} else {
+		if (is_cli() || SET_MIN_FILE) {
+			$path = $set_min($path);
 		}
 	}
 	return $path;

@@ -46,7 +46,10 @@ function get_template($path)
 {
 	$object = ['template' => ''];
 	$path = "script/template/" . $path;
-	if (is_file($path . ".html")) {
+	if (is_file($path . ".min.html")) {
+		$content = file_get_contents($path . ".min.html");
+		$object['template'] = json_encode($content, JSON_UNESCAPED_UNICODE);
+	} elseif (is_file($path . ".html")) {
 		$content = file_get_contents($path . ".html");
 		$object['template'] = json_encode(compress_html($content), JSON_UNESCAPED_UNICODE);
 	}

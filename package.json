@@ -1,0 +1,33 @@
+{
+  "name": "GoCourseWeb",
+  "version": "0.1.0",
+  "description": "GoCourse Web App",
+  "main": "index.html",
+  "directories": {
+    "doc": "doc",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@coding.net:loveyu/GoCourseWeb.git"
+  },
+  "keywords": [
+    "GoCourse",
+    "Vue.js",
+    "Online Test"
+  ],
+  "author": "loveyu",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-clean": "^0.3.1",
+    "gulp-concat": "^2.5.2",
+    "gulp-htmlmin": "^1.1.2",
+    "gulp-jshint": "^1.11.0",
+    "gulp-minify-css": "^1.1.6",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^1.2.0"
+  }
+}

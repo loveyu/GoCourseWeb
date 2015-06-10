@@ -1,5 +1,6 @@
 .idea/
 html_out/*.html
+html_compress_out/
 test/
 avatar/large/
 avatar/small/
@@ -7,3 +8,7 @@ avatar/middle/
 doc/*.html
 javadoc/
 javadoc.zip
+node_modules/
+doc/asset/all.*
+asset/style/*/*.min.*
+script/template/*/*.min.html
