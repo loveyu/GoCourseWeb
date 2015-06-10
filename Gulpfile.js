@@ -20,28 +20,31 @@ gulp.task('doc_css', function () {
 		.pipe(gulp.dest('doc/asset/'));
 });
 
-/**
- * 文档JS压缩
- */
-gulp.task('doc_js', function () {
-	gulp.src('doc/asset/js/all*.js', {read: false})
+gulp.task('doc_js_clean', function () {
+	return gulp.src([
+		'doc/asset/all*.js'
+	], {read: false})
 		.pipe(clean());
+});
 
+gulp.task('doc_js_min', ['doc_js_clean'], function () {
 	//压缩原始JS
-	gulp.src('doc/asset/js/*.js')
+	return gulp.src('doc/asset/js/*.js')
 		.pipe(concat('all.doc.js'))
 		.pipe(gulp.dest('doc/asset'))
 		.pipe(uglify())
 		.pipe(rename({suffix: '.min'}))
 		.pipe(gulp.dest('doc/asset'));
+});
 
-	//合并JS
-	gulp.src(['asset/jquery/jquery.js', 'doc/asset/all.doc.js'])
+/**
+ * 文档JS压缩
+ */
+gulp.task('doc_js', ['doc_js_min'], function () {
+	gulp.src(['asset/jquery/jquery.js', 'doc/asset/all.doc.js'], {base: './'})
 		.pipe(concat("all.js"))
 		.pipe(gulp.dest("doc/asset"));
-
-	//合并JS min文件
-	gulp.src(['asset/jquery/jquery.min.js', 'doc/asset/all.doc.min.js'])
+	gulp.src(['asset/jquery/jquery.min.js', 'doc/asset/all.doc.min.js'], {base: './'})
 		.pipe(concat("all.min.js"))
 		.pipe(gulp.dest("doc/asset"));
 });
