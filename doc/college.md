@@ -136,6 +136,8 @@ Param:
 ## /college/get_classes_all
 Desc: 获取一个专业的全部信息，包含所有的班级，所有的年级，是对于接口`get_classes` 的另一种数据获取方式
 
+Method: Default
+
 Param: 
 * dept_id(require) 专业ID,仅有无年份参数
 
@@ -196,6 +198,66 @@ Param:
 		  "name": "计专11301"
 		}
 	  ]
+	}
+  }
+}
+```
+
+## /college/get_all_colleges
+Desc: 获取全部的学院信息，包含所有的学校，所有的年级
+
+Method: Default
+
+Param: `none`
+
+#### 错误状态，错误标记`182`
+* `18200` 数据异常，无课程数据
+
+
+
+
+**数据对象引用：** [*DataCollegeAll*](../javadoc/index.html?com/katoa/gocourse/model/data/DataCollegeAll.html)
+
+```js
+{
+  "status": true,
+  "code": 0,
+  "msg": "",
+  "data": {
+	"colleges": {		//学院对象，MAP
+	  "1": {
+		"1": "地球科学学院",
+		"2": "地球物理与石油资源学院",
+		"3": "石油工程学院",
+		"4": "机械工程学院",
+		"5": "化学与环境工程学院",
+		"6": "计算机科学学院",
+		"7": "电子信息学院",
+		"8": "城市建设学院"
+		//.....more
+	  },
+	  "2": {
+		"131": "国际合作",
+		"130": "重修（武）",
+		"133": "医护系",
+		"132": "设计系",
+		"135": "团委",
+		"134": "网络课程(武)",
+		"144": "人文学院"
+		//......more
+	  }
+	},
+	"universities": {		//学校信息
+	  "1": {
+		"uniID": 1,
+		"uniName": "长江大学",
+		"uniNickname": "长江大学"
+	  },
+	  "2": {
+		"uniID": 2,
+		"uniName": "北京师范大学",
+		"uniNickname": "北师大"
+	  }
 	}
   }
 }
