@@ -186,7 +186,7 @@ Param: `none`
 }
 ```
 
-## /email/send
+## /user/email/send
 Desc: 邮件的发送操作
 
 Method: POST
