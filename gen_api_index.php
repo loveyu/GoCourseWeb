@@ -12,7 +12,11 @@ echo "\r\n## API错误状态代码\r\n[链接: status_code.html](status_code.htm
 echo "\r\n## API列表导航\r\n";
 $i = 1;
 
-$map = ["/" => "API首页"];
+$map = [
+	"/" => "API首页",
+	"mysql_table.html" => "数据库字段及描述",
+	"status_code.html" => "API错误状态代码"
+];
 foreach (glob($path . "*.md") as $v) {
 	$content = get_line($v);
 	if (preg_match("/[#]*[\\s]+([\\s\\S]*?)\r\n/", $content, $match) != 1) {
