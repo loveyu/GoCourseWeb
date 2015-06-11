@@ -13,7 +13,7 @@ echo "\r\n## API列表导航\r\n";
 $i = 1;
 
 $map = [
-	"/" => "API首页",
+	"index.html" => "API首页",
 	"mysql_table.html" => "数据库字段及描述",
 	"status_code.html" => "API错误状态代码"
 ];
