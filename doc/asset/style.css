@@ -1,1 +1,91 @@
 /*! 自定义样式 */
+
+.fix_menu {
+    position: fixed;
+    right: 35px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background-color: #009926;
+}
+
+.fix_menu:hover {
+    background-color: #ff7736;
+}
+
+.fix_menu a.button {
+    height: 38px;
+    width: 38px;
+    display: block;
+}
+
+.fix_menu a.button span {
+    display: block;
+    width: 18px;
+    height: 18px;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+.top_menu {
+    top: 30px;
+}
+
+.top_menu a.button span {
+    background: url("images/menu.png") no-repeat center;
+    background-size: 18px 18px;
+}
+
+.bottom_menu {
+    bottom: 30px;
+}
+
+.bottom_menu a.button span {
+    background: url("images/go.png") no-repeat center;
+    background-size: 18px 18px;
+}
+
+.fix_menu > ul {
+    list-style: none;
+    background-color: #fff;
+    border: solid 1px #ff7736;
+    position: absolute;
+    border-radius: 4px;
+    right: 0;
+}
+
+.fix_menu > ul > li {
+    margin: 0;
+    padding: 0;
+    line-height: 1.8;
+}
+
+.fix_menu > ul > li a {
+    text-decoration: none;
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 0 5px;
+    text-overflow: ellipsis;
+}
+
+.fix_menu > ul > li a:hover {
+    background-color: #ff7736;
+    color: #fff;
+}
+
+.fix_menu > ul > li > ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.fix_menu > ul > li > ul > li > a {
+    padding-left: 15px;
+    line-height: 1.5;
+    font-size: 13px;
+}
+
+.top_menu > ul {
+    width: 120px;
+}

@@ -9,7 +9,7 @@ $n = implode(" ", $argv);
 system("php script.php {$n} > asset/style/js/go.js");
 system("php css.php {$n} > asset/style/css/style.css");
 foreach (glob("php/*.php") as $v) {
-	if (basename($v) == "test.php") {
+	if (in_array(basename($v), ["test.php", "doc.php"])) {
 		continue;
 	}
 	$name = preg_replace("/\\.php$/", ".html", basename($v));

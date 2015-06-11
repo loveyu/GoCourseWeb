@@ -29,7 +29,7 @@ gulp.task('doc_js_clean', function () {
 
 gulp.task('doc_js_min', ['doc_js_clean'], function () {
 	//压缩原始JS
-	return gulp.src('doc/asset/js/*.js')
+	return gulp.src(['doc/asset/js/name_map.js', 'doc/asset/js/doc.js'])
 		.pipe(concat('all.doc.js'))
 		.pipe(gulp.dest('doc/asset'))
 		.pipe(uglify())
