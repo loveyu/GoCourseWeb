@@ -1149,7 +1149,7 @@ Page.course_student = function () {
 				}
 			},
 			components: {
-				my: {template:"<p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p><div v-if=\"week_list.length>0\"><nav><ul class=\"pagination pagination-lg\"><li class=\"disabled\"><a href=\"javascript:void(0)\">周次<\/a><\/li><li v-repeat=\"week_list\" v-class=\"$value==week_current?'active':''\"><a href=\"#\" v-on=\"click: setWeek($value, $event)\">{{$value}}<\/a><\/li><\/ul><\/nav><\/div><div class=\"alert alert-warning\" v-if=\"!has_course\"><p>本周没有任何课程<\/p><\/div><table v-if=\"has_course\" class=\"table student-course-table\"><thead><tr><th class=\"Weekly\">第{{week_current}}周<\/th><th>星期一<\/th><th>星期二<\/th><th>星期三<\/th><th>星期四<\/th><th>星期五<\/th><th>星期六<\/th><th>星期日<\/th><\/tr><\/thead><tbody><tr v-repeat=\"week_table\"><td>{{$index| course_week_index_to_time}}<br>{{$index+1}}<\/td><td v-repeat=\"$value\"><div v-repeat=\"$value\"><h4>{{courseName}}<\/h4><span class=\"teacher\">{{teacherName}}<\/span> <span class=\"address\">{{location}}<\/span><\/div><\/td><\/tr><\/tbody><\/table>",methods:{
+				my: {template:"<p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p><div v-if=\"week_list.length>0\"><nav><ul class=\"pagination pagination-lg\"><li class=\"disabled\"><a href=\"javascript:void(0)\">周次<\/a><\/li><li v-repeat=\"week_list\" v-class=\"$value==week_current?'active':''\"><a href=\"#\" v-on=\"click: setWeek($value, $event)\">{{$value}}<\/a><\/li><\/ul><\/nav><\/div><div class=\"alert alert-warning\" v-if=\"!has_course\"><p>本周没有任何课程, 第<strong>{{week_current}}<\/strong>周<\/p><\/div><table v-if=\"has_course\" class=\"table student-course-table\"><thead><tr><th class=\"Weekly\">第{{week_current}}周<\/th><th>星期一<\/th><th>星期二<\/th><th>星期三<\/th><th>星期四<\/th><th>星期五<\/th><th>星期六<\/th><th>星期日<\/th><\/tr><\/thead><tbody><tr v-repeat=\"week_table\"><td>{{$index| course_week_index_to_time}}<br>{{$index+1}}<\/td><td v-repeat=\"$value\"><div v-repeat=\"$value\"><h4>{{courseName}}<\/h4><span class=\"teacher\">{{teacherName}}<\/span> <span class=\"address\">{{location}}<\/span><\/div><\/td><\/tr><\/tbody><\/table>",methods:{
 	/**
 	 * 解析课表
 	 */
@@ -1209,9 +1209,9 @@ Page.course_student = function () {
 				}
 			}
 		}
+		this.week_current = week;//始终设置当前周次
 		if (flag) {
 			this.week_table = table;
-			this.week_current = week;
 			this.has_course = true;
 		}
 		return false;
@@ -3593,9 +3593,31 @@ var APP = {
 			console.error("Page:" + page + ", not found.");
 		}
 		return null;
+	},
+	fixedFooterLocation: function () {
+		var resize_func = function () {
+			var footer = jQuery("#Footer");
+			var header = jQuery("#Header");
+			var height = jQuery(window).height() - header.height() - footer.height();
+			height -= footer.css("padding-top").substr(0, footer.css("padding-top").length - 2);
+			height -= footer.css("padding-bottom").substr(0, footer.css("padding-bottom").length - 2);
+
+			height -= footer.css("margin-top").substr(0, footer.css("margin-top").length - 2);
+			height -= footer.css("margin-bottom").substr(0, footer.css("margin-bottom").length - 2);
+
+			height -= header.css("padding-top").substr(0, header.css("padding-top").length - 2);
+			height -= header.css("padding-bottom").substr(0, header.css("padding-bottom").length - 2);
+
+			height -= header.css("margin-top").substr(0, header.css("margin-top").length - 2);
+			height -= header.css("margin-bottom").substr(0, header.css("margin-bottom").length - 2);
+			jQuery(".main-container").css("min-height", (Math.ceil(height) - 2) + "px");
+		};
+		resize_func();
+		jQuery(window).bind("resize", resize_func);
 	}
 };
 
 APP.runPage('header');
+APP.fixedFooterLocation();
 
 

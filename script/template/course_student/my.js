@@ -58,9 +58,9 @@ _methods_ = {
 				}
 			}
 		}
+		this.week_current = week;//始终设置当前周次
 		if (flag) {
 			this.week_table = table;
-			this.week_current = week;
 			this.has_course = true;
 		}
 		return false;

@@ -28,17 +28,11 @@
 
 /* 主要的容器 */
 .main-container {
-    /*要和Footer高度一致*/
-    padding-bottom: 90px;
 }
 
 #Footer {
     background-color: #f4f4f4;
     padding: 30px 18px;
-    position: fixed;
-    bottom: 0;
-    height: 90px;
-    width: 100%;
 }
 
 #Footer .container {
@@ -64,7 +58,7 @@
     color: #000;
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 786px) {
     #CustomStyle {
         background: url('image/background_index.jpg') no-repeat;
         background-size: cover;
