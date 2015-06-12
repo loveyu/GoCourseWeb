@@ -35,7 +35,8 @@ Page.course_teacher = function () {
 				FUNC.ajax(CONFIG.api.course_table.search, "get", {
 					search_type: "teacher",
 					set_class_info: 1,
-					set_location: 1
+					set_location: 1,
+					status: 0
 				}, function (result) {
 					if (result.status) {
 						obj.result.list = result.data.list;
