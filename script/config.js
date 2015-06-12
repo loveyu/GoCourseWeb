@@ -93,7 +93,8 @@ var CONFIG = {
 		},
 		sign: {
 			prepare: "sign/prepare",
-			create: "sign/create"
+			create: "sign/create",
+			teacher_list: 'sign/teacher_list'
 		}
 	},
 	current_week: {	//当前的周次，该数据会依据服务器状态而更新

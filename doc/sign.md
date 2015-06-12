@@ -103,3 +103,71 @@ Param:
   }
 }
 ```
+
+## /sign/teacher_list
+Desc: 查询当前创建的教师签到任务列表
+
+Method: Default
+
+Param:
+* show_append (可选) 是否查询签到任务中的附加信息,默认不查询,`1`传入时有效
+
+#### 错误状态，错误标记`172`
+* `17200` 非教师用户无权限
+
+
+
+
+**数据对象引用：** [*DataSignData*](../javadoc/index.html?com/katoa/gocourse/model/data/DataSignData.html)
+
+**数据对象引用：** [*DataSignAppend*](../javadoc/index.html?com/katoa/gocourse/model/data/DataSignAppend.html)
+
+```js
+{
+  "status": true,
+  "code": 0,
+  "msg": "",
+  "data": {
+	"list": [
+	  {
+		"taskID": 7,
+		"courseTableID": 5,
+		"count": 0,
+		"append": [				//此处为附加的信息，内容可能会增加，如果不请求该数据，值会置null
+		  {
+			"time": 1434109565,
+			"content": "附加信息1"
+		  },
+		  {
+			"time": 1434101467,
+			"content": "附加信息2222"
+		  }
+		],
+		"signID": 4,
+		"name": "人工智能(管理员)，第14周上课签到，星期五",
+		"detail": "",
+		"time": 1434098727,
+		"expireTime": 1434101427,
+		"type": 0,
+		"userID": 1,
+		"flag": 0
+	  },
+	  {
+		"taskID": 6,
+		"courseTableID": 6,
+		"count": 0,
+		"append": "",
+		"signID": 3,
+		"name": "科学教育(管理员)，第12周上课签到，星期天",
+		"detail": "",
+		"time": 1432987311,
+		"expireTime": 1432990011,
+		"type": 0,
+		"userID": 1,
+		"flag": 0
+	  }
+	  //..................
+	]
+  }
+}
+```

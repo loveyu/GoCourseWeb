@@ -6,17 +6,20 @@ Page.sign_teacher = function () {
 			currentView: 'base-loading',
 			currentName: "base-loading",
 			menus: {
-				history: {url: '#/', name: '签到历史', active: false},
+				history: {url: '#/', name: '历史签到任务', active: false},
 				new_sign: {url: 'course_teacher.html#/', name: '新签到', active: false}
 			}
 		},
 		methods: {
 			history: function () {
+				this.result = {loading: true, list: null, error: null};
 				this.currentView = "history";
+				var obj = FUNC.findVueChild(vm, "history");
+				obj.load_history();
 			}
 		},
 		components: {
-			history: {__require: 'sign_student/history.html'},
+			history: {__require: 'sign_teacher/history.html'}
 		}
 	});
 	var change_menus_active = FUNC.createMenuChangeFunc(vm);

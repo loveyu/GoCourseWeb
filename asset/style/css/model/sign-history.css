@@ -1,0 +1,19 @@
+.sign-history .s-desc {
+    margin: 0;
+}
+
+.sign-history .list-group-item:hover {
+    background-color: #eee;
+}
+
+.sign-history .s-detail{
+    padding: 2px 5px;
+    border-left: 2px solid #ffcc41;
+}
+.sign-history .s-detail:hover{
+    background-color: #fff;
+}
+
+.sign-history .s-desc span {
+    font-size: 80%;
+}

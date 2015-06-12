@@ -160,52 +160,6 @@
 }
 
 
-.course-table tbody {
-    background-color: #e6f8fb;
-    color: #666;
-}
-
-.course-table .table > thead > tr > th,
-.course-table .table > tbody > tr > td{
-    text-align: center;
-    vertical-align: middle;
-    border-top: none;
-}
-
-.course-table .table > thead > tr > th {
-    background-color: #5bc0de;
-}
-
-.course-table .table > tbody {
-    border-style: none;
-}
-
-.course-table tbody:nth-of-type(2n) {
-    background: #feeeab;
-}
-
-.course-table .table > thead > tr > th {
-    color: #fff;
-}
-
-.course-table tr {
-    height: 52px;
-}
-
-.course-table .pre, .next {
-    height: 34px;
-}
-
-.course-table .today {
-    background: url(image/today_red.png) no-repeat center center;
-}
-
-.course-table .blue {
-    background-color: #5bc0de;
-    border: 1px solid #28a2c6;
-}
-
-
 .student-course-table > thead > tr > th, td {
     text-align: center;
 }
@@ -293,5 +247,70 @@
     background-size: 16px 20px;
 }
 
+
+.course-table tbody {
+    background-color: #e6f8fb;
+    color: #666;
+}
+
+.course-table .table > thead > tr > th,
+.course-table .table > tbody > tr > td{
+    text-align: center;
+    vertical-align: middle;
+    border-top: none;
+}
+
+.course-table .table > thead > tr > th {
+    background-color: #5bc0de;
+}
+
+.course-table .table > tbody {
+    border-style: none;
+}
+
+.course-table tbody:nth-of-type(2n) {
+    background: #feeeab;
+}
+
+.course-table .table > thead > tr > th {
+    color: #fff;
+}
+
+.course-table tr {
+    height: 52px;
+}
+
+.course-table .pre, .next {
+    height: 34px;
+}
+
+.course-table .today {
+    background: url(image/today_red.png) no-repeat center center;
+}
+
+.course-table .blue {
+    background-color: #5bc0de;
+    border: 1px solid #28a2c6;
+}
+
+.sign-history .s-desc {
+    margin: 0;
+}
+
+.sign-history .list-group-item:hover {
+    background-color: #eee;
+}
+
+.sign-history .s-detail{
+    padding: 2px 5px;
+    border-left: 2px solid #ffcc41;
+}
+.sign-history .s-detail:hover{
+    background-color: #fff;
+}
+
+.sign-history .s-desc span {
+    font-size: 80%;
+}
 
 

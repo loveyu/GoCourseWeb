@@ -4,6 +4,7 @@
  * Date: 2015/4/21
  * Time: 23:44
  */
+$param = isset($argv[1]) ? $argv[1] : null;
 system("php gen_status_code.php > doc/status_code.md");
 system("php gen_mysql_table.php > doc/mysql_table.md");
 system("php gen_api_index.php > doc/index.md");
@@ -12,6 +13,11 @@ foreach (glob("G:\\J2EE\\GoCourseServer\\doc\\api\\*.md") as $v) {
 	file_put_contents("doc/" . basename($v), set_error_code(file_get_contents($v)));
 }
 foreach (glob("doc/*.md") as $v) {
+	if ($param !== null) {
+		if ($param . ".md" != basename($v)) {
+			continue;
+		}
+	}
 	$content = get_line($v);
 	if (preg_match("/[#]*[\\s]+([\\s\\S]*?)\r\n/", $content, $match) != 1) {
 		continue;
@@ -22,7 +28,7 @@ foreach (glob("doc/*.md") as $v) {
 	$name = preg_replace("/\\.md$/", ".html", $base_n);
 	file_put_contents("test/{$base_n}", "_文档生成时间: " .
 		date("Y-m-d H:i:s") . "_\r\n\r\n" . file_get_contents($v));
-	system("ghmd --template ".__DIR__."/doc/template/my.jade --title \"{$title}\" --dest ".__DIR__."/doc/{$name} ".__DIR__."/test/{$base_n}");
+	system("ghmd --template " . __DIR__ . "/doc/template/my.jade --title \"{$title}\" --dest " . __DIR__ . "/doc/{$name} " . __DIR__ . "/test/{$base_n}");
 	unlink("test/{$base_n}");
 	echo "finish $name\n";
 }
