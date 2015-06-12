@@ -1,11 +1,18 @@
-.bs-navbar-collapse{
+.navbar {
+    /*消除导航栏的边角*/
+    border-radius: 0;
+}
+
+.bs-navbar-collapse {
     padding-left: 0;
     padding-right: 0;
 }
-.bs-navbar-collapse .container .navbar-right{
+
+.bs-navbar-collapse .container .navbar-right {
     margin-left: 0;
     margin-right: 0;
 }
+
 #Header .profile-info {
     padding: 0;
     line-height: 50px;
@@ -19,10 +26,19 @@
     margin-right: 5px;
 }
 
+/* 主要的容器 */
+.main-container {
+    /*要和Footer高度一致*/
+    padding-bottom: 90px;
+}
+
 #Footer {
     background-color: #f4f4f4;
     padding: 30px 18px;
-    margin-top: 50px;
+    position: fixed;
+    bottom: 0;
+    height: 90px;
+    width: 100%;
 }
 
 #Footer .container {
@@ -35,6 +51,74 @@
 
 .bg-padding {
     padding: 12px 8px;
+}
+
+/*首页样式*/
+
+#Index h2.desc {
+    text-align: center;
+    font-size: 4em;
+    margin-top: 100px;
+    padding: 25px 0;
+    line-height: 1.2;
+    color: #000;
+}
+
+@media screen and (min-width: 1024px) {
+    #CustomStyle {
+        background: url('image/background_index.jpg') no-repeat;
+        background-size: cover;
+    }
+
+    #CustomStyle .main-navbar {
+        background-color: rgba(107, 210, 238, 0.9);
+        border-top: 0;
+        border-left: 0;
+        border-right: 0;
+    }
+
+    #CustomStyle .main-navbar .dropdown-menu {
+        background-color: rgba(107, 210, 238, 0.9);
+    }
+
+    #CustomStyle .navbar-default .navbar-nav > .open > a,
+    #CustomStyle .navbar-default .navbar-nav > .open > a:focus,
+    #CustomStyle .navbar-default .navbar-nav > .open > a:hover {
+        background-color: rgba(107, 210, 238, 0.95);
+    }
+
+    #CustomStyle .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover,
+    #CustomStyle .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+        background-color: rgba(107, 210, 238, 0.5);
+    }
+
+    #CustomStyle .main-navbar a {
+        color: #f3f3f3;
+    }
+
+    #CustomStyle .main-navbar a:hover {
+        color: #fff;
+    }
+
+    #CustomStyle .main-footer {
+        background-color: rgba(102, 188, 211, 0.30);
+        color: #fff;
+    }
+
+    #CustomStyle .navbar-default {
+        border: none;
+    }
+
+    #CustomStyle .navbar {
+        border-radius: 0;
+        margin-bottom: 0;
+        border: none;
+        border-bottom: 1px solid #8cdaf2;
+    }
+
+    #Index h2.desc {
+        color: #fff;
+    }
 }
 
 /*测验多选的选项样式*/
@@ -62,19 +146,21 @@
     font-size: 18px;
 }
 
-.quiz-answer-submit{
+.quiz-answer-submit {
     padding: 0;
     margin: 0 0 15px 20px;
 }
 
-.answer-result-item{
+.answer-result-item {
     border: 1px dashed #658e5b;
     padding: 5px;
 }
-.answer-result-item p{
+
+.answer-result-item p {
     margin-bottom: 0;
 }
-.answer-result-item button{
+
+.answer-result-item button {
     margin-left: 5px;
     border-radius: 50%;
 }

@@ -8,7 +8,8 @@ Page.login = function () {
 			result: {
 				error_msg: '',
 				username: '',
-				password: ''
+				password: '',
+				show_title: true
 			}
 		}
 	});

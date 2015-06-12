@@ -7,7 +7,7 @@
 
 define('SET_MIN_FILE', false);
 
-function get_header($title)
+function get_header($title, $body_id=null, $body_class=null)
 {
 	include(__DIR__ . "/header.php");
 }

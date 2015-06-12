@@ -75,7 +75,7 @@ if (!('localStorage' in window)) {
 /**
  * Created by loveyu on 2015/4/1.
  */
-Vue.component('base-login-form', {template:"<form method=\"get\" v-on=\"submit: onLoginFormSubmit\"><fieldset><legend>用户登录<\/legend><div class=\"alert alert-danger\" role=\"alert\" v-if=\"error_msg\"><span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"><\/span> <span class=\"sr-only\">Error:<\/span> {{error_msg}}<\/div><div class=\"form-group\"><div class=\"input-group\"><span class=\"input-group-addon\">用户名<\/span> <input type=\"text\" v-model=\"username\" name=\"username\" class=\"form-control\" placeholder=\"Username\"><\/div><\/div><div class=\"form-group\"><div class=\"input-group\"><span class=\"input-group-addon\">密　码<\/span> <input type=\"password\" v-model=\"password\" name=\"password\" class=\"form-control\" placeholder=\"Password\"><\/div><\/div><div class=\"form-group\"><button class=\"btn btn-primary form-control\" type=\"submit\">登录<\/button><\/div><\/fieldset><p><a class=\"text-info\" href=\"forget.html\">忘记密码？<\/a><\/p><\/form>",methods:{
+Vue.component('base-login-form', {template:"<form method=\"get\" v-on=\"submit: onLoginFormSubmit\"><fieldset><legend v-if=\"show_title\">用户登录<\/legend><div class=\"alert alert-danger\" role=\"alert\" v-if=\"error_msg\"><span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"><\/span> <span class=\"sr-only\">Error:<\/span> {{error_msg}}<\/div><div class=\"form-group\"><div class=\"input-group\"><span class=\"input-group-addon\">用户名<\/span> <input type=\"text\" v-model=\"username\" name=\"username\" class=\"form-control\" placeholder=\"Username\"><\/div><\/div><div class=\"form-group\"><div class=\"input-group\"><span class=\"input-group-addon\">密　码<\/span> <input type=\"password\" v-model=\"password\" name=\"password\" class=\"form-control\" placeholder=\"Password\"><\/div><\/div><div class=\"form-group\"><button class=\"btn btn-primary form-control\" type=\"submit\">登录<\/button><\/div><\/fieldset><p><a class=\"text-info\" href=\"forget.html\">忘记密码？<\/a><\/p><\/form>",methods:{
 	onLoginFormSubmit: function (event) {
 		event.preventDefault();
 		var flag = true;
@@ -2531,15 +2531,30 @@ Page.index = function () {
 		el: "#Index",
 		data: {
 			login_form: false,
+			is_login: false,
+			is_teacher: false,
+			is_student: false,
 			result: {
-				error_msg: '', username: '', password: '', type: ''
+				error_msg: '', username: '', password: '', type: '', show_title: false
 			}
 		}
 	});
 	var login_call = function (arg) {
+		in_vm.is_login = Member.login_status;
 		if (!Member.login_status) {
-			in_vm.login_form = true;
-			$('#LoginModal').modal('show');
+			setTimeout(function () {
+				in_vm.login_form = true;
+				$('#LoginModal').modal('show');
+			}, 8000);
+		} else {
+			switch (Member.user_type) {
+				case "student":
+					in_vm.is_student = true;
+					break;
+				case "teacher":
+					in_vm.is_teacher = true;
+					break;
+			}
 		}
 		return arg;
 	};
@@ -2562,7 +2577,8 @@ Page.login = function () {
 			result: {
 				error_msg: '',
 				username: '',
-				password: ''
+				password: '',
+				show_title: true
 			}
 		}
 	});

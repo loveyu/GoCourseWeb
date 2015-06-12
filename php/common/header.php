@@ -15,8 +15,8 @@
 	<link rel="icon" href="<?php echo get_asset("favicon.ico") ?>"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<body>
-<header id="Header" class="navbar navbar-default">
+<body<?php echo (isset($body_id) && !empty($body_id)) ? " id=\"{$body_id}\"" : "" ?><?php echo (isset($body_class) && !empty($body_class)) ? " class=\"{$body_class}\"" : "" ?>>
+<header id="Header" class="main-navbar navbar navbar-default">
 	<div class="container">
 		<div class="navbar-header">
 			<button class="navbar-toggle collapsed" type="button" data-toggle="collapse"
@@ -61,4 +61,4 @@
 		</nav>
 	</div>
 </header>
-
+<div class="main-container">

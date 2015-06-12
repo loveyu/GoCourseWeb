@@ -1,4 +1,5 @@
-<footer id="Footer">
+</div>
+<footer id="Footer" class="main-footer">
 	<div class="container">
 		<p class="text-center">&copy;Go Course 2015</p>
 	</div>

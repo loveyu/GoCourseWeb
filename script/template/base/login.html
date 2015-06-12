@@ -1,6 +1,6 @@
 <form method="get" v-on="submit: onLoginFormSubmit">
 	<fieldset>
-		<legend>用户登录</legend>
+		<legend v-if="show_title">用户登录</legend>
 		<div class="alert alert-danger" role="alert" v-if="error_msg">
 			<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 			<span class="sr-only">Error:</span>
