@@ -9,8 +9,8 @@ Page.course_student = function () {
 				currentName: "base-loading",
 				result: null,
 				menus: {
-					my: {url: '/', name: '我的课表', active: false},
-					add: {url: '/add', name: '添加课程', active: false}
+					my: {url: '#/', name: '我的课表', active: false},
+					add: {url: '#/add', name: '添加课程', active: false}
 				}
 			},
 			methods: {

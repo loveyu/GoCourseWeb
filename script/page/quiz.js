@@ -10,12 +10,12 @@ Page.quiz = function () {
 			currentView: 'base-loading',
 			currentName: "base-loading",
 			menus: {
-				course_table_list: {url: '/', name: '课程测验', active: false},
+				course_table_list: {url: '#/', name: '课程测验', active: false},
 				do_test: {url: '', name: '答题模式', active: false},
-				quiz_history: {url: '/quiz_history', name: '测验记录', active: false},
+				quiz_history: {url: '#/quiz_history', name: '测验记录', active: false},
 				ct_history: {url: '', name: '课程测验记录', active: false},
-				history: {url: '/history', name: '做题记录', active: false},
-				open_test: {url: '/open_test', name: '开放性测验', active: false}
+				history: {url: '#/history', name: '做题记录', active: false},
+				open_test: {url: '#/open_test', name: '开放性测验', active: false}
 			}
 		},
 		methods: {

@@ -9,10 +9,10 @@ Page.manager_quiz = function () {
 			currentName: "base-loading",
 			result: null,
 			menus: {
-				my: {url: '/', name: '当前课程测验', active: false},
-				all: {url: '/all', name: '全部测验', active: false},
-				add: {url: '/add', name: '添加测验', active: false},
-				share: {url: '/share', name: '共享的测验', active: false}
+				my: {url: '#/', name: '当前课程测验', active: false},
+				all: {url: '#/all', name: '全部测验', active: false},
+				add: {url: '#/add', name: '添加测验', active: false},
+				share: {url: '#/share', name: '共享的测验', active: false}
 			}
 		},
 		methods: {

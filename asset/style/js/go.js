@@ -104,7 +104,7 @@ Vue.component('base-login-form', {template:"<form method=\"get\" v-on=\"submit: 
 	}
 }});
 Vue.component('base-loading', {template:"<div class=\"jumbotron\"><p class=\"text-center\">加载中.......<\/p><\/div>"});
-Vue.component('base-page-menu', {template:"<!--component page_menu--><div style=\"margin-bottom: 15px\"><ul class=\"nav nav-pills\"><li v-repeat=\"menus\" role=\"presentation\" v-show=\"url!='' || active\" v-class=\"active?'active':''\"><a href=\"#{{url==''?now_url():url}}\">{{name}}<\/a><\/li><\/ul><\/div>",methods:{
+Vue.component('base-page-menu', {template:"<!--component page_menu--> <div style=\"margin-bottom: 15px\"> <ul class=\"nav nav-pills\"> <li v-repeat=\"menus\" role=\"presentation\" v-show=\"url!='' || active\" v-class=\"active?'active':''\"> <a href=\"{{url==''?now_url():url}}\">{{name}}<\/a> <\/li> <\/ul> <\/div>",methods:{
 	now_url: function () {
 		return window.location.hash.substr(1);
 	}
@@ -1074,8 +1074,8 @@ Page.course_student = function () {
 				currentName: "base-loading",
 				result: null,
 				menus: {
-					my: {url: '/', name: '我的课表', active: false},
-					add: {url: '/add', name: '添加课程', active: false}
+					my: {url: '#/', name: '我的课表', active: false},
+					add: {url: '#/add', name: '添加课程', active: false}
 				}
 			},
 			methods: {
@@ -1290,11 +1290,11 @@ Page.course_teacher = function () {
 			currentName: "base-loading",
 			result: null,
 			menus: {
-				my: {url: '/', name: '我的课表', active: false},
-				add: {url: '/add', name: '添加课表', active: false},
-				schedule_add: {url: '/schedule_add', name: '添加课程', active: false},
-				schedule_search: {url: '/schedule_search', name: '课程搜索', active: false},
-				course_list: {url: '/course_list', name: '课程名列表', active: false},
+				my: {url: '#/', name: '我的课表', active: false},
+				add: {url: '#/add', name: '添加课表', active: false},
+				schedule_add: {url: '#/schedule_add', name: '添加课程', active: false},
+				schedule_search: {url: '#/schedule_search', name: '课程搜索', active: false},
+				course_list: {url: '#/course_list', name: '课程名列表', active: false},
 				new_sign: {url: '', name: '新的签到', active: false}
 			}
 		},
@@ -2025,12 +2025,14 @@ Page.header = function () {
 						);
 						this.nav_private = [
 							FUNC.nav('课程测验', 'quiz.html#/', '开始进行课程测验', FUNC.urlMatch("quiz.html")),
+							FUNC.nav('我的签到', 'sign_student.html#/', '查询我的签到表', FUNC.urlMatch("sign_student.html")),
 							FUNC.nav("我的课表", "course_student.html#/", "", FUNC.urlMatch("course_student.html"))
 						];
 					} else if (this.user_type == "teacher") {
 						this.nav_private = [
 							FUNC.nav("教师课表", "course_teacher.html#/", "", FUNC.urlMatch("course_teacher.html")),
-							FUNC.nav("管理测验", "manager_quiz.html#/", "", FUNC.urlMatch("manager_quiz.html"))
+							FUNC.nav("管理测验", "manager_quiz.html#/", "", FUNC.urlMatch("manager_quiz.html")),
+							FUNC.nav('管理签到', 'sign_teacher.html#/', '', FUNC.urlMatch("sign_teacher.html"))
 						];
 					}
 					this.nav_private.push(
@@ -2069,18 +2071,18 @@ Page.header = function () {
 Page.home = function () {
 	var menus = {
 		student: {
-			student_info: {url: '/', name: '个人信息', active: false},
-			edit_profile_student: {url: '/edit_profile_student', name: '编辑资料', active: false},
-			edit_avatar: {url: '/edit_avatar', name: '更改头像', active: false},
-			email_bind: {url: '/email_bind', name: '邮箱绑定', active: false},
-			edit_password: {url: '/edit_password', name: '修改密码', active: false}
+			student_info: {url: '#/', name: '个人信息', active: false},
+			edit_profile_student: {url: '#/edit_profile_student', name: '编辑资料', active: false},
+			edit_avatar: {url: '#/edit_avatar', name: '更改头像', active: false},
+			email_bind: {url: '#/email_bind', name: '邮箱绑定', active: false},
+			edit_password: {url: '#/edit_password', name: '修改密码', active: false}
 		},
 		teacher: {
-			teacher_info: {url: '/', name: '个人信息', active: true},
-			edit_profile_teacher: {url: '/edit_profile_teacher', name: '编辑资料', active: false},
-			edit_avatar: {url: '/edit_avatar', name: '更改头像', active: false},
-			email_bind: {url: '/email_bind', name: '邮箱绑定', active: false},
-			edit_password: {url: '/edit_password', name: '修改密码', active: false}
+			teacher_info: {url: '#/', name: '个人信息', active: true},
+			edit_profile_teacher: {url: '#/edit_profile_teacher', name: '编辑资料', active: false},
+			edit_avatar: {url: '#/edit_avatar', name: '更改头像', active: false},
+			email_bind: {url: '#/email_bind', name: '邮箱绑定', active: false},
+			edit_password: {url: '#/edit_password', name: '修改密码', active: false}
 		}
 	};
 	var home_vm = new Vue({
@@ -2571,7 +2573,7 @@ Page.index = function () {
  * Created by loveyu on 2015/3/24.
  */
 Page.login = function () {
-	return new Vue({
+	var vm = new Vue({
 		el: "#Login",
 		data: {
 			result: {
@@ -2582,6 +2584,17 @@ Page.login = function () {
 			}
 		}
 	});
+	var login_call = function () {
+		if (Member.login_status) {
+			FUNC.redirect("home.html");
+		}
+	};
+	if (!Member.login_status) {
+		Hook.add('login.finish', login_call);
+	} else {
+		login_call();
+	}
+	return vm;
 };
 
 
@@ -2596,10 +2609,10 @@ Page.manager_quiz = function () {
 			currentName: "base-loading",
 			result: null,
 			menus: {
-				my: {url: '/', name: '当前课程测验', active: false},
-				all: {url: '/all', name: '全部测验', active: false},
-				add: {url: '/add', name: '添加测验', active: false},
-				share: {url: '/share', name: '共享的测验', active: false}
+				my: {url: '#/', name: '当前课程测验', active: false},
+				all: {url: '#/all', name: '全部测验', active: false},
+				add: {url: '#/add', name: '添加测验', active: false},
+				share: {url: '#/share', name: '共享的测验', active: false}
 			}
 		},
 		methods: {
@@ -3168,12 +3181,12 @@ Page.quiz = function () {
 			currentView: 'base-loading',
 			currentName: "base-loading",
 			menus: {
-				course_table_list: {url: '/', name: '课程测验', active: false},
+				course_table_list: {url: '#/', name: '课程测验', active: false},
 				do_test: {url: '', name: '答题模式', active: false},
-				quiz_history: {url: '/quiz_history', name: '测验记录', active: false},
+				quiz_history: {url: '#/quiz_history', name: '测验记录', active: false},
 				ct_history: {url: '', name: '课程测验记录', active: false},
-				history: {url: '/history', name: '做题记录', active: false},
-				open_test: {url: '/open_test', name: '开放性测验', active: false}
+				history: {url: '#/history', name: '做题记录', active: false},
+				open_test: {url: '#/open_test', name: '开放性测验', active: false}
 			}
 		},
 		methods: {
@@ -3573,6 +3586,114 @@ Page.register = function () {
 			}
 		}
 	});
+};
+
+
+Page.sign_student = function () {
+	var vm = new Vue({
+		el: "#SignStudent",
+		data: {
+			result: null,
+			currentView: 'base-loading',
+			currentName: "base-loading",
+			menus: {
+				history: {url: '#/', name: '签到历史', active: false},
+				new_sign: {url: '#/new_sign', name: '新签到', active: false}
+			}
+		},
+		methods: {
+			history: function () {
+				this.currentView = "history";
+			},
+			new_sign: function () {
+				this.currentView = "new_sign";
+			}
+		},
+		components: {
+			history: {template:"<h3 class='alert alert-danger'>模板未找到！！！<\/h3>"},
+			new_sign: {template:"<h3 class='alert alert-danger'>模板未找到！！！<\/h3>"}
+		}
+	});
+	var change_menus_active = FUNC.createMenuChangeFunc(vm);
+	var routes = {
+		'/': function () {
+			change_menus_active("history");
+			vm.history();
+		},
+		'/new_sign': function () {
+			change_menus_active("new_sign");
+			vm.new_sign();
+		}
+	};
+	var router = Router(routes);//初始化一个路由器
+	var login_call = function (arg) {
+		if (Member.user_type != "student") {
+			FUNC.alertOnElem(vm.$el, "非法访问");
+		} else {
+			router.init();//加载路由配置
+			if (document.location.hash == "") {
+				//初始化空路由
+				routes['/']();
+			}
+		}
+		return arg;
+	};
+	if (!Member.login_status) {
+		Hook.add('login.finish', login_call);
+	} else {
+		login_call();
+	}
+	return vm;
+};
+
+
+Page.sign_teacher = function () {
+	var vm = new Vue({
+		el: "#SignTeacher",
+		data: {
+			result: null,
+			currentView: 'base-loading',
+			currentName: "base-loading",
+			menus: {
+				history: {url: '#/', name: '签到历史', active: false},
+				new_sign: {url: 'course_teacher.html#/', name: '新签到', active: false}
+			}
+		},
+		methods: {
+			history: function () {
+				this.currentView = "history";
+			}
+		},
+		components: {
+			history: {template:"<h3 class='alert alert-danger'>模板未找到！！！<\/h3>"},
+		}
+	});
+	var change_menus_active = FUNC.createMenuChangeFunc(vm);
+	var routes = {
+		'/': function () {
+			change_menus_active("history");
+			vm.history();
+		}
+	};
+	var router = Router(routes);//初始化一个路由器
+	var login_call = function (arg) {
+		if (Member.user_type != "teacher") {
+			FUNC.alertOnElem(vm.$el, "非法访问");
+		} else {
+			router.init();//加载路由配置
+			if (document.location.hash == "") {
+				//初始化空路由
+				routes['/']();
+			}
+		}
+		return arg;
+	};
+	if (!Member.login_status) {
+		Hook.add('login.finish', login_call);
+	} else {
+		login_call();
+	}
+	return vm;
 };
 
 

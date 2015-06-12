@@ -41,12 +41,14 @@ Page.header = function () {
 						);
 						this.nav_private = [
 							FUNC.nav('课程测验', 'quiz.html#/', '开始进行课程测验', FUNC.urlMatch("quiz.html")),
+							FUNC.nav('我的签到', 'sign_student.html#/', '查询我的签到表', FUNC.urlMatch("sign_student.html")),
 							FUNC.nav("我的课表", "course_student.html#/", "", FUNC.urlMatch("course_student.html"))
 						];
 					} else if (this.user_type == "teacher") {
 						this.nav_private = [
 							FUNC.nav("教师课表", "course_teacher.html#/", "", FUNC.urlMatch("course_teacher.html")),
-							FUNC.nav("管理测验", "manager_quiz.html#/", "", FUNC.urlMatch("manager_quiz.html"))
+							FUNC.nav("管理测验", "manager_quiz.html#/", "", FUNC.urlMatch("manager_quiz.html")),
+							FUNC.nav('管理签到', 'sign_teacher.html#/', '', FUNC.urlMatch("sign_teacher.html"))
 						];
 					}
 					this.nav_private.push(

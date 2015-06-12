@@ -4,18 +4,18 @@
 Page.home = function () {
 	var menus = {
 		student: {
-			student_info: {url: '/', name: '个人信息', active: false},
-			edit_profile_student: {url: '/edit_profile_student', name: '编辑资料', active: false},
-			edit_avatar: {url: '/edit_avatar', name: '更改头像', active: false},
-			email_bind: {url: '/email_bind', name: '邮箱绑定', active: false},
-			edit_password: {url: '/edit_password', name: '修改密码', active: false}
+			student_info: {url: '#/', name: '个人信息', active: false},
+			edit_profile_student: {url: '#/edit_profile_student', name: '编辑资料', active: false},
+			edit_avatar: {url: '#/edit_avatar', name: '更改头像', active: false},
+			email_bind: {url: '#/email_bind', name: '邮箱绑定', active: false},
+			edit_password: {url: '#/edit_password', name: '修改密码', active: false}
 		},
 		teacher: {
-			teacher_info: {url: '/', name: '个人信息', active: true},
-			edit_profile_teacher: {url: '/edit_profile_teacher', name: '编辑资料', active: false},
-			edit_avatar: {url: '/edit_avatar', name: '更改头像', active: false},
-			email_bind: {url: '/email_bind', name: '邮箱绑定', active: false},
-			edit_password: {url: '/edit_password', name: '修改密码', active: false}
+			teacher_info: {url: '#/', name: '个人信息', active: true},
+			edit_profile_teacher: {url: '#/edit_profile_teacher', name: '编辑资料', active: false},
+			edit_avatar: {url: '#/edit_avatar', name: '更改头像', active: false},
+			email_bind: {url: '#/email_bind', name: '邮箱绑定', active: false},
+			edit_password: {url: '#/edit_password', name: '修改密码', active: false}
 		}
 	};
 	var home_vm = new Vue({

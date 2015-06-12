@@ -52,6 +52,8 @@ function get_template($path)
 	} elseif (is_file($path . ".html")) {
 		$content = file_get_contents($path . ".html");
 		$object['template'] = json_encode(compress_html($content), JSON_UNESCAPED_UNICODE);
+	} else {
+		$object['template'] = json_encode("<h3 class='alert alert-danger'>模板未找到！！！</h3>", JSON_UNESCAPED_UNICODE);
 	}
 	if (is_file($path . ".js")) {
 		$content = file_get_contents($path . ".js");

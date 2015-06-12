@@ -17,11 +17,11 @@ Page.course_teacher = function () {
 			currentName: "base-loading",
 			result: null,
 			menus: {
-				my: {url: '/', name: '我的课表', active: false},
-				add: {url: '/add', name: '添加课表', active: false},
-				schedule_add: {url: '/schedule_add', name: '添加课程', active: false},
-				schedule_search: {url: '/schedule_search', name: '课程搜索', active: false},
-				course_list: {url: '/course_list', name: '课程名列表', active: false},
+				my: {url: '#/', name: '我的课表', active: false},
+				add: {url: '#/add', name: '添加课表', active: false},
+				schedule_add: {url: '#/schedule_add', name: '添加课程', active: false},
+				schedule_search: {url: '#/schedule_search', name: '课程搜索', active: false},
+				course_list: {url: '#/course_list', name: '课程名列表', active: false},
 				new_sign: {url: '', name: '新的签到', active: false}
 			}
 		},
