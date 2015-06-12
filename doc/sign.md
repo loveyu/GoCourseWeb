@@ -118,7 +118,7 @@ Param:
 
 
 
-**数据对象引用：** [*DataSignData*](../javadoc/index.html?com/katoa/gocourse/model/data/DataSignData.html)
+**数据对象引用：** [*TbSignData*](../javadoc/index.html?com/katoa/gocourse/model/entity/TbSignData.html)
 
 **数据对象引用：** [*DataSignAppend*](../javadoc/index.html?com/katoa/gocourse/model/data/DataSignAppend.html)
 
@@ -166,7 +166,7 @@ Param:
 		"userID": 1,
 		"flag": 0
 	  }
-	  //..................
+	  //.....更多数据.............
 	]
   }
 }
