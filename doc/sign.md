@@ -171,3 +171,135 @@ Param:
   }
 }
 ```
+
+## /sign/student_new_sign
+Desc: 获取学生的新签到任务，即教师发布非新的签到任务
+
+Method: Default
+
+Param: none
+
+#### 错误状态，错误标记`173`
+* `17300` 非学生无法查询新签到任务
+
+
+
+
+**数据对象引用：** [*DataSignData*](../javadoc/index.html?com/katoa/gocourse/model/data/DataSignData.html)
+
+```js
+{
+  "status": true,
+  "code": 0,
+  "msg": "",
+  "data": {
+	"list": [
+	  {
+		"taskID": 9,
+		"courseTableID": 5,
+		"count": 0,
+		"append": [
+		  {
+			"time": 1456938976,
+			"content": "Append 1"
+		  },
+		  {
+			"time": 1456938982,
+			"content": "Append 2"
+		  }
+		],
+		"signID": 6,
+		"name": "人工智能(管理员)，第14周上课签到，星期六",
+		"detail": "",
+		"time": 1434170376,
+		"expireTime": 1434201876,
+		"type": 0,
+		"userID": 1,
+		"flag": 0
+	  }
+	  //...more....可能存在多个新的签到列表
+	]
+  }
+}
+```
+
+## /sign/teacher_append_info
+Desc: 为某一签到任务设置更新附加的信息描述，只能添加
+
+Method: POST
+
+Param:
+* sign_id (require) 签到的ID
+* info (require) 附加的信息
+
+#### 错误状态，错误标记`174`
+* `17400` 非教师用户，无权限
+* `17401` 非法签到任务ID
+* `17402` 附加信息为空
+* `17403` 未找到对应的签到
+* `17404` 无法附加新的信息
+
+
+
+```js
+{
+  "status": true,
+  "code": 0,
+  "msg": "",
+  "data": null
+}
+```
+
+## /sign/teacher_get/{signID}
+Desc: 教师获取某一个签到信息
+
+Method: Default
+
+Param:
+* {signID} 使用ID替换该URL，`int`整型
+
+#### 错误状态，错误标记`175`
+* `17500` 非教师用户
+* `17501` 非法签到ID
+* `17502` 未找到签到
+
+
+
+
+**数据对象引用：** [*TbSignData*](../javadoc/index.html?com/katoa/gocourse/model/entity/TbSignData.html)
+
+```js
+{
+  "status": true,
+  "code": 0,
+  "msg": "",
+  "data": {
+	"taskID": 7,
+	"courseTableID": 5,
+	"count": 0,
+	"append": [
+	  {
+		"time": 1434109565,
+		"content": "附加信息1"
+	  },
+	  {
+		"time": 1434101467,
+		"content": "附加信息2222"
+	  },
+	  {
+		"time": 1456935849,
+		"content": "OK"
+	  }
+	],
+	"signID": 4,
+	"name": "人工智能(管理员)，第14周上课签到，星期五",
+	"detail": "",
+	"time": 1434098727,
+	"expireTime": 1434101427,
+	"type": 0,
+	"userID": 1,
+	"flag": 0
+  }
+}
+
+```

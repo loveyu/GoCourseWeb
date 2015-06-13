@@ -52,9 +52,12 @@ Token用于用户登录过程中的验证问题，长度为64位，如果涉及�
 5. /course/\*
 6. /schedule/\*
 7. /course_table/\*
+7. /course_table/\*/\*
 8. /quiz_teacher/\*
 9. /quiz_student/\*
 10. /sign/\*
+10. /sign/\*/\*
+10. /task/\*
 
 ### Session ID的传递
 Session ID 必须使用Cookie进行传递，且默认名称为`JSESSIONID`，该默认值可能会修改，最好的查询方式为检测服务器返回的COOKIE进行判断
@@ -80,7 +83,8 @@ Session ID 必须使用Cookie进行传递，且默认名称为`JSESSIONID`，该
 7. [获取服务器状态信息](server_status.html), `/server_status/`
 8. [签到管理](sign.html), `/sign/`
 9. [学生信息获取](student.html), `/student/`
-10. [教师信息获取](teacher.html), `/teacher/`
-11. [通用型的工具](tools.html), `/tools/`
-12. [用户信息相关操作](user.html), `/user/`
-13. [用户未登陆过程中的操作](user_action.html), `/user_action/`
+10. [任务管理](task.html), `/task/`
+11. [教师信息获取](teacher.html), `/teacher/`
+12. [通用型的工具](tools.html), `/tools/`
+13. [用户信息相关操作](user.html), `/user/`
+14. [用户未登陆过程中的操作](user_action.html), `/user_action/`
