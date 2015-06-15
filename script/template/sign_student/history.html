@@ -2,7 +2,7 @@
 <p v-if="error" class="alert alert-danger">{{error}}</p>
 
 <div v-if="!loading" class="sign-history">
-	<p v-if="!list || list.length<1" class="alert-warning alert">没有新的签到任务</p>
+	<p v-if="!list || list.length<1" class="alert-warning alert">没有任何签到任务</p>
 
 	<ul v-if="list && list.length>0" class="list-group">
 		<li v-repeat="list" class="list-group-item">

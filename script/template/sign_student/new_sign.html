@@ -1,7 +1,7 @@
 <p v-if="loading" class="alert alert-info">加载中.....</p>
 <p v-if="error" class="alert alert-danger">{{error}}</p>
 
-<p v-if="success_obj">{{success_obj|json}}</p>
+<p v-if="success_obj"  class="alert alert-success">已提交签到请求，请前往签到历史页面完成签到任务</p>
 
 <div v-if="!loading" class="sign-history">
 	<p v-if="!list || list.length<1" class="alert-warning alert">没有新的签到任务</p>

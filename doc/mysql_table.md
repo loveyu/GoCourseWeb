@@ -200,12 +200,12 @@ deptID|int|11|不允许| |专业ID
 status|tinyint|4|不允许| |课程状态，0-开课中，1-未开课，2-已结束
 
 
-## tb_signins
+## tb_sign_log
 签到信息
 
 字段名|类型|长度|允许空|主键|说明
 ---|---|---|---|---|---
-signinID|int|最大值|不允许|是|签到事件ID,描述一次签到状态
+signLogID|int|最大值|不允许|是|签到事件ID,描述一次签到状态
 userID|int|11|不允许| |用户ID
 beginTime|int|最大值|不允许| |签到开始准备时间
 endTime|int|最大值|不允许| |签到完成时间，未完成时为0
@@ -238,6 +238,7 @@ flag|tinyint|最大值|不允许| |任务状态:0正常,1删除
 ---|---|---|---|---|---
 signID|int|最大值|不允许|是|签到的ID
 taskID|int|最大值|不允许| |每个签到对应的任务ID
+courseID|int|11|不允许| |课程的ID，便于进行查询和归类
 courseTableID|int|最大值|不允许| |签到对应的课程表ID
 count|int|最大值|不允许| |签到统计，即签到的人数总计
 append|text|最大值|允许| |附加信息，一个JSON格式数组，可多次更新,由{time:xxx,data:'xxx'}组成

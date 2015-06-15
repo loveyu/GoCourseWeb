@@ -3662,7 +3662,7 @@ Page.sign_student = function () {
 			}
 		},
 		components: {
-			history: {template:"<p v-if=\"loading\" class=\"alert alert-info\">加载中.....<\/p> <p v-if=\"error\" class=\"alert alert-danger\">{{error}}<\/p> <div v-if=\"!loading\" class=\"sign-history\"> <p v-if=\"!list || list.length<1\" class=\"alert-warning alert\">没有新的签到任务<\/p> <ul v-if=\"list && list.length>0\" class=\"list-group\"> <li v-repeat=\"list\" class=\"list-group-item\"> <span class=\"badge\" v-if=\"count\">已有 {{count}} 人<\/span> <h4 class=\"s-name\"> <button v-if=\"logStatus===0 && expireTime>now_time\" class=\"btn btn-danger btn-sm\" v-on=\"click: e_finish_now($index)\">即刻完成 <\/button> <label class=\"label label-warning\" v-if=\"logStatus===0 && expireTime<=now_time\">过期<\/label> <label class=\"label label-success\" v-if=\"logStatus===1\">完成<\/label> <label class=\"label label-danger\" v-if=\"logStatus===2\">失败<\/label> <label class=\"label label-danger\" v-if=\"logStatus===3\">异常<\/label> <a href=\"#\" title=\"查看详情\">{{name}}<\/a><\/h4> <p class=\"s-detail\" v-if=\"detail\">{{detail}}<\/p> <p class=\"s-desc\"> 时间:<span>{{taskTime|timestamp_to_date}}<\/span>&nbsp; <span v-if=\"logStatus===0\"> 过期:<span>{{expireTime|timestamp_to_offset}}<\/span>&nbsp; <\/span> <span v-if=\"logStatus>0\"> 完成:<span>{{endTime|timestamp_to_offset}}<\/span>&nbsp; <\/span> <a href=\"#{{courseTableID}}\" class=\"btn btn-info btn-sm\">查看课程<\/a>&nbsp; <\/p> <\/li> <\/ul> <\/div>",methods:{
+			history: {template:"<p v-if=\"loading\" class=\"alert alert-info\">加载中.....<\/p> <p v-if=\"error\" class=\"alert alert-danger\">{{error}}<\/p> <div v-if=\"!loading\" class=\"sign-history\"> <p v-if=\"!list || list.length<1\" class=\"alert-warning alert\">没有任何签到任务<\/p> <ul v-if=\"list && list.length>0\" class=\"list-group\"> <li v-repeat=\"list\" class=\"list-group-item\"> <span class=\"badge\" v-if=\"count\">已有 {{count}} 人<\/span> <h4 class=\"s-name\"> <button v-if=\"logStatus===0 && expireTime>now_time\" class=\"btn btn-danger btn-sm\" v-on=\"click: e_finish_now($index)\">即刻完成 <\/button> <label class=\"label label-warning\" v-if=\"logStatus===0 && expireTime<=now_time\">过期<\/label> <label class=\"label label-success\" v-if=\"logStatus===1\">完成<\/label> <label class=\"label label-danger\" v-if=\"logStatus===2\">失败<\/label> <label class=\"label label-danger\" v-if=\"logStatus===3\">异常<\/label> <a href=\"#\" title=\"查看详情\">{{name}}<\/a><\/h4> <p class=\"s-detail\" v-if=\"detail\">{{detail}}<\/p> <p class=\"s-desc\"> 时间:<span>{{taskTime|timestamp_to_date}}<\/span>&nbsp; <span v-if=\"logStatus===0\"> 过期:<span>{{expireTime|timestamp_to_offset}}<\/span>&nbsp; <\/span> <span v-if=\"logStatus>0\"> 完成:<span>{{endTime|timestamp_to_offset}}<\/span>&nbsp; <\/span> <a href=\"#{{courseTableID}}\" class=\"btn btn-info btn-sm\">查看课程<\/a>&nbsp; <\/p> <\/li> <\/ul> <\/div>",methods:{
 	load: function () {
 		var obj = this;
 		obj.error = null;
@@ -3696,7 +3696,7 @@ Page.sign_student = function () {
 
 	}
 }},
-			new_sign: {template:"<p v-if=\"loading\" class=\"alert alert-info\">加载中.....<\/p> <p v-if=\"error\" class=\"alert alert-danger\">{{error}}<\/p> <p v-if=\"success_obj\">{{success_obj|json}}<\/p> <div v-if=\"!loading\" class=\"sign-history\"> <p v-if=\"!list || list.length<1\" class=\"alert-warning alert\">没有新的签到任务<\/p> <ul v-if=\"list && list.length>0\" class=\"list-group\"> <li v-repeat=\"list\" class=\"list-group-item\"> <span class=\"badge\" v-if=\"count\">已有 {{count}} 人<\/span> <h4 class=\"s-name\"> <button class=\"btn btn-danger btn-sm\" v-on=\"click: e_sign_now($index)\">立即签到<\/button> <a href=\"#\" title=\"查看详情\">{{name}}<\/a><\/h4> <p class=\"s-detail\" v-if=\"detail\">{{detail}}<\/p> <p class=\"s-desc\"> 时间:<span>{{time|timestamp_to_offset}}<\/span>&nbsp; 过期:<span>{{expireTime|timestamp_to_offset}}<\/span>&nbsp; <a href=\"#{{courseTableID}}\" class=\"btn btn-info btn-sm\">查看课程<\/a>&nbsp; <\/p> <\/li> <\/ul> <\/div>",methods:{
+			new_sign: {template:"<p v-if=\"loading\" class=\"alert alert-info\">加载中.....<\/p> <p v-if=\"error\" class=\"alert alert-danger\">{{error}}<\/p> <p v-if=\"success_obj\" class=\"alert alert-success\">已提交签到请求，请前往签到历史页面完成签到任务<\/p> <div v-if=\"!loading\" class=\"sign-history\"> <p v-if=\"!list || list.length<1\" class=\"alert-warning alert\">没有新的签到任务<\/p> <ul v-if=\"list && list.length>0\" class=\"list-group\"> <li v-repeat=\"list\" class=\"list-group-item\"> <span class=\"badge\" v-if=\"count\">已有 {{count}} 人<\/span> <h4 class=\"s-name\"> <button class=\"btn btn-danger btn-sm\" v-on=\"click: e_sign_now($index)\">立即签到<\/button> <a href=\"#\" title=\"查看详情\">{{name}}<\/a><\/h4> <p class=\"s-detail\" v-if=\"detail\">{{detail}}<\/p> <p class=\"s-desc\"> 时间:<span>{{time|timestamp_to_offset}}<\/span>&nbsp; 过期:<span>{{expireTime|timestamp_to_offset}}<\/span>&nbsp; <a href=\"#{{courseTableID}}\" class=\"btn btn-info btn-sm\">查看课程<\/a>&nbsp; <\/p> <\/li> <\/ul> <\/div>",methods:{
 	load: function () {
 		var obj = this;
 		obj.error = null;
@@ -3715,7 +3715,7 @@ Page.sign_student = function () {
 		var obj = this;
 		var sign = obj.list[index];
 		obj.error = null;
-		obj.success_obj = 0;
+		obj.success_obj = null;
 		var time = Math.floor((new Date()).getTime() / 1000);
 		FUNC.ajax(CONFIG.api.sign.student_sign_begin, "post", {
 			sign_id: sign.signID,
@@ -3725,6 +3725,7 @@ Page.sign_student = function () {
 		}, function (result) {
 			if (result.status) {
 				obj.success_obj = result.data;
+				obj.load();
 			} else {
 				obj.error = result.msg;
 			}

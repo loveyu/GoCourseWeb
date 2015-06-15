@@ -17,7 +17,7 @@ _methods_ = {
 		var obj = this;
 		var sign = obj.list[index];
 		obj.error = null;
-		obj.success_obj = 0;
+		obj.success_obj = null;
 		var time = Math.floor((new Date()).getTime() / 1000);
 		FUNC.ajax(CONFIG.api.sign.student_sign_begin, "post", {
 			sign_id: sign.signID,
@@ -27,6 +27,7 @@ _methods_ = {
 		}, function (result) {
 			if (result.status) {
 				obj.success_obj = result.data;
+				obj.load();
 			} else {
 				obj.error = result.msg;
 			}

@@ -303,3 +303,161 @@ Param:
 }
 
 ```
+
+## /sign/student_sign_begin
+Desc: 学生开始进行一个签到操作，进行前期准备
+
+Method: POST
+
+Param:
+* sign_id (require) 教师创建的签到ID
+* key (require) 数据字符串，加密后的数据，参考[签到加密说明--创建请求签名数据](sign_encode.html#CreateSignKey)
+* hash (require) 加密数据的HASH值，参考[签到加密说明--创建请求签名Hash](sign_encode.html#CreateSignKeyHash)
+* algorithm (可选) 加密算法，默认值为`table`，`table`算法用于测试,后期用于移除，请参考[签到加密说明--秘钥](sign_encode.html#Algorithm)
+
+#### 错误状态，错误标记`176`
+* `17600` 非法用户
+* `17601` 未知签到ID
+* `17602` 签名算法无效
+* `17603` 签名验证失败
+* `17604` 签名时间偏差大于60秒，检查设备时间，或使用服务器时间
+* `17605` 未找到签到任务
+* `17606` 签到已超时，无法继续添加
+* `17607` 签到事件已添加，无法再次添加
+* `17608` 未选该课程，无法进行签到事件
+* `17609` 无法创建签到记录
+
+
+
+```js
+{
+  "status": true,
+  "code": 0,
+  "msg": "",
+  "data": {
+	"signKey": "S1Pe1aneZ2",		//用于签到确认的加密秘钥，需本地保存
+	"signLogId": "4"				//创建的签到记录ID
+  }
+}
+```
+
+
+## /sign/student_sign_finish
+Desc: 完成一个学生签到请求，由客户端确认这个签到是成功还是失败
+
+Method: POST
+
+Param:
+* sign_id (require) 教师的签到ID
+* key (require) 客户端加密后的数据，依据创建签到请求时返回的秘钥,[签到加密说明--创建结束签到请求数据](sign_encode.html#CreateSignFinishKey)
+* algorithm (可选) 加密算法，默认`table`，后期会移除
+
+#### 错误状态，错误标记`177`
+* `17700` 非学生用户，签到失败
+* `17701` 非法签到记录ID
+* `17702` 未知签名算法
+* `17703` 未找到签到记录
+* `17704` 该签到已完成，无需再次处理
+* `17705` 该签到已过期
+* `17706` 签到服务器数据异常
+* `17707` 数据解析失败
+* `17708` 数据异常，无法匹配原始请求状态UID
+* `17709` 设置的签到状态有误
+* `17710` 无法更新签到记录
+* `17711` 无法针对签到人数修改
+* `17712` 签到处理发生异常
+
+
+
+```js
+{
+  "status": true,
+  "code": 0,
+  "msg": "",
+  "data": null
+}
+```
+
+## /sign/student_history
+Desc: 学生签到历史记录
+
+Method: Default
+
+Param: 
+* status (可选) 签到的状态,默认`全部`，0表示签到准备中,1签到成功,2签到失败,3签到异常，[对应的数据库字段](mysql_table.html#tb_sign_log)
+* course (可选) 对应的课程搜索参数，支持ID，名称，拼音，默认`无`
+* show_append (可选) 是否显示附加信息,默认不显示，传入字符`1`显示
+
+#### 错误状态，错误标记`178`
+* `17800` 非学生用户
+* `17801` 非法状态参数
+
+
+
+
+**数据对象引用：** [*TbSignHistory*](../javadoc/index.html?com/katoa/gocourse/model/entity/TbSignHistory.html)
+
+**数据对象引用：** [*DataSignStudentHistory*](../javadoc/index.html?com/katoa/gocourse/model/data/DataSignStudentHistory.html)
+
+
+```js
+{
+  "status": true,
+  "code": 0,
+  "msg": "",
+  "data": {
+	"list": [
+	  {
+		"signLogID": 2,
+		"studentID": 32,
+		"beginTime": 1434331808,
+		"endTime": 0,
+		"signID": 10,
+		"courseTableID": 5,
+		"longitude": 0,
+		"latitude": 0,
+		"logStatus": 0,
+		"taskID": 15,
+		"name": "人工智能(管理员)，第15周上课签到，星期一 再次",
+		"detail": "",
+		"taskTime": 1434299533,
+		"expireTime": 1434299933,
+		"teacherID": 1,
+		"courseID": 1,
+		"courseName": "人工智能",
+		"count": 0,
+		"append": null
+	  },
+	  {
+		"signLogID": 3,
+		"studentID": 32,
+		"beginTime": 1434344951,
+		"endTime": 1434353670,
+		"signID": 11,
+		"courseTableID": 9,
+		"longitude": 0,
+		"latitude": 0,
+		"logStatus": 2,
+		"taskID": 16,
+		"name": "国际政治(管理员)，第15周上课签到，星期一",
+		"detail": "",
+		"taskTime": 1434344913,
+		"expireTime": 1434404853,
+		"teacherID": 1,
+		"courseID": 386,
+		"courseName": "国际政治",
+		"count": 1,
+		"append": [
+		  {
+			"time": 1458592966,
+			"content": "OK"
+		  }
+		]
+	  }
+	]
+  }
+}
+
+```
+
+
