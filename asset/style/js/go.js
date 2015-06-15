@@ -349,7 +349,11 @@ var CONFIG = {
 		sign: {
 			prepare: "sign/prepare",
 			create: "sign/create",
-			teacher_list: 'sign/teacher_listx'
+			teacher_list: 'sign/teacher_list',
+			student_new_sign: 'sign/student_new_sign',
+			student_history: 'sign/student_history',
+			student_sign_finish: 'sign/student_sign_finish',
+			student_sign_begin: 'sign/student_sign_begin'
 		}
 	},
 	current_week: {	//当前的周次，该数据会依据服务器状态而更新
@@ -495,8 +499,41 @@ Vue.filter('quiz_translate_type', function (value) {
  */
 Vue.filter('timestamp_to_date', function (value) {
 	var date = new Date((+value) * 1000);
-	return "" + date.getFullYear() + "-" + FUNC.numFormatLen(date.getMonth(), 2) + "-" + FUNC.numFormatLen(date.getDate(), 2) + " "
+	return "" + date.getFullYear() + "-" + FUNC.numFormatLen(date.getMonth() + 1, 2) + "-" + FUNC.numFormatLen(date.getDate(), 2) + " "
 		+ FUNC.numFormatLen(date.getHours(), 2) + ":" + FUNC.numFormatLen(date.getMinutes(), 2) + ":" + FUNC.numFormatLen(date.getSeconds(), 2);
+});
+
+/**
+ * 将时间转换为偏移量
+ */
+Vue.filter('timestamp_to_offset', function (value) {
+	value = Math.floor((new Date()).getTime() / 1000) - value;
+	if (value == 0 || isNaN(value)) {
+		return "刚刚";
+	}
+	var push = [];
+	if (value < 0) {
+		push.push("后");
+		value = 0 - value;
+	} else {
+		push.push("前");
+	}
+	var x = value % 60;
+	if (x > 0) {
+		push.push(x + "秒");
+	}
+	value = Math.floor(value / 60);
+	if (value > 0) {
+		x = value % 60;
+		if (x > 0) {
+			push.push(x + "分");
+		}
+		value = Math.floor(value / 60);
+		if (value > 0) {
+			push.push(x + "小时");
+		}
+	}
+	return push.reverse().join('');
 });
 
 /**
@@ -3604,15 +3641,96 @@ Page.sign_student = function () {
 		},
 		methods: {
 			history: function () {
+				this.result = {
+					loading: true,
+					error: null,
+					list: null,
+					now_time: Math.floor((new Date()).getTime() / 1000)
+				};
 				this.currentView = "history";
+				FUNC.findVueChild(this, "history").load();
 			},
 			new_sign: function () {
+				this.result = {
+					loading: true,
+					error: null,
+					list: null,
+					success_obj: null
+				};
 				this.currentView = "new_sign";
+				FUNC.findVueChild(this, "new_sign").load();
 			}
 		},
 		components: {
-			history: {template:"<h3 class='alert alert-danger'>模板未找到！！！<\/h3>"},
-			new_sign: {template:"<h3 class='alert alert-danger'>模板未找到！！！<\/h3>"}
+			history: {template:"<p v-if=\"loading\" class=\"alert alert-info\">加载中.....<\/p> <p v-if=\"error\" class=\"alert alert-danger\">{{error}}<\/p> <div v-if=\"!loading\" class=\"sign-history\"> <p v-if=\"!list || list.length<1\" class=\"alert-warning alert\">没有新的签到任务<\/p> <ul v-if=\"list && list.length>0\" class=\"list-group\"> <li v-repeat=\"list\" class=\"list-group-item\"> <span class=\"badge\" v-if=\"count\">已有 {{count}} 人<\/span> <h4 class=\"s-name\"> <button v-if=\"logStatus===0 && expireTime>now_time\" class=\"btn btn-danger btn-sm\" v-on=\"click: e_finish_now($index)\">即刻完成 <\/button> <label class=\"label label-warning\" v-if=\"logStatus===0 && expireTime<=now_time\">过期<\/label> <label class=\"label label-success\" v-if=\"logStatus===1\">完成<\/label> <label class=\"label label-danger\" v-if=\"logStatus===2\">失败<\/label> <label class=\"label label-danger\" v-if=\"logStatus===3\">异常<\/label> <a href=\"#\" title=\"查看详情\">{{name}}<\/a><\/h4> <p class=\"s-detail\" v-if=\"detail\">{{detail}}<\/p> <p class=\"s-desc\"> 时间:<span>{{taskTime|timestamp_to_date}}<\/span>&nbsp; <span v-if=\"logStatus===0\"> 过期:<span>{{expireTime|timestamp_to_offset}}<\/span>&nbsp; <\/span> <span v-if=\"logStatus>0\"> 完成:<span>{{endTime|timestamp_to_offset}}<\/span>&nbsp; <\/span> <a href=\"#{{courseTableID}}\" class=\"btn btn-info btn-sm\">查看课程<\/a>&nbsp; <\/p> <\/li> <\/ul> <\/div>",methods:{
+	load: function () {
+		var obj = this;
+		obj.error = null;
+		obj.loading = true;
+		obj.list = null;
+		FUNC.ajax(CONFIG.api.sign.student_history, "get", {}, function (result) {
+			obj.loading = false;
+			if (result.status) {
+				obj.list = result.data.list;
+			} else {
+				obj.error = result.msg;
+			}
+		});
+	},
+	e_finish_now: function (index) {
+		var obj = this;
+		var sign = obj.list[index];
+		obj.error = null;
+		var time = Math.floor((new Date()).getTime() / 1000);
+		FUNC.ajax(CONFIG.api.sign.student_sign_finish, "post", {
+			sign_id: sign.signID,
+			key: 1 + "\t" + "uuid\t0\t0",
+			algorithm: "table"
+		}, function (result) {
+			if (result.status) {
+				obj.load();//重新加载数据
+			} else {
+				obj.error = result.msg;
+			}
+		});
+
+	}
+}},
+			new_sign: {template:"<p v-if=\"loading\" class=\"alert alert-info\">加载中.....<\/p> <p v-if=\"error\" class=\"alert alert-danger\">{{error}}<\/p> <p v-if=\"success_obj\">{{success_obj|json}}<\/p> <div v-if=\"!loading\" class=\"sign-history\"> <p v-if=\"!list || list.length<1\" class=\"alert-warning alert\">没有新的签到任务<\/p> <ul v-if=\"list && list.length>0\" class=\"list-group\"> <li v-repeat=\"list\" class=\"list-group-item\"> <span class=\"badge\" v-if=\"count\">已有 {{count}} 人<\/span> <h4 class=\"s-name\"> <button class=\"btn btn-danger btn-sm\" v-on=\"click: e_sign_now($index)\">立即签到<\/button> <a href=\"#\" title=\"查看详情\">{{name}}<\/a><\/h4> <p class=\"s-detail\" v-if=\"detail\">{{detail}}<\/p> <p class=\"s-desc\"> 时间:<span>{{time|timestamp_to_offset}}<\/span>&nbsp; 过期:<span>{{expireTime|timestamp_to_offset}}<\/span>&nbsp; <a href=\"#{{courseTableID}}\" class=\"btn btn-info btn-sm\">查看课程<\/a>&nbsp; <\/p> <\/li> <\/ul> <\/div>",methods:{
+	load: function () {
+		var obj = this;
+		obj.error = null;
+		obj.loading = true;
+		obj.list = null;
+		FUNC.ajax(CONFIG.api.sign.student_new_sign, "get", {}, function (result) {
+			obj.loading = false;
+			if (result.status) {
+				obj.list = result.data.list;
+			} else {
+				obj.error = result.msg;
+			}
+		});
+	},
+	e_sign_now: function (index) {
+		var obj = this;
+		var sign = obj.list[index];
+		obj.error = null;
+		obj.success_obj = 0;
+		var time = Math.floor((new Date()).getTime() / 1000);
+		FUNC.ajax(CONFIG.api.sign.student_sign_begin, "post", {
+			sign_id: sign.signID,
+			key: time + "\t" + "uuid\tweb",
+			hash: time + "uuidweb",
+			algorithm: "table"
+		}, function (result) {
+			if (result.status) {
+				obj.success_obj = result.data;
+			} else {
+				obj.error = result.msg;
+			}
+		});
+	}
+}}
 		}
 	});
 	var change_menus_active = FUNC.createMenuChangeFunc(vm);

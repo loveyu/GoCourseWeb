@@ -12,10 +12,24 @@ Page.sign_student = function () {
 		},
 		methods: {
 			history: function () {
+				this.result = {
+					loading: true,
+					error: null,
+					list: null,
+					now_time: Math.floor((new Date()).getTime() / 1000)
+				};
 				this.currentView = "history";
+				FUNC.findVueChild(this, "history").load();
 			},
 			new_sign: function () {
+				this.result = {
+					loading: true,
+					error: null,
+					list: null,
+					success_obj: null
+				};
 				this.currentView = "new_sign";
+				FUNC.findVueChild(this, "new_sign").load();
 			}
 		},
 		components: {

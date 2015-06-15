@@ -106,8 +106,41 @@ Vue.filter('quiz_translate_type', function (value) {
  */
 Vue.filter('timestamp_to_date', function (value) {
 	var date = new Date((+value) * 1000);
-	return "" + date.getFullYear() + "-" + FUNC.numFormatLen(date.getMonth(), 2) + "-" + FUNC.numFormatLen(date.getDate(), 2) + " "
+	return "" + date.getFullYear() + "-" + FUNC.numFormatLen(date.getMonth() + 1, 2) + "-" + FUNC.numFormatLen(date.getDate(), 2) + " "
 		+ FUNC.numFormatLen(date.getHours(), 2) + ":" + FUNC.numFormatLen(date.getMinutes(), 2) + ":" + FUNC.numFormatLen(date.getSeconds(), 2);
+});
+
+/**
+ * 将时间转换为偏移量
+ */
+Vue.filter('timestamp_to_offset', function (value) {
+	value = Math.floor((new Date()).getTime() / 1000) - value;
+	if (value == 0 || isNaN(value)) {
+		return "刚刚";
+	}
+	var push = [];
+	if (value < 0) {
+		push.push("后");
+		value = 0 - value;
+	} else {
+		push.push("前");
+	}
+	var x = value % 60;
+	if (x > 0) {
+		push.push(x + "秒");
+	}
+	value = Math.floor(value / 60);
+	if (value > 0) {
+		x = value % 60;
+		if (x > 0) {
+			push.push(x + "分");
+		}
+		value = Math.floor(value / 60);
+		if (value > 0) {
+			push.push(x + "小时");
+		}
+	}
+	return push.reverse().join('');
 });
 
 /**
