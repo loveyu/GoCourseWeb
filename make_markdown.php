@@ -5,6 +5,7 @@
  * Time: 23:44
  */
 $param = isset($argv[1]) ? $argv[1] : null;
+system("php gen_status_index.php > test/status_index.md");
 system("php gen_status_code.php > doc/status_code.md");
 system("php gen_mysql_table.php > doc/mysql_table.md");
 system("php gen_api_index.php > doc/index.md");

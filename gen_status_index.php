@@ -20,10 +20,14 @@ foreach ($list as $v) {
 	if (preg_match("/public class ([a-zA-Z_]+?) extends BaseAction/", $content, $m3) !== 1) {
 		continue;
 	}
+	if (isset($data[$m2[1]])) {
+		echo "**警告：**重复对象{$m2[1]}，" . trim($m[1]) . "," . trim($m3[1]) . "，覆盖:",
+			json_encode($data[$m2[1]], JSON_UNESCAPED_UNICODE) . "\n";
+	}
 	$data[$m2[1]] = ["title" => trim($m[1]), "class" => trim($m3[1])];
 }
 ksort($data);
 $i = 1;
 foreach ($data as $key => $value) {
-	echo $i++,". ",$value['title']," `{$value['class']}` `{$key}`\r\n";
+	echo $i++, ". ", $value['title'], " `{$value['class']}` `{$key}`\r\n";
 }
