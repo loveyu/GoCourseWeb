@@ -30,7 +30,7 @@
 		<td>{{$index| course_week_index_to_time}}<br>{{$index+1}}</td>
 		<td v-repeat="$value">
 			<div v-repeat="$value">
-				<h4>{{courseName}}</h4>
+				<h4><a href="#/course_table/{{courseTableID}}">{{courseName}}</a></h4>
 				<span class="teacher">{{teacherName}}</span>
 				<span class="address">{{location}}</span>
 			</div>

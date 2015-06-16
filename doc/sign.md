@@ -461,3 +461,57 @@ Param:
 ```
 
 
+## /sign/student_get/{signLogID}
+Desc: 学生查询自己的一个签到记录信息
+
+Method: Default
+
+Param:
+* {signLogID} 替换为签到记录的ID
+
+#### 错误状态，错误标记`179`
+* `17900` 非学生
+* `17901` 非法参数值
+* `17902` 未找到记录
+
+
+
+
+**数据对象引用：** [*TbSignHistory*](../javadoc/index.html?com/katoa/gocourse/model/entity/TbSignHistory.html)
+
+```js
+{
+  "signLogID": 3,
+  "studentID": 32,
+  "beginTime": 1434344951,
+  "endTime": 1434353670,
+  "signID": 11,
+  "courseTableID": 9,
+  "longitude": 0,
+  "latitude": 0,
+  "logStatus": 2,
+  "taskID": 16,
+  "name": "国际政治(管理员)，第15周上课签到，星期一",
+  "detail": "国际政治(管理员)，第",
+  "taskTime": 1434344913,
+  "expireTime": 1434404853,
+  "teacherID": 1,
+  "courseID": 386,
+  "courseName": "国际政治",
+  "count": 1,
+  "append": [
+    {
+      "time": 1458592966,
+      "content": "OK"
+    },
+    {
+      "time": 1458941284,
+      "content": "法国大范甘迪"
+    },
+    {
+      "time": 1458941406,
+      "content": "个地方电饭锅电饭锅电饭锅地方"
+    }
+  ]
+}
+```

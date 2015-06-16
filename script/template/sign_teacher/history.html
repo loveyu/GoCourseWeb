@@ -8,15 +8,15 @@
 			<li v-repeat="list" class="list-group-item">
 				<span class="badge" v-if="count">{{count}}</span>
 
-				<h4 class="s-name"><a href="#">{{name}}</a></h4>
+				<h4 class="s-name"><a href="#/sign_detail/{{signID}}">{{name}}</a></h4>
 
 				<p class="s-detail" v-if="detail">{{detail}}</p>
 
 				<p class="s-desc">
 					时间:<span>{{time|timestamp_to_date}}</span>&nbsp;
 					过期:<span>{{expireTime|timestamp_to_date}}</span>&nbsp;
-					<a href="#{{courseTableID}}" class="btn btn-info btn-sm">查看课程</a>&nbsp;
-					<a href="#{{signID}}" class="btn btn-success btn-sm">汇总</a>
+					<a href="course_teacher.html#/course_table/{{courseTableID}}" class="btn btn-info btn-sm">查看课程</a>&nbsp;
+					<a href="#/report/{{signID}}" class="btn btn-success btn-sm">汇总</a>
 				</p>
 			</li>
 		</ul>

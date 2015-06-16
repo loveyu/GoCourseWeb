@@ -70,7 +70,7 @@ var CONFIG = {
 			get: "course_table/get",
 			search: "course_table/search",
 			student_selected: "course_table/student_selected",
-			student_select_add: "course_table/student_select_add"
+			student_select_add: "course_table/student_select_add",
 		},
 		quiz_teacher: {
 			course_list: "quiz_teacher/course_list",
@@ -98,7 +98,13 @@ var CONFIG = {
 			student_new_sign: 'sign/student_new_sign',
 			student_history: 'sign/student_history',
 			student_sign_finish: 'sign/student_sign_finish',
-			student_sign_begin: 'sign/student_sign_begin'
+			student_sign_begin: 'sign/student_sign_begin',
+			teacher_get: 'sign/teacher_get',
+			teacher_append_info: 'sign/teacher_append_info',
+			student_get: 'sign/student_get'
+		},
+		task: {
+			task_set_detail: "task/task_set_detail"
 		}
 	},
 	current_week: {	//当前的周次，该数据会依据服务器状态而更新

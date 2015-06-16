@@ -7,7 +7,8 @@ Page.sign_student = function () {
 			currentName: "base-loading",
 			menus: {
 				history: {url: '#/', name: '签到历史', active: false},
-				new_sign: {url: '#/new_sign', name: '新签到', active: false}
+				new_sign: {url: '#/new_sign', name: '新签到', active: false},
+				sign_detail: {url: '', name: '签到详情', active: false}
 			}
 		},
 		methods: {
@@ -30,10 +31,21 @@ Page.sign_student = function () {
 				};
 				this.currentView = "new_sign";
 				FUNC.findVueChild(this, "new_sign").load();
+			},
+			sign_detail: function (id) {
+				this.result = {
+					loading: true,
+					error: null,
+					sign: null,
+					now_time: Math.floor((new Date()).getTime() / 1000)
+				};
+				this.currentView = "sign_detail";
+				FUNC.findVueChild(this, "sign_detail").load(id);
 			}
 		},
 		components: {
 			history: {__require: 'sign_student/history.html'},
+			sign_detail: {__require: 'sign_student/sign_detail.html'},
 			new_sign: {__require: 'sign_student/new_sign.html'}
 		}
 	});
@@ -46,6 +58,14 @@ Page.sign_student = function () {
 		'/new_sign': function () {
 			change_menus_active("new_sign");
 			vm.new_sign();
+		},
+		'/sign_detail/:id': function (id) {
+			id = parseInt(id);
+			if (isNaN(id) || id < 1) {
+				return;
+			}
+			change_menus_active("sign_detail");
+			vm.sign_detail(id);
 		}
 	};
 	var router = Router(routes);//初始化一个路由器

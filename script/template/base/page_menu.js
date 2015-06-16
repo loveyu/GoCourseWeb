@@ -1,5 +1,5 @@
 _methods_ = {
 	now_url: function () {
-		return window.location.hash.substr(1);
+		return window.location.hash;
 	}
 };//_methods_

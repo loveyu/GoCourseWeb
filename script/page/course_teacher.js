@@ -22,7 +22,8 @@ Page.course_teacher = function () {
 				schedule_add: {url: '#/schedule_add', name: '添加课程', active: false},
 				schedule_search: {url: '#/schedule_search', name: '课程搜索', active: false},
 				course_list: {url: '#/course_list', name: '课程名列表', active: false},
-				new_sign: {url: '', name: '新的签到', active: false}
+				new_sign: {url: '', name: '新的签到', active: false},
+				course_table: {url: '', name: '课程详情', active: false}
 			}
 		},
 		methods: {
@@ -204,6 +205,11 @@ Page.course_teacher = function () {
 					}
 					this.currentView = "base-error";
 				}
+			},
+			m_course_table: function (id) {
+				this.result = {error: null, loading: true, table: null};
+				this.currentView = "course_table";
+				FUNC.findVueChild(this, "course_table").load(id);
 			}
 		},
 		components: {
@@ -212,7 +218,8 @@ Page.course_teacher = function () {
 			course_list: {__require: 'course_teacher/course_list.html'},
 			schedule_search: {__require: 'course_teacher/schedule_search.html'},
 			schedule_add: {__require: 'course_teacher/schedule_add.html'},
-			new_sign: {__require: 'course_teacher/new_sign.html'}
+			new_sign: {__require: 'course_teacher/new_sign.html'},
+			course_table: {__require: 'course_teacher/course_table.html'}
 		}
 	});
 	var change_menus_active = FUNC.createMenuChangeFunc(ct_vm);
@@ -244,6 +251,14 @@ Page.course_teacher = function () {
 			}
 			change_menus_active("new_sign");
 			ct_vm.m_new_sign(id);
+		},
+		'/course_table/:id': function (id) {
+			id = parseInt(id);
+			if (isNaN(id) || id < 1) {
+				return;
+			}
+			change_menus_active("course_table");
+			ct_vm.m_course_table(id);
 		}
 	};
 	var router = Router(routes);//初始化一个路由器

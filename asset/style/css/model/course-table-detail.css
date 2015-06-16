@@ -1,0 +1,19 @@
+.course-table-detail ul li{
+    line-height: 2;
+}
+
+.course-table-detail .class-info{
+    font-size: 1.2em;
+}
+.course-table-detail .class-info span.label{
+    margin-right: 5px;
+}
+
+.course-table-detail .ct-location .notice {
+    width: 40%;
+    text-align: left;
+}
+
+.course-table-detail .ct-location-edit {
+    width: 40px;
+}

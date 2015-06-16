@@ -1,0 +1,30 @@
+.sign-detail .count-sign span.count span {
+    font-size: 3em;
+    padding: 0 5px;
+    font-weight: bolder;
+    line-height: 1;
+    color: #000080;
+}
+
+.sign-detail textarea {
+    margin-top: 5px;
+}
+
+.sign-detail .s-detail {
+    border-left: 3px solid #ffcc41;
+    padding: 5px;
+    margin-left: 5px;
+    background-color: #f3f3f3;
+}
+.sign-detail .s-time{
+    margin-left: 5px;
+}
+.sign-detail .s-time span {
+    font-size: 95%;
+}
+
+.sign-detail .append dl {
+    border-left: 4px solid #d3cfed;
+    padding: 2px 5px;
+    margin-bottom: 8px;
+}

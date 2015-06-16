@@ -1,0 +1,38 @@
+<p v-if="loading" class="alert alert-info">加载中</p>
+<p v-if="error" class="alert alert-danger">{{error}}</p>
+<div v-if="sign!==null" class="student-sign-detail">
+	<h3 class="s-name">{{sign.name}}</h3>
+
+	<p class="s-detail" v-if="sign.detail">{{sign.detail}}</p>
+
+	<p class="sign-status">签到状态：
+		<label class="label label-warning" v-if="sign.logStatus===0 && sign.expireTime<=now_time">过期</label>
+		<label class="label label-success" v-if="sign.logStatus===1">完成</label>
+		<label class="label label-danger" v-if="sign.logStatus===2">失败</label>
+		<label class="label label-danger" v-if="sign.logStatus===3">异常</label>
+	</p>
+
+	<p class="s-time">
+		我的签到时间：<span>{{sign.beginTime|timestamp_to_date}}</span>&nbsp;
+		完成时间：<span v-if="sign.endTime>0">{{sign.endTime|timestamp_to_date}}</span>
+		<span v-if="sign.endTime<1" class="label label-warning">任务未完成</span>&nbsp;
+	</p>
+
+	<p class="s-time">
+		签到任务开始：<span>{{sign.taskTime|timestamp_to_date}}</span>&nbsp;
+		签到过期：<span>{{sign.expireTime|timestamp_to_date}}</span>&nbsp;
+	</p>
+
+	<p>
+		<span class="count">共<span>{{sign.count}}</span>人签到</span>
+		<a href="course_student.html#/course_table/{{sign.courseTableID}}" class="btn btn-info btn-sm">查看课程</a>&nbsp;
+	</p>
+
+	<div class="append" v-if="sign.append!=null && sign.append.length>0">
+		<h4 class="help-block">附加信息：</h4>
+		<dl v-repeat="sign.append">
+			<dt>{{time|timestamp_to_date}}</dt>
+			<dd>{{content}}</dd>
+		</dl>
+	</div>
+</div>

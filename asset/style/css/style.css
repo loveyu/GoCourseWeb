@@ -160,6 +160,26 @@
 }
 
 
+.course-table-detail ul li{
+    line-height: 2;
+}
+
+.course-table-detail .class-info{
+    font-size: 1.2em;
+}
+.course-table-detail .class-info span.label{
+    margin-right: 5px;
+}
+
+.course-table-detail .ct-location .notice {
+    width: 40%;
+    text-align: left;
+}
+
+.course-table-detail .ct-location-edit {
+    width: 40px;
+}
+
 .student-course-table > thead > tr > th, td {
     text-align: center;
 }
@@ -293,6 +313,37 @@
     border: 1px solid #28a2c6;
 }
 
+.sign-detail .count-sign span.count span {
+    font-size: 3em;
+    padding: 0 5px;
+    font-weight: bolder;
+    line-height: 1;
+    color: #000080;
+}
+
+.sign-detail textarea {
+    margin-top: 5px;
+}
+
+.sign-detail .s-detail {
+    border-left: 3px solid #ffcc41;
+    padding: 5px;
+    margin-left: 5px;
+    background-color: #f3f3f3;
+}
+.sign-detail .s-time{
+    margin-left: 5px;
+}
+.sign-detail .s-time span {
+    font-size: 95%;
+}
+
+.sign-detail .append dl {
+    border-left: 4px solid #d3cfed;
+    padding: 2px 5px;
+    margin-bottom: 8px;
+}
+
 .sign-history .s-desc {
     margin: 0;
 }
@@ -313,4 +364,16 @@
     font-size: 80%;
 }
 
+
+.student-sign-detail .sign-status label{
+    font-size: 1.5em;
+}
+
+.student-sign-detail .s-detail{
+    margin: 8px 0;
+    line-height: 1.5;
+    padding: 5px;
+    border-left: 2px solid #ffcc41;
+    background-color: #fafafa;
+}
 

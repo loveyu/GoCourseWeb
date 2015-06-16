@@ -10,7 +10,8 @@ Page.course_student = function () {
 				result: null,
 				menus: {
 					my: {url: '#/', name: '我的课表', active: false},
-					add: {url: '#/add', name: '添加课程', active: false}
+					add: {url: '#/add', name: '添加课程', active: false},
+					course_table: {url: '', name: '课程详情', active: false}
 				}
 			},
 			methods: {
@@ -19,7 +20,7 @@ Page.course_student = function () {
 					obj.result = {
 						error: "",
 						list: null,
-						has_course:false,
+						has_course: false,
 						week_current: 0,
 						week_table: [],
 						week_list: []
@@ -79,13 +80,19 @@ Page.course_student = function () {
 						}
 					});
 				},
+				m_course_table: function (id) {
+					this.result = {error: null, loading: true, table: null};
+					this.currentView = "course_table";
+					FUNC.findVueChild(this, "course_table").load(id);
+				},
 				set_error: function (msg) {
 					FUNC.alertOnElem(this.$el, msg);
 				}
 			},
 			components: {
 				my: {__require: 'course_student/my.html'},
-				add: {__require: 'course_student/add.html'}
+				add: {__require: 'course_student/add.html'},
+				course_table: {__require: 'course_teacher/course_table.html'}
 			}
 		})
 		;
@@ -98,6 +105,14 @@ Page.course_student = function () {
 		'/add': function () {
 			change_menus_active("add");
 			cs_vm.m_add();
+		},
+		'/course_table/:id': function (id) {
+			id = parseInt(id);
+			if (isNaN(id) || id < 1) {
+				return;
+			}
+			change_menus_active("course_table");
+			cs_vm.m_course_table(id);
 		}
 	};
 	var router = Router(routes);//初始化一个路由器

@@ -2,7 +2,7 @@
 <div style="margin-bottom: 15px">
 	<ul class="nav nav-pills">
 		<li v-repeat="menus" role="presentation" v-show="url!='' || active" v-class="active?'active':''">
-			<a href="{{url==''?now_url():url}}">{{name}}</a>
+			<a href="{{url==''?now_url(active):url}}">{{name}}</a>
 		</li>
 	</ul>
 </div>

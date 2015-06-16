@@ -1,0 +1,11 @@
+.student-sign-detail .sign-status label{
+    font-size: 1.5em;
+}
+
+.student-sign-detail .s-detail{
+    margin: 8px 0;
+    line-height: 1.5;
+    padding: 5px;
+    border-left: 2px solid #ffcc41;
+    background-color: #fafafa;
+}

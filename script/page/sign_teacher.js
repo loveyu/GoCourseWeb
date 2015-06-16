@@ -7,7 +7,9 @@ Page.sign_teacher = function () {
 			currentName: "base-loading",
 			menus: {
 				history: {url: '#/', name: '历史签到任务', active: false},
-				new_sign: {url: 'course_teacher.html#/', name: '新签到', active: false}
+				new_sign: {url: 'course_teacher.html#/', name: '新签到', active: false},
+				sign_detail: {url: '', name: '签到详情', active: false},
+				report: {url: '', name: '签到汇总', active: false}
 			}
 		},
 		methods: {
@@ -16,10 +18,25 @@ Page.sign_teacher = function () {
 				this.currentView = "history";
 				var obj = FUNC.findVueChild(vm, "history");
 				obj.load_history();
+			},
+			/**
+			 * 查看一个签到的详情
+			 * @param id
+			 */
+			sign_detail: function (id) {
+				this.result = {loading: true, sign: null, error: null, form: {detail: null, append: null}};
+				this.currentView = "sign_detail";
+				var obj = FUNC.findVueChild(vm, "sign_detail");
+				obj.load(id);
+			},
+			report:function(id){
+				this.currentView = "report";
 			}
 		},
 		components: {
-			history: {__require: 'sign_teacher/history.html'}
+			history: {__require: 'sign_teacher/history.html'},
+			sign_detail: {__require: 'sign_teacher/sign_detail.html'},
+			report: {__require: 'sign_teacher/report.html'}
 		}
 	});
 	var change_menus_active = FUNC.createMenuChangeFunc(vm);
@@ -27,6 +44,22 @@ Page.sign_teacher = function () {
 		'/': function () {
 			change_menus_active("history");
 			vm.history();
+		},
+		'/sign_detail/:id': function (id) {
+			id = parseInt(id);
+			if (isNaN(id) || id < 1) {
+				return;
+			}
+			change_menus_active("sign_detail");
+			vm.sign_detail(id);
+		},
+		'/report/:id': function (id) {
+			id = parseInt(id);
+			if (isNaN(id) || id < 1) {
+				return;
+			}
+			change_menus_active("report");
+			vm.report(id);
 		}
 	};
 	var router = Router(routes);//初始化一个路由器

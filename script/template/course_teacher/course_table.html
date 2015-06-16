@@ -1,0 +1,56 @@
+<p v-if="loading" class="alert alert-info">加载中</p>
+<p v-if="error" class="alert alert-danger">{{error}}</p>
+<div v-if="table!==null" class="course-table-detail">
+	<h3>{{table.course.courseName}}</h3>
+	<ul class="list-unstyled">
+		<li><strong>专业：</strong>
+			{{table.course.deptName}}({{table.course.deptNickName}}{{table.course.enrolYear}}级)
+		</li>
+		<li><strong>老师：</strong>
+			{{table.course.teacherName}}({{table.course.teacherID}})
+		</li>
+		<li><strong>开课：</strong>
+			{{table.course.openYear}}
+			{{table.course.openTerm|course_term}}
+		</li>
+		<li><strong>周次：</strong>
+			{{table.course.fromWeek}}-{{table.course.endWeek}} 周
+		</li>
+		<li><strong>状态：</strong>
+			{{{table.course.status|course_status_label}}}
+		</li>
+	</ul>
+	<h5 class="class-info" v-if="table.classes_info!==null">所属班级信息：
+		<span class="label label-info" v-repeat="table.classes_info">
+				{{className}}
+			</span>
+	</h5>
+	<table v-if="table.locations!==null" class="ct-location table table-responsive table-hover table-bordered">
+		<caption><h4>上课地点</h4></caption>
+		<thead>
+		<tr>
+			<th>&nbsp;</th>
+			<th>地点</th>
+			<th>周次</th>
+			<th>节次</th>
+			<th>星期</th>
+			<th>备注</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr v-repeat="table.locations">
+			<td class="ct-location-edit">
+				<a href="#" class="text-danger"><span class="glyphicon glyphicon-edit"></span></a>
+			</td>
+			<td>{{location}}</td>
+			<td>{{week}}</td>
+			<td>{{slot}}</td>
+			<td>{{day|course_week_parse}}</td>
+			<td class="notice">
+				{{notice}}
+			</td>
+		</tr>
+		</tbody>
+	</table>
+
+</div>

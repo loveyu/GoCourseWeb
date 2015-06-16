@@ -184,9 +184,40 @@ Vue.filter('quiz_title_to_test_title', function (value) {
 	return FUNC.quiz.parse_title(("" + value).replace(/\(___\)/g, "").replace(/__[A-Z]__/g, "(___)")).title;
 });
 
+/**
+ * 分割数组
+ */
 Vue.filter('split', function (value, str) {
 	var list = value.split(str);
 	console.log(str);
 	console.log(list);
 	return list;
+});
+
+/**
+ * 返回季度信息
+ */
+Vue.filter('course_term', function (index) {
+	for (var i in CONST_MAP.course_term) {
+		var obj = CONST_MAP.course_term[i];
+		if (obj.id == index) {
+			return obj.term;
+		}
+	}
+	return "未知";
+});
+
+Vue.filter('course_status_label', function (index) {
+	for (var i in CONST_MAP.course_status) {
+		var obj = CONST_MAP.course_status[i];
+		if (obj.id != index) {
+			continue;
+		}
+		var class_map = {'-1': 'default', '0': 'success', '1': 'info', '2': 'warning'}
+		if (index < 0 || index > 0) {
+			break;
+		}
+		return "<label class='label label-" + class_map[index] + "'>" + obj.status + "</label>";
+	}
+	return "<label class='label label-danger'>未知状态</label>";
 });

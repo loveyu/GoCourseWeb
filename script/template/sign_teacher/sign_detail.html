@@ -1,0 +1,43 @@
+<p v-if="loading" class="alert alert-info">加载中</p>
+<p v-if="error" class="alert alert-danger">{{error}}</p>
+<div v-if="sign!==null" class="sign-detail">
+	<h3 class="s-name">{{sign.name}}</h3>
+
+	<p class="s-detail" v-if="sign.detail">{{sign.detail}}</p>
+
+
+	<p class="s-time">
+		时间:<span>{{sign.time|timestamp_to_date}}</span>&nbsp;
+		过期:<span>{{sign.expireTime|timestamp_to_date}}</span>&nbsp;
+	</p>
+
+	<p class="count-sign">
+		<span class="count">共<span>{{sign.count}}</span>人签到</span>
+		<a href="course_teacher.html#/course_table/{{sign.courseTableID}}" class="btn btn-info btn-sm">查看课程</a>&nbsp;
+		<a href="#/report/{{sign.signID}}" class="btn btn-success btn-sm">汇总</a>
+	</p>
+
+	<div v-if="!sign.detail">
+		<div class="form-group">
+			<label for="SignDetail">更新描述：</label>
+			<button class="btn btn-primary btn-sm" v-on="click:up_detail">更新</button>
+			<textarea id="SignDetail" v-model="form.detail" class="form-control"></textarea>
+		</div>
+	</div>
+
+	<div class="append" v-if="sign.append!=null && sign.append.length>0">
+		<p class="help-block">附加信息：</p>
+		<dl v-repeat="sign.append">
+			<dt>{{time|timestamp_to_date}}</dt>
+			<dd>{{content}}</dd>
+		</dl>
+	</div>
+	<div v-if="sign.append==null || sign.append.length<10">
+		<div class="form-group">
+			<label for="SignAppend">添加附加记录：</label>
+			<button class="btn btn-primary btn-sm" v-on="click:add_append">添加</button>
+			<textarea id="SignAppend" v-model="form.append" class="form-control"></textarea>
+		</div>
+	</div>
+
+</div>

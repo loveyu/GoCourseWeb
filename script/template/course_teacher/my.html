@@ -16,7 +16,9 @@
 		<tbody v-repeat="list">
 		<tr v-repeat="locations">
 			<td class="{{locations[$index] | course_location_check_today today none}}"></td>
-			<td v-if="$index==0" rowspan="{{locations.length}}">{{course.courseName}}</td>
+			<td v-if="$index==0" rowspan="{{locations.length}}">
+				<a href="#/course_table/{{courseTableID}}">{{course.courseName}}</a>
+			</td>
 			<td v-if="$index==0" rowspan="{{locations.length}}">
 				<span v-repeat="classes_info" class="btn-block">{{className}}</span>
 			</td>
@@ -26,7 +28,8 @@
 			<td>{{location}}</td>
 			<td v-if="$index==0" rowspan="{{locations.length}}">
 				<button class="btn btn-primary btn-sm">编辑</button>
-				<a v-if="course.status==0" class="btn btn-success btn-sm" href="#/new_sign/{{course.courseTableID}}">新签到</a>
+				<a v-if="course.status==0" class="btn btn-success btn-sm"
+				   href="#/new_sign/{{course.courseTableID}}">新签到</a>
 			</td>
 		</tr>
 		</tbody>
