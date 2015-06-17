@@ -1467,7 +1467,11 @@ Page.course_teacher = function () {
 								departments: [],
 								openYear: year_out(),
 								openTerm: [{id: 0, term: "春季"}, {id: 1, term: "秋季"}]
-							})
+							}),
+							courseName: {
+								list: null,
+								error: false
+							}
 						};
 						obj.currentView = "schedule_add";
 						obj.result.form.openYear = new Date().getFullYear();
@@ -1846,7 +1850,7 @@ Page.course_teacher = function () {
 		return false;
 	}
 }},
-			schedule_add: {template:"<h3>添加课程<\/h3> <p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p> <p class=\"alert-success alert\" v-if=\"success\">{{success}}<\/p> <form v-on=\"submit:submitScheduleAdd\"> <div class=\"form-inline form-group\"> <select class=\"form-control\" disabled> <option>{{data.uniNickname}}<\/option> <\/select> <select class=\"form-control\" disabled> <option>{{data.collegeName}}<\/option> <\/select> <select class=\"form-control\" name=\"dept\" v-model=\"form.department\"> <option value=\"\">--请选择--<\/option> <option v-repeat=\"data.departments\" value=\"{{id}}\">{{name}}<\/option> <\/select> <\/div> <div class=\"form-inline form-group\"> <div class=\"input-group\"> <span class=\"input-group-addon\">课程名<\/span> <input type=\"text\" v-model=\"form.name\" name=\"name\" class=\"form-control\" placeholder=\"一个存在课程名称\"> <\/div> <div class=\"input-group\"> <span class=\"input-group-addon\">开学年份<\/span> <select class=\"form-control\" name=\"openYear\" v-model=\"form.openYear\"> <option v-repeat=\"data.openYear\">{{year}}<\/option> <\/select> <\/div> <div class=\"input-group\"> <span class=\"input-group-addon\">学期<\/span> <select class=\"form-control\" name=\"openTerm\" v-model=\"form.openTerm\"> <option v-repeat=\"data.openTerm\" value=\"{{id}}\">{{term}}<\/option> <\/select> <\/div> <\/div> <div class=\"form-inline form-group\"> <div class=\"input-group\"> <span class=\"input-group-addon\">开始周<\/span> <input type=\"number\" v-model=\"form.fromWeek\" name=\"fromWeek\" class=\"form-control\" placeholder=\"开课周，1-28\"> <\/div> <div class=\"input-group\"> <span class=\"input-group-addon\">结束周<\/span> <input type=\"number\" v-model=\"form.endWeek\" name=\"endWeek\" class=\"form-control\" placeholder=\"结束周，1-28\"> <\/div> <\/div> <div class=\"form-group\"> <label for=\"TextareaRequirement\">课程需求<\/label> <textarea class=\"form-control\" v-model=\"form.requirement\" id=\"TextareaRequirement\"><\/textarea> <\/div> <div class=\"form-group\"> <label for=\"TextareaContent\">主要内容<\/label> <textarea rows=\"3\" class=\"form-control\" v-model=\"form.content\" id=\"TextareaContent\"><\/textarea> <\/div> <div class=\"form-group\"> <button class=\"btn btn-primary\">创建课程<\/button> <\/div> <\/form> ",methods:{
+			schedule_add: {template:"<h3>添加课程<\/h3> <p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p> <p class=\"alert-success alert\" v-if=\"success\">{{success}}<\/p> <form v-on=\"submit:submitScheduleAdd\"> <div class=\"form-inline form-group\"> <select class=\"form-control\" disabled> <option>{{data.uniNickname}}<\/option> <\/select> <select class=\"form-control\" disabled> <option>{{data.collegeName}}<\/option> <\/select> <select class=\"form-control\" name=\"dept\" v-model=\"form.department\"> <option value=\"\">--请选择--<\/option> <option v-repeat=\"data.departments\" value=\"{{id}}\">{{name}}<\/option> <\/select> <\/div> <div class=\"form-inline form-group\"> <div class=\"input-group\" v-class=\"courseName.error?'has-error':''\"> <span class=\"input-group-addon\">课程名<\/span> <input type=\"text\" v-model=\"form.name\" name=\"name\" class=\"form-control\" v-on=\"blur: onSearchName\" placeholder=\"一个存在课程名称\"> <\/div> <div class=\"input-group\"> <span class=\"input-group-addon\">开学年份<\/span> <select class=\"form-control\" name=\"openYear\" v-model=\"form.openYear\"> <option v-repeat=\"data.openYear\">{{year}}<\/option> <\/select> <\/div> <div class=\"input-group\"> <span class=\"input-group-addon\">学期<\/span> <select class=\"form-control\" name=\"openTerm\" v-model=\"form.openTerm\"> <option v-repeat=\"data.openTerm\" value=\"{{id}}\">{{term}}<\/option> <\/select> <\/div> <\/div> <div v-if=\"courseName.list!==null\" class=\"form-inline form-group\"> 选择一个课程名称： <button class=\"btn btn-sm btn-info\" type=\"button\" v-repeat=\"courseName.list\" v-on=\"click: onSelectCourseName($value)\">{{$value}} <\/button> <\/div> <div class=\"form-inline form-group\"> <div class=\"input-group\"> <span class=\"input-group-addon\">开始周<\/span> <input type=\"number\" v-model=\"form.fromWeek\" name=\"fromWeek\" class=\"form-control\" placeholder=\"开课周，1-28\"> <\/div> <div class=\"input-group\"> <span class=\"input-group-addon\">结束周<\/span> <input type=\"number\" v-model=\"form.endWeek\" name=\"endWeek\" class=\"form-control\" placeholder=\"结束周，1-28\"> <\/div> <\/div> <div class=\"form-group\"> <label for=\"TextareaRequirement\">课程需求<\/label> <textarea class=\"form-control\" v-model=\"form.requirement\" id=\"TextareaRequirement\"><\/textarea> <\/div> <div class=\"form-group\"> <label for=\"TextareaContent\">主要内容<\/label> <textarea rows=\"3\" class=\"form-control\" v-model=\"form.content\" id=\"TextareaContent\"><\/textarea> <\/div> <div class=\"form-group\"> <button class=\"btn btn-primary\">创建课程<\/button> <\/div> <\/form> ",methods:{
 	setDept: function (college_id) {
 		var obj = this;
 		FUNC.ajax(CONFIG.api.college.get_departments, "get", {college_id: college_id}, function (result) {
@@ -1884,6 +1888,39 @@ Page.course_teacher = function () {
 			}
 		});
 		return false;
+	},
+	onSelectCourseName: function (name) {
+		var obj = this;
+		obj.form.name = name;
+	},
+	onSearchName: function () {
+		var obj = this;
+		obj.courseName.error = false;
+		obj.courseName.list = null;
+		obj.error = null;
+		FUNC.ajax(CONFIG.api.course.search, "get", {query: obj.form.name}, function (result) {
+			if (result.status) {
+				var i = 0;
+				var list = [];
+				for (var id in result.data) {
+					++i;
+					list.push(id);
+				}
+				if (i === 0) {
+					obj.error = "没有查询到课程";
+					obj.courseName.error = true;
+					return;
+				}
+				if (i === 1) {
+					obj.form.name = result.data[list[0]];
+				} else {
+					obj.courseName.list = result.data;
+				}
+			} else {
+				obj.error = result.msg;
+				obj.courseName.error = true;
+			}
+		});
 	}
 }},
 			new_sign: {template:"<h3>创建一个新的签到<\/h3> <p class=\"alert alert-danger\" v-if=\"error\">{{error}}<\/p> <div v-if=\"result\" class=\"alert alert-success\"> <p>成功创建了签到任务:<\/p> <p>签到ID为：<strong class=\"text-danger\">{{result.signID}}<\/strong><\/p> <p>有效期为: <small>{{result.beginTime|timestamp_to_date}}<\/small> - <small>{{result.endTime|timestamp_to_date}}<\/small><\/p> <\/div> <form v-if=\"!result\" method=\"post\" v-on=\"submit:onSubmit\"> <div class=\"form-group\"> <p><strong>课程：<\/strong>{{course_data.courseName}}, {{course_data.deptName}}, {{course_data.enrolYear}}级<\/p> <p><strong>班级：<\/strong><span v-repeat=\"class_info\" class=\"label label-info\">{{className}}<\/span><\/p> <\/div> <div class=\"form-group\"> <label class=\"control-label\" for=\"InputName\">签到名称<\/label> <input id=\"InputName\" type=\"text\" v-model=\"form.name\" class=\"form-control\"\/> <\/div> <div class=\"form-group\"> <label class=\"control-label\" for=\"InputDetail\">细节<\/label> <textarea id=\"InputDetail\" v-model=\"form.detail\" placeholder=\"可留空\" class=\"form-control\"><\/textarea> <\/div> <div class=\"form-group form-inline\"> <div class=\"input-group\"> <span class=\"input-group-addon\">有效时间<\/span> <div class=\"input-group-btn\"> <button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\">{{form.time>0?(form.time+'分钟'):'无效时间'}}<span class=\"caret\"><\/span> <\/button> <ul class=\"dropdown-menu\" role=\"menu\"> <li><a href=\"javascript:void(0)\" v-on=\"click:form.time=30\">30分钟<\/a><\/li> <li><a href=\"javascript:void(0)\" v-on=\"click:form.time=90\">90分钟<\/a><\/li> <li><a href=\"javascript:void(0)\" v-on=\"click:form.time=45\">45分钟<\/a><\/li> <li><a href=\"javascript:void(0)\" v-on=\"click:form.time=15\">15分钟<\/a><\/li> <\/ul> <\/div> <input type=\"number\" class=\"form-control\" placeholder=\"有效时间，分钟\" v-model=\"form.time\" aria-describedby=\"basic-addon1\"> <\/div> <\/div> <div class=\"form-group\"> <button class=\"btn btn-primary\" type=\"submit\">创建一个签到<\/button> <\/div> <\/form>",methods:{

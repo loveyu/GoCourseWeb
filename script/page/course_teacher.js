@@ -86,7 +86,11 @@ Page.course_teacher = function () {
 								departments: [],
 								openYear: year_out(),
 								openTerm: [{id: 0, term: "春季"}, {id: 1, term: "秋季"}]
-							})
+							}),
+							courseName: {
+								list: null,
+								error: false
+							}
 						};
 						obj.currentView = "schedule_add";
 						obj.result.form.openYear = new Date().getFullYear();

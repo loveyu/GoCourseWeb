@@ -15,9 +15,11 @@
 		</select>
 	</div>
 	<div class="form-inline form-group">
-		<div class="input-group">
+		<div class="input-group" v-class="courseName.error?'has-error':''">
 			<span class="input-group-addon">课程名</span>
-			<input type="text" v-model="form.name" name="name" class="form-control"
+			<input type="text" v-model="form.name" name="name"
+			       class="form-control"
+			       v-on="blur: onSearchName"
 			       placeholder="一个存在课程名称">
 		</div>
 		<div class="input-group">
@@ -32,6 +34,12 @@
 				<option v-repeat="data.openTerm" value="{{id}}">{{term}}</option>
 			</select>
 		</div>
+	</div>
+	<div v-if="courseName.list!==null" class="form-inline form-group">
+		选择一个课程名称：
+		<button class="btn btn-sm btn-info" type="button" v-repeat="courseName.list"
+		        v-on="click: onSelectCourseName($value)">{{$value}}
+		</button>
 	</div>
 	<div class="form-inline form-group">
 		<div class="input-group">

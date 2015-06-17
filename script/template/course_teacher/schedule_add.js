@@ -36,5 +36,38 @@ _methods_ = {
 			}
 		});
 		return false;
+	},
+	onSelectCourseName: function (name) {
+		var obj = this;
+		obj.form.name = name;
+	},
+	onSearchName: function () {
+		var obj = this;
+		obj.courseName.error = false;
+		obj.courseName.list = null;
+		obj.error = null;
+		FUNC.ajax(CONFIG.api.course.search, "get", {query: obj.form.name}, function (result) {
+			if (result.status) {
+				var i = 0;
+				var list = [];
+				for (var id in result.data) {
+					++i;
+					list.push(id);
+				}
+				if (i === 0) {
+					obj.error = "没有查询到课程";
+					obj.courseName.error = true;
+					return;
+				}
+				if (i === 1) {
+					obj.form.name = result.data[list[0]];
+				} else {
+					obj.courseName.list = result.data;
+				}
+			} else {
+				obj.error = result.msg;
+				obj.courseName.error = true;
+			}
+		});
 	}
 };//_methods_

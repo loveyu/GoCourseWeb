@@ -177,7 +177,7 @@ time|int 无符号|11|不允许| |回复评价时间
 字段名|类型|长度|允许空|键|说明
 ---|---|---|---|---|---
 reviewID|int 无符号|11|不允许|主键|评价ID
-scheduleID|int 无符号|11|不允许|索引|课程表ID
+courseTableID|int 无符号|11|不允许|索引|课程表ID
 userID|int 无符号|11|不允许|索引|用户ID
 content|varchar|200|不允许| |评价内容
 rating|decimal|最大值|不允许| |评分，精度为半颗星，取值范围[1, 5]
