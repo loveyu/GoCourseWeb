@@ -23,7 +23,7 @@ echo "# GoCourse数据库结构说明\r\n";
 //echo "快速跳转：",implode(", ", $link), "\r\n\r\n";
 foreach ($list as $table) {
 	echo "## ", $table['TABLE_NAME'], "\r\n", $table['TABLE_COMMENT'] ? (quote_comment($table['TABLE_COMMENT']) . "\r\n\r\n") : "\r\n";
-	echo "字段名|类型|长度|允许空|主键|说明\r\n";
+	echo "字段名|类型|长度|允许空|键|说明\r\n";
 	echo "---|---|---|---|---|---\r\n";
 	$stmt = $pdo->query("show full fields from " . $table['TABLE_NAME']);
 	if (!$stmt) {
@@ -34,10 +34,10 @@ foreach ($list as $table) {
 	$stmt->closeCursor();
 	foreach ($filed_list as $filed) {
 		echo $filed['Field'], "|";
-		echo parse_type($filed['Type']), "|";
+		echo parse_type($filed['Type']), parse_unsigned($filed['Type']), "|";
 		echo parse_size($filed['Type']), "|";
-		echo $filed['Null'] == "NO" ? "不允许" : "允许", "|";
-		echo $filed['Key'] == "PRI" ? "是" : " ", "|";
+		echo $filed['Null'] === "NO" ? "不允许" : "允许", "|";
+		echo $filed['Key'] === "PRI" ? "主键" : ($filed['Key'] === "UNI" ? "唯一" : (!empty($filed['Key']) ? "索引" : " ")), "|";
 		echo quote_comment($filed['Comment']), "\r\n";
 	}
 	echo "\r\n\r\n";
@@ -51,8 +51,13 @@ function parse_type($type)
 
 function parse_size($type)
 {
-	preg_match("/\\(([0-9]+)\\)$/", $type, $ma);
+	preg_match("/[a-z]+\\(([0-9]+)\\)/", $type, $ma);
 	return isset($ma[1]) ? $ma[1] : "最大值";
+}
+
+function parse_unsigned($type)
+{
+	return strpos($type, "unsigned") !== false ? " 无符号" : "";
 }
 
 function quote_comment($data)
