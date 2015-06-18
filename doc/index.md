@@ -9,6 +9,10 @@
 
 如果需要服务端JavaDoc文件请访问: [Javadoc](../javadoc), [Javadoc.zip](../javadoc.zip)
 
+### 请求格式
+采用标准的form表单传递，只支持GET和POST两种请求，如果`POST`数据出现乱码请先检查`header`中是否包含`Content-Type`字段，
+纯文字使用`application/x-www-form-urlencoded`，文件上传使用`multipart/form-data`，且在大部分情况下请使用前者。
+
 ### 数据格式说明
 服务器端采用的Json格式数据返回，通用格式如下：
 
@@ -56,8 +60,9 @@ Token用于用户登录过程中的验证问题，长度为64位，如果涉及�
 8. /quiz_teacher/\*
 9. /quiz_student/\*
 10. /sign/\*
-10. /sign/\*/\*
-10. /task/\*
+11. /sign/\*/\*
+12. /task/\*
+13. /review/\*
 
 ### Session ID的传递
 Session ID 必须使用Cookie进行传递，且默认名称为`JSESSIONID`，该默认值可能会修改，最好的查询方式为检测服务器返回的COOKIE进行判断
@@ -79,13 +84,14 @@ Session ID 必须使用Cookie进行传递，且默认名称为`JSESSIONID`，该
 3. [课程表的查询与添加](course_table.html), `/course_table/`
 4. [学生的测验与管理](quiz_student.html), `/quiz_student/`
 5. [教师的测验管理](quiz_teacher.html), `/quiz_teacher/`
-6. [课程安排的时间](schedule.html), `/schedule/`
-7. [获取服务器状态信息](server_status.html), `/server_status/`
-8. [签到管理](sign.html), `/sign/`
-9. [签到加密说明](sign_encode.html), `/sign_encode/`
-10. [学生信息获取](student.html), `/student/`
-11. [任务管理](task.html), `/task/`
-12. [教师信息获取](teacher.html), `/teacher/`
-13. [通用型的工具](tools.html), `/tools/`
-14. [用户信息相关操作](user.html), `/user/`
-15. [用户未登陆过程中的操作](user_action.html), `/user_action/`
+6. [课程评价操作](review.html), `/review/`
+7. [课程安排的时间](schedule.html), `/schedule/`
+8. [获取服务器状态信息](server_status.html), `/server_status/`
+9. [签到管理](sign.html), `/sign/`
+10. [签到加密说明](sign_encode.html), `/sign_encode/`
+11. [学生信息获取](student.html), `/student/`
+12. [任务管理](task.html), `/task/`
+13. [教师信息获取](teacher.html), `/teacher/`
+14. [通用型的工具](tools.html), `/tools/`
+15. [用户信息相关操作](user.html), `/user/`
+16. [用户未登陆过程中的操作](user_action.html), `/user_action/`
