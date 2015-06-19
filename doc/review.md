@@ -332,3 +332,28 @@ Param: `none` 此时无参数
   ]
 }
 ```
+
+## /review/check_already_review
+Desc: 检测学生是否已经评价，该检测不会对是否选课进行检测，不能依旧此接口判断是否允许评价
+
+Method: POST
+
+Param: 
+* course_table_id (require) 课程ID
+
+#### 错误状态，错误标记`236`
+* `23600` 非学生用户
+* `23601` 未知课程
+
+
+
+**返回提示：** 成功检测会在`status`返回`true`,而已经选课会再`data`字段返回`true`，未选则为`false`
+
+```js
+{
+    "status": true,
+    "code": 0,
+    "msg": "",
+    "data": true			//True表示已经选课。false表示未选课
+}
+```
