@@ -249,6 +249,8 @@ courseID|int 无符号|11|不允许|索引|课程ID
 courseTableID|int 无符号|11|不允许|索引|课程表ID
 count|int 无符号|11|不允许| |测验的提交的总人数
 append|text|最大值|允许| |测验附加信息，一个JSON格式数组，可多次更新,由{time:xxx,content:'xxx'}组成
+createTime|int 无符号|11|不允许| |测验任务的最初创建时间，非发布时间。测验开始与结束为Task表中数据
+quizNum|int 无符号|10|不允许| |测验题目的数量
 
 
 ## tb_task_quiz_map
@@ -258,6 +260,7 @@ append|text|最大值|允许| |测验附加信息，一个JSON格式数组，可
 ---|---|---|---|---|---
 taskID|int 无符号|11|不允许|主键|任务ID
 quizID|int 无符号|11|不允许|主键|测验ID
+time|int 无符号|11|不允许| |添加时间
 
 
 ## tb_task_quiz_submit
@@ -272,6 +275,8 @@ time|int 无符号|11|不允许| |提交测验的时间
 finishNum|int 无符号|11|不允许| |完成的题目数量
 rightNum|int 无符号|11|不允许| |正确的数量
 wrongNum|int 无符号|11|不允许| |错误的数量
+finishTime|int 无符号|11|不允许| |测验完成时间，非0标志已完成
+flag|tinyint 无符号|1|不允许| |标志对象,0为有效,1为无效,2为删除
 
 
 ## tb_task_sign

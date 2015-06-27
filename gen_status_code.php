@@ -18,11 +18,11 @@ foreach ($list as $v) {
 		continue;
 	}
 	$data[$m2[1]] = ["title" => trim($m[1]), "list" => []];
-	if (preg_match_all("/set\\(([0-9]{1,2}), \"([\\s\\S]+?)\"\\);/", $content, $m3, PREG_SET_ORDER) < 1) {
+	if (preg_match_all("/set\\(([0-9]{1,2}), \"([\\s\\S]+?)\"[ +]*([a-zA-Z0-9.* +]*)\\);/", $content, $m3, PREG_SET_ORDER) < 1) {
 		continue;
 	}
 	foreach ($m3 as $v2) {
-		$data[$m2[1]]["list"][$v2[1] + $m2[1] * 100] = trim($v2[2]);
+		$data[$m2[1]]["list"][$v2[1] + $m2[1] * 100] = trim($v2[2]) . ((isset($v2[3]) && !empty($v2[3])) ? trim($v2[3]) : "");
 	}
 	ksort($data[$m2[1]]["list"]);
 }

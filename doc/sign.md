@@ -120,7 +120,7 @@ Param:
 
 **数据对象引用：** [*TbSignData*](../javadoc/index.html?com/katoa/gocourse/model/entity/TbSignData.html)
 
-**数据对象引用：** [*DataSignAppend*](../javadoc/index.html?com/katoa/gocourse/model/data/DataSignAppend.html)
+**数据对象引用：** [*DataAppendInfo*](../javadoc/index.html?com/katoa/gocourse/model/data/DataAppendInfo.html)
 
 ```js
 {

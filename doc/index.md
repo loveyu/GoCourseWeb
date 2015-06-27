@@ -63,6 +63,7 @@ Token用于用户登录过程中的验证问题，长度为64位，如果涉及�
 11. /sign/\*/\*
 12. /task/\*
 13. /review/\*
+14. /quiz_test/\*
 
 ### Session ID的传递
 Session ID 必须使用Cookie进行传递，且默认名称为`JSESSIONID`，该默认值可能会修改，最好的查询方式为检测服务器返回的COOKIE进行判断

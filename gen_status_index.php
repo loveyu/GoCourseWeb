@@ -9,6 +9,7 @@ $package = isset($argv[2]) ? $argv[2] : "G:\\J2EE\\GoCourseServer\\src\\com\\kat
 $list = glob($package . "/*/*.java");
 $data = [];
 foreach ($list as $v) {
+	$package_name = basename(dirname($v));
 	$content = file_get_contents($v);
 	if (preg_match("/\\* #([\\s\\S]+?)\n/", $content, $m) !== 1) {
 		continue;
@@ -24,10 +25,10 @@ foreach ($list as $v) {
 		echo "**警告：**重复对象{$m2[1]}，" . trim($m[1]) . "," . trim($m3[1]) . "，覆盖:",
 			json_encode($data[$m2[1]], JSON_UNESCAPED_UNICODE) . "\n";
 	}
-	$data[$m2[1]] = ["title" => trim($m[1]), "class" => trim($m3[1])];
+	$data[$m2[1]] = ["title" => trim($m[1]), "class" => trim($m3[1]), 'package' => $package_name];
 }
 ksort($data);
 $i = 1;
 foreach ($data as $key => $value) {
-	echo $i++, ". ", $value['title'], " `{$value['class']}` `{$key}`\r\n";
+	echo $i++, ". ", $value['title'], "`{$value['package']}`.`{$value['class']}` `{$key}`\r\n";
 }
