@@ -13,8 +13,6 @@ Param:
 * `14000` 不是教师用户
 * `14001` 状态取值不正确
 
-
-
 ```js
 {
   "status": true,
@@ -83,8 +81,6 @@ Param:
 * `14118` 添加到当前课表失败，请检查当前是否有开该名称课程
 * `14119` 事务数据处理发生异常
 
-
-
 Return:
 ```js
 {
@@ -107,9 +103,6 @@ Param:
 * `14200` 非教师用户
 * `14201` 非法的课程ID号
 * `14202` 教师没有该课程
-
-
-
 
 **数据对象引用：** [*DataQuizList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataQuizList.html)
 
@@ -191,10 +184,7 @@ Param:
 * `14900` 非教师用户
 * `14901` 非法的课程ID号
 
-
-
 *返回数据格式与`quiz_list`一致*
-
 
 **数据对象引用：** [*DataQuizList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataQuizList.html)
 
@@ -281,8 +271,6 @@ Param:
 * `14305` 该测验共享已被取消
 * `14306` 无法成功设置分享信息
 
-
-
 ```js
 {
   "status": true,
@@ -323,10 +311,7 @@ Param:
 * `14500` 非教师用户
 * `14501` 非法课程ID
 
-
-
 *返回数据格式与`quiz_list`一致*
-
 
 **数据对象引用：** [*DataQuizList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataQuizList.html)
 
@@ -408,10 +393,7 @@ Param:
 * `14600` 非教师用户
 * `14601` 非法课程ID
 
-
-
 *返回数据格式与`quiz_list`一致*
-
 
 **数据对象引用：** [*DataQuizList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataQuizList.html)
 
@@ -481,7 +463,6 @@ Param:
 }
 ```
 
-
 ## /quiz_teacher/unbind_share_list
 Desc: 获取某一课程表未绑定的**共享**测验列表
 
@@ -493,7 +474,6 @@ Param:
 #### 错误状态，参考前文标记`146`
 
 *返回数据格式与`quiz_list`一致*
-
 
 **数据对象引用：** [*DataQuizList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataQuizList.html)
 
@@ -588,8 +568,6 @@ Param:
 * `14812` 未找到该课程表
 * `14813` 当前教师无此权限
 * `14814` 无法将测验解除绑定
-
-
 
 ```js
 {

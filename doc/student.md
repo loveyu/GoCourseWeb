@@ -11,9 +11,6 @@ Param: `none`
 #### 错误状态，错误标记`104`
 * `10400` 当前用户非学生用户，无法获取其基本信息
 
-
-
-
 **数据对象引用：** [*DataStudentInfo*](../javadoc/index.html?com/katoa/gocourse/model/data/DataStudentInfo.html)
 
 ```js
@@ -76,8 +73,6 @@ Param: 一个数据列表全部不能为空，如下面的结构
 * `10505` 传递的班级专业信息不合法
 * `10506` 无法绑定用户信息
 
-
-
 Return:
 ```js
 {
@@ -99,8 +94,6 @@ Param:
 #### 错误状态，错误标记`106`
 * `10600` 无需更新用户描述信息
 * `10601` 更新学生信息出错
-
-
 
 ```js
 {
@@ -131,9 +124,6 @@ Param:
 * `12902` 不允许查询其他院系的学生课表信息
 * `12903` 当前年份学期信息不存在
 * `12904` 你当前没有任何课程
-
-
-
 
 **数据对象引用：** [*DataStudentCourse*](../javadoc/index.html?com/katoa/gocourse/model/data/DataStudentCourse.html)
 

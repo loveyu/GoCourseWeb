@@ -16,8 +16,6 @@ Param: `none`
 * `18004` 专业ID不合法，必须为正整数
 * `18005` 专业ID不存在，请检查合法性
 
-
-
 ```js
 {
     "status": true,
@@ -144,9 +142,6 @@ Param:
 #### 错误状态，错误标记`181`
 * `18100` 非法ID字符串
 
-
-
-
 **数据对象引用：** [*DataClassAllInfo*](../javadoc/index.html?com/katoa/gocourse/model/data/DataClassAllInfo.html)
 
 ```js
@@ -212,9 +207,6 @@ Param: `none`
 
 #### 错误状态，错误标记`182`
 * `18200` 数据异常，无课程数据
-
-
-
 
 **数据对象引用：** [*DataCollegeAll*](../javadoc/index.html?com/katoa/gocourse/model/data/DataCollegeAll.html)
 

@@ -8,7 +8,6 @@ Method: Default
 
 Param: `none`
 
-
 **数据对象引用：** [*DataServerTime*](../javadoc/index.html?com/katoa/gocourse/model/data/DataServerTime.html)
 
 ```js

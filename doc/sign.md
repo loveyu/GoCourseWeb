@@ -15,9 +15,6 @@ Param:
 * `17002` 错误的课程参数
 * `17003` 你无法在此课程上创建签到
 
-
-
-
 **数据对象引用：** [*DataSignPrepare*](../javadoc/index.html?com/katoa/gocourse/model/data/DataSignPrepare.html)
 
 ```js
@@ -61,7 +58,6 @@ Param:
 }
 ```
 
-
 ## /sign/create
 Desc: 创建一个签到任务
 
@@ -84,9 +80,6 @@ Param:
 * `17107` 存在重复的任务，请修改任务名称
 * `17108` 无法创建签到任务
 * `17109` 无法创建签到关联事件
-
-
-
 
 **数据对象引用：** [*DataSignCreate*](../javadoc/index.html?com/katoa/gocourse/model/data/DataSignCreate.html)
 
@@ -114,9 +107,6 @@ Param:
 
 #### 错误状态，错误标记`172`
 * `17200` 非教师用户无权限
-
-
-
 
 **数据对象引用：** [*TbSignData*](../javadoc/index.html?com/katoa/gocourse/model/entity/TbSignData.html)
 
@@ -182,9 +172,6 @@ Param: none
 #### 错误状态，错误标记`173`
 * `17300` 非学生无法查询新签到任务
 
-
-
-
 **数据对象引用：** [*DataSignData*](../javadoc/index.html?com/katoa/gocourse/model/data/DataSignData.html)
 
 ```js
@@ -239,8 +226,6 @@ Param:
 * `17403` 未找到对应的签到
 * `17404` 无法附加新的信息
 
-
-
 ```js
 {
   "status": true,
@@ -262,9 +247,6 @@ Param:
 * `17500` 非教师用户
 * `17501` 非法签到ID
 * `17502` 未找到签到
-
-
-
 
 **数据对象引用：** [*TbSignData*](../javadoc/index.html?com/katoa/gocourse/model/entity/TbSignData.html)
 
@@ -327,8 +309,6 @@ Param:
 * `17608` 未选该课程，无法进行签到事件
 * `17609` 无法创建签到记录
 
-
-
 ```js
 {
   "status": true,
@@ -340,7 +320,6 @@ Param:
   }
 }
 ```
-
 
 ## /sign/student_sign_finish
 Desc: 完成一个学生签到请求，由客户端确认这个签到是成功还是失败
@@ -367,8 +346,6 @@ Param:
 * `17711` 无法针对签到人数修改
 * `17712` 签到处理发生异常
 
-
-
 ```js
 {
   "status": true,
@@ -392,13 +369,9 @@ Param:
 * `17800` 非学生用户
 * `17801` 非法状态参数
 
-
-
-
 **数据对象引用：** [*TbSignHistory*](../javadoc/index.html?com/katoa/gocourse/model/entity/TbSignHistory.html)
 
 **数据对象引用：** [*DataSignStudentHistory*](../javadoc/index.html?com/katoa/gocourse/model/data/DataSignStudentHistory.html)
-
 
 ```js
 {
@@ -460,7 +433,6 @@ Param:
 
 ```
 
-
 ## /sign/student_get/{signLogID}
 Desc: 学生查询自己的一个签到记录信息
 
@@ -473,9 +445,6 @@ Param:
 * `17900` 非学生
 * `17901` 非法参数值
 * `17902` 未找到记录
-
-
-
 
 **数据对象引用：** [*TbSignHistory*](../javadoc/index.html?com/katoa/gocourse/model/entity/TbSignHistory.html)
 

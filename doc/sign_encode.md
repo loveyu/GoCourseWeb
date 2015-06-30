@@ -9,7 +9,6 @@
 ## CreateSignKey
 利用`DataSignKey`对象加密得到一个加密的字符串
 
-
 **数据对象引用：** [*DataSignKey*](../javadoc/index.html?com/katoa/gocourse/model/data/DataSignKey.html)
 
 ```java
@@ -32,14 +31,10 @@ public class DataSignKey {
 ## CreateSignKeyHash
 通过`DataSignKey`对象生成一个Hash签名数据用于数据验证
 
-
 **数据对象引用：** [*DataSignKey*](../javadoc/index.html?com/katoa/gocourse/model/data/DataSignKey.html)
-
-
 
 ## CreateSignFinishKey
 通过`DataSignFinishKey`对象和服务器返回的加密秘钥`key`生成要传递的加密数据
-
 
 **数据对象引用：** [*DataSignFinishKey*](../javadoc/index.html?com/katoa/gocourse/model/data/DataSignFinishKey.html)
 
@@ -64,10 +59,8 @@ public class DataSignFinishKey {
 }
 ```
 
-
 ## TableAlgorithm
 未加密的测试算法
-
 
 **数据对象引用：** [*Table*](../javadoc/index.html?com/katoa/gocourse/utils/encrypt/Table.html)
 
@@ -102,7 +95,6 @@ class Table {
 
 ## GeV1Algorithm
 GeV1 算法实现
-
 
 **数据对象引用：** [*GeV1*](../javadoc/index.html?com/katoa/gocourse/utils/encrypt/GeV1.html)
 

@@ -29,9 +29,6 @@ Param: 所以参数均不能为空，课程会进行冲突检测
 * `12009` 数据存在冲突，请试着查询当前数据唯一性
 * `12010` 插入数据失败
 
-
-
-
 **数据对象引用：** [*TbSchedule*](../javadoc/index.html?com/katoa/gocourse/model/entity/TbSchedule.html)
 
 ```js
@@ -73,8 +70,6 @@ Param:
 * `12100` 登录用户检查失败
 * `12101` 开学季度不正确
 * `12102` 输入正确的开课年份
-
-
 
 ```js
 //完整模式

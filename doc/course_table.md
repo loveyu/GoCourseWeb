@@ -58,8 +58,6 @@ Param: *该方法需要提交多个复杂类型的参数*
 * `12515` 有上课地点检测失败
 * `12516` 课程时间存在冲突，请检查星期与上课周次及时间
 
-
-
 Return:
 ```js
 {
@@ -88,9 +86,6 @@ Param: **提示：** 此处参数与`search`的有部分重合
 * `12400` 课程表ID无效
 * `12401` 无效的状态
 * `12402` 当前课程未找到
-
-
-
 
 **数据对象引用：** [*DataCourseTable*](../javadoc/index.html?com/katoa/gocourse/model/data/DataCourseTable.html)
 
@@ -168,9 +163,6 @@ Param:
 * `12602` 该搜索必须为教师
 * `12603` 该搜索必须为学生
 * `12604` 课程表搜索失败，参数检查异常
-
-
-
 
 **数据对象引用：** [*DataCourseTableSearch*](../javadoc/index.html?com/katoa/gocourse/model/data/DataCourseTableSearch.html)
 
@@ -307,8 +299,6 @@ Param:
 * `12700` 仅允许学生自己查询
 * `12701` 传递的ID参数长度为0
 
-
-
 ```js
 //如传入数据为：ids:'4,5,9,12,13'
 {
@@ -338,8 +328,6 @@ Param:
 * `12801` 该班级不允许选择此课程
 * `12802` 学生已经选了这门课
 * `12803` 无法成功添加课程，请检查是否已经添加了该课程
-
-
 
 ```js
 {

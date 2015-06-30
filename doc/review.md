@@ -22,9 +22,6 @@ Param:
 * `23007` 无法更新课程表的信息
 * `23008` 数据更新异常
 
-
-
-
 **数据对象引用：** [*TbReview*](../javadoc/index.html?com/katoa/gocourse/model/entity/TbReview.html)
 
 ```js
@@ -63,8 +60,6 @@ Param:
 * `23105` 无法更新评价附加信息
 * `23106` 更新异常，请稍后再试
 
-
-
 ```js
 {
     "status": true,
@@ -89,9 +84,6 @@ Param:
 * `23202` 回复对应的评价ID为空
 * `23203` 无权限回复
 * `23204` 回复异常，请重试
-
-
-
 
 **数据对象引用：** [*TbReviewReply*](../javadoc/index.html?com/katoa/gocourse/model/entity/TbReviewReply.html)
 
@@ -127,9 +119,6 @@ Param:
 * `23301` 你没有权限查看该课程的评价信息
 * `23302` 教师无法查看自己的评价列表
 * `23303` 课程未找到
-
-
-
 
 **数据对象引用：** [*DataReviewList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataReviewList.html)
 
@@ -210,9 +199,6 @@ Param:
 #### 错误状态，错误标记`234`
 * `23400` 非学生用户
 
-
-
-
 **数据对象引用：** [*DataReviewList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataReviewList.html)
 
 **注意:** 在`allowComment`和`allowReply`两字段是无效的，不能用作判断，因为查询条件不一样
@@ -290,9 +276,6 @@ Param: `none` 此时无参数
 #### 错误状态，错误标记`235`
 * `23500` 非教师用户
 
-
-
-
 **数据对象引用：** [*TbReviewReplyMore*](../javadoc/index.html?com/katoa/gocourse/model/entity/TbReviewReplyMore.html)
 
 ```js
@@ -344,8 +327,6 @@ Param:
 #### 错误状态，错误标记`236`
 * `23600` 非学生用户
 * `23601` 未知课程
-
-
 
 **返回提示：** 成功检测会在`status`返回`true`,而已经选课会再`data`字段返回`true`，未选则为`false`
 

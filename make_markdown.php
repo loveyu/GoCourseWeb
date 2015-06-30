@@ -5,6 +5,7 @@
  * Time: 23:44
  */
 $param = isset($argv[1]) ? $argv[1] : null;
+date_default_timezone_set("PRC");
 system("php gen_status_index.php > test/status_index.md");
 system("php gen_status_code.php > doc/status_code.md");
 system("php gen_mysql_table.php > doc/mysql_table.md");
@@ -64,7 +65,7 @@ function set_error_code($content)
 			$content = str_replace($v[0], "\r\n**数据对象引用：** [*{$v[2]}*](../javadoc/index.html?{$package}/{$v[2]}.html)", $content);
 		}
 	}
-	return $content;
+	return preg_replace("/[\\r\\n]{3,}/", "\r\n\r\n", $content);
 }
 
 function get_code_error_data($code)

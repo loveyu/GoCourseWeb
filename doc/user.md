@@ -8,7 +8,6 @@ Method: Default
 
 Param: `none`
 
-
 **数据对象引用：** [*DataUserInfo*](../javadoc/index.html?com/katoa/gocourse/model/data/DataUserInfo.html)
 
 ```js
@@ -52,9 +51,6 @@ Param:
 * `21003` 原始密码不正确
 * `21004` 更新密码信息失败
 
-
-
-
 **数据对象引用：** [*DataToken*](../javadoc/index.html?com/katoa/gocourse/model/data/DataToken.html)
 
 ```js
@@ -80,9 +76,6 @@ Param:
 #### 错误状态，错误标记`214`
 * `21400` 请求超时，或系统时间异常，请在20秒内完成请求，通过`/server_status/time`查看服务器时间
 * `21401` 无法更新新的Token
-
-
-
 
 **数据对象引用：** [*DataToken*](../javadoc/index.html?com/katoa/gocourse/model/data/DataToken.html)
 
@@ -142,9 +135,6 @@ Param: **上传必须使用HTML文件类型表单**
 * `21614` 无法存储小号头像
 * `21615` 无法更新服务器头像状态
 
-
-
-
 **数据对象引用：** [*DataUserInfo*](../javadoc/index.html?com/katoa/gocourse/model/data/DataUserInfo.html)
 
 ```js
@@ -183,7 +173,6 @@ Param: `none`，该方法为将整个图片直接存放在POST对象中
 **提示：** 文件上传表单中header需包含`Content-Type`，值为对应的图片类型
 
 #### 错误状态，参考前文标记`216`
-
 
 **数据对象引用：** [*DataUserInfo*](../javadoc/index.html?com/katoa/gocourse/model/data/DataUserInfo.html)
 
@@ -265,8 +254,6 @@ Param:
 * `21114` 新邮箱的验证码不正确，请确认顺序
 * `21115` 新的邮箱已被注册，请更换
 * `21116` 更新邮箱地址失败，请重试
-
-
 
 Return:
 ```js

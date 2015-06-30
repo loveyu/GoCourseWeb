@@ -11,9 +11,6 @@ Param: `none`
 #### 错误状态，错误标记`111`
 * `11100` 非教师身份，无法查询相关信息
 
-
-
-
 **数据对象引用：** [*DataTeacherInfo*](../javadoc/index.html?com/katoa/gocourse/model/data/DataTeacherInfo.html)
 
 ```js
@@ -56,8 +53,6 @@ Param:
 #### 错误状态，错误标记`112`
 * `11200` 无需更新用户描述信息
 * `11201` 更新教师信息出错
-
-
 
 ```js
 {

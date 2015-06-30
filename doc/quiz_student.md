@@ -13,9 +13,6 @@ Param:
 * `16000` 课程表ID不正确
 * `16001` 只允许学生用户查询
 
-
-
-
 **数据对象引用：** [*DataTestList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataTestList.html)
 
 ```js
@@ -151,9 +148,6 @@ Param:
 * `16300` 学生才能获取测验列表
 * `16301` 课程ID有误
 
-
-
-
 **数据对象引用：** [*DataTestList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataTestList.html)
 
 ```js
@@ -285,6 +279,8 @@ Method: POST
 Param:
 * quiz_id(require) 测验的ID
 * answer(require)  回答的列表，用`,`逗号分隔，传入的数据为选项ID(optionID)，不是ABCD也不是0123序号，如果多选题，有严格的传入顺序，如多选`125,127,128`，单选`125`
+* task_id (可选) 测验任务ID，如果该测验是针对某一次的测验，则提交该参数，否者留空
+* submit_id (可选) 测验任务的提交ID，和任务ID相对应，同时标记了学生，为测验任务则提交，否者留空
 
 #### 错误状态，错误标记`161`
 * `16100` 非学生无法做测试
@@ -300,8 +296,7 @@ Param:
 * `16110` 答案错误，且提交答案失败
 * `16111` 答案正确，但提交答案失败
 * `16112` 答案错误，且提交答案失败
-
-
+* `16113` 提交测试答案出现异常
 
 ```js
 {
@@ -328,10 +323,6 @@ Param: **所以参数可均不提交，即查询全部**
 * `16201` 当前测验类型不支持
 * `16202` 有误的测验正确性类型
 * `16203` 非法参数
-
-
-
-
 
 **数据对象引用：** [*DataTestExecList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataTestExecList.html)
 
