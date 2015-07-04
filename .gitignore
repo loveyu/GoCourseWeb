@@ -6,7 +6,7 @@ avatar/large/
 avatar/small/
 avatar/middle/
 doc/*.html
-javadoc/
+javadoc/*
 javadoc.zip
 doc.zip
 node_modules/

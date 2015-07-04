@@ -346,7 +346,8 @@ Param: **所以参数可均不提交，即查询全部**
 		"type": 0,
 		"flag": 1,
 		"optionMap": "65,67",
-		"taskID": 0
+		"taskID": 0,
+		"submitID": 0
 	  },
 	  {
 		"execID": 19,
@@ -358,7 +359,8 @@ Param: **所以参数可均不提交，即查询全部**
 		"type": 0,
 		"flag": 1,
 		"optionMap": "81,82",
-		"taskID": 0
+		"taskID": 0,
+		"submitID": 0
 	  },
 	  {
 		"execID": 17,
@@ -370,7 +372,8 @@ Param: **所以参数可均不提交，即查询全部**
 		"type": 0,
 		"flag": 1,
 		"optionMap": "69,70,69",
-		"taskID": 0
+		"taskID": 0,
+		"submitID": 0
 	  }
 	],
 	"quiz": {
