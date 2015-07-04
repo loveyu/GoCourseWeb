@@ -117,6 +117,7 @@ type|tinyint 无符号|4|不允许| |测验类型：0为自我测验，1为教�
 flag|tinyint 无符号|4|不允许| |测验标记位，1为正常状态,0表示删除
 optionMap|varchar|255|允许| |提交的答案选项列表，如果是多选，该值会设置，否则只在optionID中
 taskID|int 无符号|11|允许|索引|对应的任务ID，如果和某次任务有关，否则值为NULL
+submitId|int 无符号|11|允许|索引|测验的提交ID，与测验任务对应唯一值，非测验任务为空
 
 
 ## tb_quiz_options
