@@ -37,11 +37,14 @@ var FUNC = {
 		redirect: function (url) {
 			window.location.href = url;
 		},
-		fileUpload: function (url, formData, callback) {
+		fileUpload: function (url, formData, callback, progress) {
 			var xhr = new XMLHttpRequest(); //创建请求对象
 			xhr.open("POST", url, true);
 			xhr.withCredentials = true;
 			xhr.addEventListener("load", callback, false);
+			if (progress && typeof progress == "function") {
+				xhr.upload.addEventListener("progress", progress, false);
+			}
 			xhr.send(formData);
 		},
 		parseJSON: function (data) {
@@ -61,6 +64,16 @@ var FUNC = {
 				}
 			}
 			return des;
+		},
+		fileSize: function (size) {
+			var a = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+			var pos = 0;
+			if (size < 0)return '出错';
+			while (size > 1024) {
+				size /= 1024;
+				pos++;
+			}
+			return (Math.round(size * 100) / 100) + a[pos];
 		},
 		alertOnElem: function (elem, msg) {
 			$(elem).html("<div class='container'><div class='alert-danger alert'>" + msg + "</div></div>");

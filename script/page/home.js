@@ -42,7 +42,8 @@ Page.home = function () {
 					now_avatar: Member.data.avatar_more.lager,
 					file: null,
 					error: null,
-					success: false
+					success: false,
+					percentComplete: 0
 				};
 				home_vm.currentView = "edit_avatar";
 			},

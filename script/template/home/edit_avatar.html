@@ -11,6 +11,13 @@
 			<input type="file" id="InputFile" v-on="change: fileChange">
 
 			<p class="help-block">从这里选择你要上传的图片，最大2MB，将会默认居中裁剪为200x200的方形。</p>
+
+			<div class="progress" v-if="percentComplete>0">
+				<div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="{{percentComplete}}"
+				     aria-valuemin="0" aria-valuemax="100" style="width: {{percentComplete}}%">
+					<span v-if="percentComplete==100">上传结束，处理中</span>
+				</div>
+			</div>
 		</div>
 		<div class="form-group">
 			<button type="submit" class="btn btn-primary">上传新的头像</button>

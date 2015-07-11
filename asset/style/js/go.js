@@ -661,11 +661,14 @@ var FUNC = {
 		redirect: function (url) {
 			window.location.href = url;
 		},
-		fileUpload: function (url, formData, callback) {
+		fileUpload: function (url, formData, callback, progress) {
 			var xhr = new XMLHttpRequest(); //创建请求对象
 			xhr.open("POST", url, true);
 			xhr.withCredentials = true;
 			xhr.addEventListener("load", callback, false);
+			if (progress && typeof progress == "function") {
+				xhr.upload.addEventListener("progress", progress, false);
+			}
 			xhr.send(formData);
 		},
 		parseJSON: function (data) {
@@ -685,6 +688,16 @@ var FUNC = {
 				}
 			}
 			return des;
+		},
+		fileSize: function (size) {
+			var a = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+			var pos = 0;
+			if (size < 0)return '出错';
+			while (size > 1024) {
+				size /= 1024;
+				pos++;
+			}
+			return (Math.round(size * 100) / 100) + a[pos];
 		},
 		alertOnElem: function (elem, msg) {
 			$(elem).html("<div class='container'><div class='alert-danger alert'>" + msg + "</div></div>");
@@ -2287,7 +2300,8 @@ Page.home = function () {
 					now_avatar: Member.data.avatar_more.lager,
 					file: null,
 					error: null,
-					success: false
+					success: false,
+					percentComplete: 0
 				};
 				home_vm.currentView = "edit_avatar";
 			},
@@ -2340,7 +2354,7 @@ Page.home = function () {
 		components: {
 			student_info: {template:"<div class=\"home-student-info\"> <h3>我的个人信息<\/h3> <dl class=\"dl-horizontal\"> <dt>用户名<\/dt> <dd>{{user.uid}}<\/dd> <dt>姓名<\/dt> <dd>{{user.name}}<\/dd> <dt>性别<\/dt> <dd>{{user.sex}}<\/dd> <dt>学校<\/dt> <dd>{{college.uniName}}<\/dd> <dt>学院<\/dt> <dd>{{college.collegeName}}<\/dd> <dt>专业<\/dt> <dd>{{college.deptName}}<\/dd> <dt>班级<\/dt> <dd>{{college.className}}<\/dd> <dt>个人简介<\/dt> <dd>{{user.description}}<\/dd> <\/dl> <\/div>"},
 			teacher_info: {template:"<div class=\"home-student-info\"> <h3>教师信息<\/h3> <dl class=\"dl-horizontal\"> <dt>用户名<\/dt> <dd>{{user.uid}}<\/dd> <dt>姓名<\/dt> <dd>{{user.name}}<\/dd> <dt>性别<\/dt> <dd>{{user.sex}}<\/dd> <dt>学校<\/dt> <dd>{{college.uniName}}<\/dd> <dt>学院<\/dt> <dd>{{college.collegeName}}<\/dd> <dt>个人简介<\/dt> <dd>{{user.description}}<\/dd> <\/dl> <\/div>"},
-			edit_avatar: {template:"<div> <h4>当前头像:<\/h4> <img class=\"img-circle img-responsive\" v-attr=\"src: now_avatar\"> <h4>上传新头像:<\/h4> <div class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/div> <div class=\"alert-success alert\" v-if=\"success\">头像更换成功<\/div> <form method=\"post\" v-on=\"submit: onSubmitAvatar\"> <div class=\"form-group\"> <label for=\"InputFile\">选择图片<\/label> <input type=\"file\" id=\"InputFile\" v-on=\"change: fileChange\"> <p class=\"help-block\">从这里选择你要上传的图片，最大2MB，将会默认居中裁剪为200x200的方形。<\/p> <\/div> <div class=\"form-group\"> <button type=\"submit\" class=\"btn btn-primary\">上传新的头像<\/button> <\/div> <\/form> <\/div>",methods:{
+			edit_avatar: {template:"<div> <h4>当前头像:<\/h4> <img class=\"img-circle img-responsive\" v-attr=\"src: now_avatar\"> <h4>上传新头像:<\/h4> <div class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/div> <div class=\"alert-success alert\" v-if=\"success\">头像更换成功<\/div> <form method=\"post\" v-on=\"submit: onSubmitAvatar\"> <div class=\"form-group\"> <label for=\"InputFile\">选择图片<\/label> <input type=\"file\" id=\"InputFile\" v-on=\"change: fileChange\"> <p class=\"help-block\">从这里选择你要上传的图片，最大2MB，将会默认居中裁剪为200x200的方形。<\/p> <div class=\"progress\" v-if=\"percentComplete>0\"> <div class=\"progress-bar progress-bar-info progress-bar-striped\" role=\"progressbar\" aria-valuenow=\"{{percentComplete}}\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: {{percentComplete}}%\"> <span v-if=\"percentComplete==100\">上传结束，处理中<\/span> <\/div> <\/div> <\/div> <div class=\"form-group\"> <button type=\"submit\" class=\"btn btn-primary\">上传新的头像<\/button> <\/div> <\/form> <\/div>",methods:{
 	onSubmitAvatar: function (event) {
 		event.preventDefault();
 		this.error = null;
@@ -2349,7 +2363,9 @@ Page.home = function () {
 			var fd = new FormData(); //创建表单
 			fd.append("avatar", this.file);
 			var obj = this;
+			obj.percentComplete = -1;//-1表示未开始
 			FUNC.fileUpload(CONFIG.api.user.upload_avatar, fd, function () {
+				obj.percentComplete = -1;
 				var data = FUNC.parseJSON(this.response);
 				if (data.status) {
 					obj.error = "";
@@ -2363,16 +2379,24 @@ Page.home = function () {
 				} else {
 					obj.error = data.msg;
 				}
-			});
+			}, this.progress);
 		} else {
 			this.error = "未选择正确的图片";
 		}
 		return false;
-	}, fileChange: function (event) {
+	},
+	progress: function (event) {
+		if (event.lengthComputable) {
+			var percent = Math.round(event.loaded * 100 / event.total);
+			this.percentComplete = percent;
+			console.log(percent);
+		}
+	},
+	fileChange: function (event) {
 		this.file = event.target.files[0];
 		this.error = null;
 		if (this.file.size > 1024 * 2 * 1024) {
-			this.error = "当前文件大于2MB";
+			this.error = "当前文件大于2MB，大小：" + FUNC.fileSize(this.file.size);
 			this.file = null;
 		} else if (this.file.type.indexOf("image/") != 0) {
 			this.error = "当前文件非图片文件";
@@ -2383,6 +2407,8 @@ Page.home = function () {
 		if (this.error !== null) {
 			$("#InputFile").val("");
 		}
+		this.success = false;
+		this.percentComplete = -1;
 	}
 }},
 			edit_password: {template:"<div> <form v-on=\"submit: onSubmit\" style=\"max-width: 500px;margin: 15px auto\" action=\"\" method=\"post\"> <h3>修改我的密码<\/h3> <p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p> <p class=\"alert-success alert\" v-if=\"success\">成功修改密码<\/p> <div class=\"form-group\"> <label class=\"sr-only\" for=\"InputOld\">旧密码<\/label> <div class=\"input-group\"> <div class=\"input-group-addon\">旧密码<\/div> <input type=\"password\" name=\"old\" v-model=\"old\" class=\"form-control\" id=\"InputOld\" placeholder=\"输入旧密码\"> <\/div> <\/div> <div class=\"form-group\"> <label class=\"sr-only\" for=\"InputNew\">新密码<\/label> <div class=\"input-group\"> <div class=\"input-group-addon\">新密码<\/div> <input type=\"password\" name=\"new\" v-model=\"new_pwd\" class=\"form-control\" id=\"InputNew\" placeholder=\"输入新密码\"> <\/div> <\/div> <div class=\"form-group\"> <button type=\"submit\" class=\"btn btn-warning\">确认修改<\/button> <\/div> <\/form> <\/div>",methods:{
