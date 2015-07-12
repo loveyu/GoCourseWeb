@@ -42,6 +42,7 @@ var FUNC = {
 			xhr.open("POST", url, true);
 			xhr.withCredentials = true;
 			xhr.addEventListener("load", callback, false);
+			xhr.addEventListener("error", callback, false);
 			if (progress && typeof progress == "function") {
 				xhr.upload.addEventListener("progress", progress, false);
 			}

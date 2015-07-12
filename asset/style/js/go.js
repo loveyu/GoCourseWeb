@@ -666,6 +666,7 @@ var FUNC = {
 			xhr.open("POST", url, true);
 			xhr.withCredentials = true;
 			xhr.addEventListener("load", callback, false);
+			xhr.addEventListener("error", callback, false);
 			if (progress && typeof progress == "function") {
 				xhr.upload.addEventListener("progress", progress, false);
 			}
@@ -2366,6 +2367,10 @@ Page.home = function () {
 			obj.percentComplete = -1;//-1表示未开始
 			FUNC.fileUpload(CONFIG.api.user.upload_avatar, fd, function () {
 				obj.percentComplete = -1;
+				if (this.status !== 200) {
+					obj.error = "请求错误：" + this.status + " - " + this.statusText;
+					return;
+				}
 				var data = FUNC.parseJSON(this.response);
 				if (data.status) {
 					obj.error = "";
