@@ -32,6 +32,32 @@ Param:
 }
 ```
 
+## /user_action/user_avatar
+Desc: 用户头像查询，通过用户账号或邮箱查询头像地址
+
+Method: Default
+
+Param:
+* user(require) 用户名，支持两种类型，邮箱和个人ID，ID可能是学号也可能是字符串类型
+
+#### 错误状态，错误标记`217`
+* `21700` 用户名为空
+* `21701` 未找到用户
+
+```js
+//返回数据为map对象
+{
+  "status": true,
+  "code": 0,
+  "msg": "",
+  "data": {
+	"lager": "http://go.course.org/avatar/large/032/32.png?_t=1436600400",
+	"small": "http://go.course.org/avatar/small/032/32.png?_t=1436600400",
+	"middle": "http://go.course.org/avatar/middle/032/32.png?_t=1436600400"
+  }
+}
+```
+
 ## /user_action/logout
 Desc: 用户退出登录，会清除`token` Cookie
 
