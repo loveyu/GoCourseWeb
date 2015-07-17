@@ -1,12 +1,12 @@
 _methods_ = {
 	init_search: function (id) {
-		var child = FUNC.findVueChild(this, "course-search");
-		if (child.course == id) {
+		var child = this.course_search_obj;
+		if (child.data.course == id) {
 			//不动态修改
 			return;
 		}
 		if (child) {
-			child.search = id;
+			child.data.search = id;
 			child.onSearch(null, function (obj) {
 				obj.onCourseClick(id);
 			});
@@ -41,6 +41,29 @@ _methods_ = {
 	}
 };//_methods_
 
-_props_ = {
-	data: Object
-};//_props_
+_props_ = ['data'];//_props_
+
+_data_ = function () {
+	return {
+		error: '',
+		warning: '',
+		test_obj: null,
+		course_search_obj: null,
+		course_search: {
+			is_init: true,
+			search: '',
+			title: '搜索课程的名称',
+			course: -1,
+			courseName: "",
+			error: "",
+			course_list_empty: false,
+			course_list: [],
+			callback: null,
+			init_call: null
+		}
+	};
+};//_data_
+
+_created_ = function () {
+	this.data.call(this);
+};//_created_

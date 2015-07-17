@@ -1,5 +1,5 @@
 <p class="alert alert-danger" v-if="error">{{error}}</p>
-<div v-with="course_search" v-component="course-search"></div>
+<component data="{{course_search}}" is="course-search"></component>
 <div class="panel panel-primary">
 	<div class="panel-heading">
 		<span v-if="course_search.courseName">有关<strong>{{course_search.courseName}}</strong>的测验&nbsp;&nbsp;</span>
@@ -41,8 +41,8 @@
 				     role="tabpane"
 				     aria-labelledby="Heading_{{$index}}">
 					<div class="panel-body">
-						<div v-with="answer:answer,quiz: quiz_obj[answer.quizID]" v-component="answer-item"></div>
-						<div v-with="quiz_obj[answer.quizID]" v-component="quiz-item"></div>
+						<component answer="{{answer}}" quiz="{{quiz_obj[answer.quizID]}}" is="answer-item"></component>
+						<component item="{{quiz_obj[answer.quizID]}}" is="quiz-item"></component>
 					</div>
 				</div>
 			</div>

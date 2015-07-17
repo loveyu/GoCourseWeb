@@ -14,22 +14,27 @@ Page.sign_teacher = function () {
 		},
 		methods: {
 			history: function () {
-				this.result = {loading: true, list: null, error: null};
+				this.result = {
+					call: function (_ob) {
+						_ob.load_history();
+					}
+				};
 				this.currentView = "history";
-				var obj = FUNC.findVueChild(vm, "history");
-				obj.load_history();
 			},
 			/**
 			 * 查看一个签到的详情
 			 * @param id
 			 */
 			sign_detail: function (id) {
-				this.result = {loading: true, sign: null, error: null, form: {detail: null, append: null}};
+				this.result = {
+					call: function (_ob) {
+						_ob.load(id);
+					}
+				};
 				this.currentView = "sign_detail";
 				var obj = FUNC.findVueChild(vm, "sign_detail");
-				obj.load(id);
 			},
-			report:function(id){
+			report: function (id) {
 				this.currentView = "report";
 			}
 		},

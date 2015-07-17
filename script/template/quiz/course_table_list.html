@@ -1,8 +1,8 @@
-<p class="alert alert-danger" v-if="error">{{error}}</p>
-<div class="alert alert-warning" v-if="course_table!=null && course_table.length==0">
+<p class="alert alert-danger" v-if="data.error">{{data.error}}</p>
+<div class="alert alert-warning" v-if="data.course_table!=null && data.course_table.length==0">
 	当前开课列表为空，请先添加课程
 </div>
-<div class="course-table" v-if="course_table!=null && course_table.length>0">
+<div class="course-table" v-if="data.course_table!=null && data.course_table.length>0">
 	<table class="table">
 		<thead>
 		<tr>
@@ -11,7 +11,7 @@
 			<th>操作</th>
 		</tr>
 		</thead>
-		<tbody v-repeat="course_table">
+		<tbody v-repeat="data.course_table">
 		<tr>
 			<td><a target="_blank" href="course_student.html#/course_table/{{course.courseTableID}}">{{course.courseName}}</a></td>
 			<td>{{course.teacherName}}</td>

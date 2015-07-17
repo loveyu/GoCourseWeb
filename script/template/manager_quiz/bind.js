@@ -91,6 +91,21 @@ _methods_ = {
 	}
 };//_methods_
 
-_props_ = {
-	data: Object
-};//_props_
+
+_props_ = ['data'];//_props_
+
+_data_ = function () {
+	return {
+		courseTableInfo: null,
+		bindQuiz: null,
+		unbindQuiz: null,
+		shareQuiz: null,
+		course_table: undefined,//Unload
+		teacher_id: Member.id,
+		error: ""
+	};
+};//_data_
+
+_created_ = function () {
+	this.data.call(this);
+};//_created_

@@ -2,4 +2,4 @@
 <p v-if="error" class="alert alert-danger">{{error}}</p>
 <p v-if="warning" class="alert alert-warning">{{warning}}</p>
 <p v-if="test_obj==null && !warning && !error" class="alert alert-info">加载中</p>
-<div v-if="test_obj!=null" v-with="test_obj" v-component="test-list"></div>
+<component v-if="test_obj!=null" answer="{{test_obj.answer}}"  list="{{test_obj.list}}" is="test-list"></component>

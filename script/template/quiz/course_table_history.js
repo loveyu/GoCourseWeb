@@ -35,7 +35,23 @@ _methods_ = {
 		});
 	}
 };//_methods_
+_props_ = ['data'];//_props_
 
-_props_ = {
-	data: Object
-};//_props_
+_data_ = function () {
+	return {
+		correct_map: CONST_MAP.history_answer_correct,
+		loading: true,
+		course_info: null,
+		is_correct: null,
+		course_table_id: undefined,//courseTableId,unload
+		execs: null,
+		quiz_obj: {},
+		ct_info: null,
+		error1: "",
+		error2: ""
+	};
+};//_data_
+
+_created_ = function () {
+	this.data.call(this);
+};//_created_

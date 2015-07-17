@@ -35,92 +35,47 @@ Page.manager_quiz = function () {
 			},
 			m_all: function () {
 				this.result = {
-					course_list: null,
-					course_list_empty: false,
-					loading: true,
-					error1: "",
-					error2: "",
-					quiz_list: null,
-					quiz_list_empty: false,
-					model: {
-						course: 0,
-						status: -1
-					},
-					map: {status: CONST_MAP.course_status}
+					call: function (_ob) {
+						_ob.load();
+					}
 				};
 				this.currentView = "all";
-				FUNC.findVueChild(this, "all").load();
 			},
 			m_add: function (course, table) {
 				if (typeof table == "undefined" || table < 1) {
 					table = -1;
 				}
 				this.result = {
-					course_list: null,
-					course_list_empty: false,
-					quiz_empty: true,
-					error: "",
-					success: "",
-					is_force_load: false,
-					loading: true,
-					courseTableId: table,
-					courseTableInfo: null,//强制加载的课程信息
-					model: {
-						status: -1,
-						course: (typeof course == "undefined" ? -1 : course),
-						add_my_course: "1",
-						quiz: {
-							title: "",
-							options: [],
-							correct: [],
-							desc: "",
-							index: ''
-						},
-						quiz_name: []
-					},
-					map: {status: CONST_MAP.course_status}
+					call: function (_ob) {
+						_ob.courseTableId = table;
+						_ob.model.course = (typeof course == "undefined" ? -1 : course);
+						_ob.model.status = -1;
+						_ob.model.add_my_course = "1";
+						if (typeof course != "undefined" && course > 0 && table > 0) {
+							_ob.forceLoad();
+						} else {
+							_ob.load();
+						}
+					}
 				};
 				this.currentView = "add";
-				this.result.model.status = -1;
-				this.result.model.add_my_course = "1";
-				if (typeof course != "undefined" && course > 0 && table > 0) {
-					FUNC.findVueChild(this, "add").forceLoad();
-				} else {
-					FUNC.findVueChild(this, "add").load();
-				}
 			},
 			m_share: function () {
 				this.result = {
-					quiz_list: [],
-					teacher_id: Member.id,
-					error2: "",
-					course_search: {
-						is_init: true,
-						search: '',
-						title: '共享的测验',
-						course: -1,
-						courseName: "",
-						error: "",
-						course_list_empty: false,
-						course_list: [],
-						callback: null
+					call: function (ob) {
+						ob.init();
 					}
 				};
 				this.currentView = "share";
-				FUNC.findVueChild(this, "share").init();
 			},
 			m_bind: function (table) {
 				this.result = {
-					courseTableInfo: null,
-					bindQuiz: null,
-					unbindQuiz: null,
-					shareQuiz: null,
-					course_table: table,
-					teacher_id: Member.id,
-					error: ""
+					call: function (ob) {
+						ob.course_table = table;
+						ob.load(table);
+					}
 				};
 				this.currentView = "bind";
-				FUNC.findVueChild(this, "bind").load(table);
 			}
 		},
 		components: {

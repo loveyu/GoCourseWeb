@@ -1,46 +1,48 @@
-<div v-if="list!=null && list.length>0">
-	<div v-repeat="list">
-		<p class="test-title"><span>{{$index+1}}.</span>&nbsp;<span
-				class="small">({{quiz.type|quiz_translate_type}})</span>&nbsp;
-			{{quiz.title}}
-		</p>
-		<ul v-if="quiz.type==0" class="quiz-single-option list-unstyled">
-			<li v-repeat="options">
-				<button class="btn btn-sm btn-{{$index==quiz.answer?'primary':'default'}}"
-				        v-on="click: onSingleClick(quiz,$index)">
-					{{$index|quiz_option_translate_index}}
+<div class="test-list">
+	<div v-if="list!=null && list.length>0">
+		<div v-repeat="list">
+			<p class="test-title"><span>{{$index+1}}.</span>&nbsp;<span
+					class="small">({{quiz.type|quiz_translate_type}})</span>&nbsp;
+				{{quiz.title}}
+			</p>
+			<ul v-if="quiz.type==0" class="quiz-single-option list-unstyled">
+				<li v-repeat="options">
+					<button class="btn btn-sm btn-{{$index==quiz.answer?'primary':'default'}}"
+					        v-on="click: onSingleClick(quiz,$index)">
+						{{$index|quiz_option_translate_index}}
+					</button>
+					&nbsp;{{description}}
+				</li>
+			</ul>
+			<ul class="quiz-multi-option list-unstyled" v-if="quiz.type==1 && quiz.size>0">
+				<li v-repeat="options">
+					<span class="display-char">{{$index|quiz_option_translate_index}}.</span>&nbsp;{{description}}
+				</li>
+				<li v-repeat="createMultiOptionObj(quiz.size,options.length)">
+					<span class="display-answer-index">({{$index+1}})&nbsp;</span>
+					<button v-repeat="now_option"
+					        class="btn btn-sm btn-{{$index==quiz.answer[now_index]?'primary':'default'}}"
+					        v-on="click: onMultiClick(quiz,now_index,$index)">
+						{{$value|quiz_option_translate_index}}
+					</button>
+				</li>
+			</ul>
+			<ul class="quiz-multi-option list-unstyled" v-if="quiz.type==1 && quiz.size==0">
+				<li v-repeat="options">
+					<button class="btn btn-sm btn-{{$index==quiz.answer[$index]?'primary':'default'}}"
+					        v-on="click: onSimpleMultiClick(quiz,$index)">
+						{{$index|quiz_option_translate_index}}
+					</button>
+					&nbsp;{{description}}
+				</li>
+			</ul>
+			<div class="quiz-answer-submit" v-if="!quiz.success && checkChoiceStatus(quiz)">
+				<button class="btn btn-sm btn-success" v-on="click:onSubmitSingle($index,quiz)">
+					{{quiz.submit_lock?"提交中":"提交答案"}}
 				</button>
-				&nbsp;{{description}}
-			</li>
-		</ul>
-		<ul class="quiz-multi-option list-unstyled" v-if="quiz.type==1 && quiz.size>0">
-			<li v-repeat="options">
-				<span class="display-char">{{$index|quiz_option_translate_index}}.</span>&nbsp;{{description}}
-			</li>
-			<li v-repeat="createMultiOptionObj(quiz.size,options.length)">
-				<span class="display-answer-index">({{$index+1}})&nbsp;</span>
-				<button v-repeat="now_option"
-				        class="btn btn-sm btn-{{$index==quiz.answer[now_index]?'primary':'default'}}"
-				        v-on="click: onMultiClick(quiz,now_index,$index)">
-					{{$value|quiz_option_translate_index}}
-				</button>
-			</li>
-		</ul>
-		<ul class="quiz-multi-option list-unstyled" v-if="quiz.type==1 && quiz.size==0">
-			<li v-repeat="options">
-				<button class="btn btn-sm btn-{{$index==quiz.answer[$index]?'primary':'default'}}"
-				        v-on="click: onSimpleMultiClick(quiz,$index)">
-					{{$index|quiz_option_translate_index}}
-				</button>
-				&nbsp;{{description}}
-			</li>
-		</ul>
-		<div class="quiz-answer-submit" v-if="!quiz.success && checkChoiceStatus(quiz)">
-			<button class="btn btn-sm btn-success" v-on="click:onSubmitSingle($index,quiz)">
-				{{quiz.submit_lock?"提交中":"提交答案"}}
-			</button>
-			<span v-if="quiz.error" class="text-danger">{{quiz.error}}</span>
+				<span v-if="quiz.error" class="text-danger">{{quiz.error}}</span>
+			</div>
+			<div v-if="quiz.success" class="alert alert-success">恭喜成功答对</div>
 		</div>
-		<div v-if="quiz.success" class="alert alert-success">恭喜成功答对</div>
 	</div>
 </div>

@@ -19,6 +19,18 @@ _methods_ = {
 	}
 };//_methods_
 
-_props_ = {
-	data: Object
-};//_props_
+_props_ = ['data'];//_props_
+
+_data_ = function () {
+	return {
+		id: undefined,//unload
+		index: 0,
+		error: '',
+		warning: '',
+		test_obj: null
+	};
+};//_data_
+
+_created_ = function () {
+	this.data.call(this);
+};//_created_

@@ -12,3 +12,15 @@ _methods_ = {
 		})
 	}
 };//_methods_
+
+_props_ = ['data'];//_props_
+
+_data_ = function () {
+	return {
+		loading: true, list: null, error: null
+	};
+};//_data_
+
+_created_ = function () {
+	this.data.call(this);
+};//_created_

@@ -81,6 +81,4 @@ _methods_ = {
 	}
 };//_methods_
 
-_props_ = {
-	data: Object
-};//_props_
+_props_ = ['list', 'answer'];//_props_

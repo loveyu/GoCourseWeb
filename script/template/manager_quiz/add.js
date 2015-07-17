@@ -188,6 +188,37 @@ _methods_ = {
 	}
 };//_methods_
 
-_props_ = {
-	data: Object
-};//_props_
+
+_props_ = ['data'];//_props_
+
+_data_ = function () {
+	return {
+		course_list: null,
+		course_list_empty: false,
+		quiz_empty: true,
+		error: "",
+		success: "",
+		is_force_load: false,
+		loading: true,
+		courseTableId: undefined,//Unload
+		courseTableInfo: null,//强制加载的课程信息
+		model: {
+			status: -1,
+			course: undefined,//unload
+			add_my_course: "1",
+			quiz: {
+				title: "",
+				options: [],
+				correct: [],
+				desc: "",
+				index: ''
+			},
+			quiz_name: []
+		},
+		map: {status: CONST_MAP.course_status}
+	};
+};//_data_
+
+_created_ = function () {
+	this.data.call(this);
+};//_created_

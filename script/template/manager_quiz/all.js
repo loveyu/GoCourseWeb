@@ -66,6 +66,25 @@ _methods_ = {
 	}
 };//_methods_
 
-_props_ = {
-	data: Object
-};//_props_
+_props_ = ['data'];//_props_
+
+_data_ = function () {
+	return {
+		course_list: null,
+		course_list_empty: false,
+		loading: true,
+		error1: "",
+		error2: "",
+		quiz_list: null,
+		quiz_list_empty: false,
+		model: {
+			course: 0,
+			status: -1
+		},
+		map: {status: CONST_MAP.course_status}
+	};
+};//_data_
+
+_created_ = function () {
+	this.data.call(this);
+};//_created_

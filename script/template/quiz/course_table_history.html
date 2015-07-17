@@ -45,8 +45,8 @@
 				     role="tabpane"
 				     aria-labelledby="Heading_{{$index}}">
 					<div class="panel-body">
-						<div v-with="answer:answer,quiz: quiz_obj[answer.quizID]" v-component="answer-item"></div>
-						<div v-with="quiz_obj[answer.quizID]" v-component="quiz-item"></div>
+						<component answer="{{answer}}" quiz="{{quiz_obj[answer.quizID]}}" is="answer-item"></component>
+						<component item="{{quiz_obj[answer.quizID]}}" is="quiz-item"></component>
 					</div>
 				</div>
 			</div>

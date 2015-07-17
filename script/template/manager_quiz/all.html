@@ -56,7 +56,7 @@
 					     class="panel-collapse collapse{{$index==0?' in':''}}"
 					     role="tabpane"
 					     aria-labelledby="Heading_{{$index}}">
-						<div class="panel-body" v-with="quiz_list[$index]" v-component="quiz-item"></div>
+						<component class="panel-body" item="{{quiz_list[$index]}}" is="quiz-item"></component>
 					</div>
 				</div>
 			</div>

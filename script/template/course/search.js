@@ -9,32 +9,40 @@ _methods_ = {
 			event.preventDefault();
 		}
 		var obj = this;
-		obj.error = "";
-		FUNC.ajax(CONFIG.api.course.search, "get", {query: this.search}, function (result) {
-			obj.is_init = false;
+		obj.data.error = "";
+		FUNC.ajax(CONFIG.api.course.search, "get", {query: this.data.search}, function (result) {
+			obj.data.is_init = false;
 			if (result.status) {
-				obj.course_list = result.data;
-				obj.course_list_empty = FUNC.isEmpty(result.data);
+				obj.data.course_list = result.data;
+				obj.data.course_list_empty = FUNC.isEmpty(result.data);
 				if (typeof call == "function") {
 					call(obj);
 				}
 			} else {
-				obj.error = result.msg;
+				obj.data.error = result.msg;
 			}
 		});
 		return false;
 	},
 	onCourseClick: function (index) {
 		index = parseInt(index);
-		var call = this.course != index;
-		this.course = index;
-		this.courseName = this.course_list[this.course];
+		var call = this.data.course != index;
+		this.data.course = index;
+		this.data.courseName = this.data.course_list[this.data.course];
 		if (call) {
-			if (typeof this.callback == "function") {
-				this.callback(index);
+			if (typeof this.data.callback == "function") {
+				this.data.callback(index);
 			} else {
 				console.warn("未定义搜索回调函数")
 			}
 		}
 	}
 };//_methods_
+
+_props_ = ['data'];//_props_
+
+_created_ = function () {
+	if (typeof this.data.init_call === "function") {
+		this.data.init_call(this);
+	}
+};//_created_

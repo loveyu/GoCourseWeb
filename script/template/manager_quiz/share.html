@@ -1,4 +1,4 @@
-<div v-with="course_search" v-component="course-search"></div>
+<component data="{{course_search}}" is="course-search"></component>
 
 <div v-if="course_search.courseName" class="panel panel-primary">
 	<div class="panel-heading">{{course_search.courseName}}</div>
@@ -29,7 +29,7 @@
 					     class="panel-collapse collapse{{$index==0?' in':''}}"
 					     role="tabpane"
 					     aria-labelledby="Heading_{{$index}}">
-						<div class="panel-body" v-with="quiz_list[$index]" v-component="quiz-item"></div>
+						<component class="panel-body" item="{{quiz_list[$index]}}" is="quiz-item"></component>
 					</div>
 				</div>
 			</div>

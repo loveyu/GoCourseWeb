@@ -16,7 +16,10 @@ Page.quiz = function () {
 				ct_history: {url: '', name: '课程测验记录', active: false},
 				history: {url: '#/history', name: '做题记录', active: false},
 				open_test: {url: '#/open_test', name: '开放性测验', active: false}
-			}
+			},
+			history_obj: null,//测验历史记录组件的实例
+			open_test_obj: null,//开放测验组件的实例
+			course_table_history_obj: null//某一课测验程组件实例
 		},
 		methods: {
 			my: function (data) {
@@ -40,98 +43,80 @@ Page.quiz = function () {
 			},
 			do_test: function (id) {
 				this.result = {
-					id: id,
-					index: 0,
-					error: '',
-					warning: '',
-					test_obj: null
+					call: function (ob) {
+						ob.id = id;
+						var parse_id = parseInt(id);
+						if (isNaN(parse_id) || parse_id < 1 || ("" + parse_id) != id) {
+							ob.error = "ID参数解析错误";
+						} else {
+							ob.load_course_table();
+						}
+					}
 				};
-				var parse_id = parseInt(id);
-				if (isNaN(parse_id) || parse_id < 1 || ("" + parse_id) != id) {
-					this.result.error = "ID参数解析错误";
-				}
 				this.currentView = "do_test";
-				if (!this.result.error) {
-					FUNC.findVueChild(this, "do_test").load_course_table();
-				}
 			},
 			history: function (is_correct) {
+				var obj = this;
 				if (this.currentView != "history") {
 					//如果视图修改
 					this.result = {
-						execs: null,
-						quiz_obj: {},
-						error: '',
-						is_correct: is_correct,
-						correct_map: CONST_MAP.history_answer_correct,
-						course_search: {
-							is_init: true,
-							search: '',
-							title: '指定测验课程',
-							course: -1,
-							courseName: "",
-							error: "",
-							course_list_empty: false,
-							course_list: [],
-							callback: null
+						call: function (ob) {
+							ob.is_correct = is_correct;
+							obj.history_obj = ob;
+							ob.load_all();
 						}
 					};
 					this.currentView = "history";
 				} else {
-					this.result.is_correct = is_correct;
+					if (obj.history_obj !== null && obj.history_obj.hasOwnProperty('is_correct')) {
+						obj.history_obj.is_correct = is_correct;
+						obj.history_obj.load_all();
+					}
 				}
-				FUNC.findVueChild(this, "history").load_all();
 			},
 			course_table_history: function (is_correct, courseTableId) {
+				var obj = this;
 				var flag = this.currentView == "ct_history"
-					&& (typeof this.result.course_table_id != "undefined")
-					&& courseTableId == this.result.course_table_id;
+					&& (typeof obj.course_table_history_obj.course_table_id != "undefined")
+					&& courseTableId == obj.course_table_history_obj.course_table_id;
 				if (!flag) {
 					this.result = {
-						correct_map: CONST_MAP.history_answer_correct,
-						loading: true,
-						course_info: null,
-						is_correct: null,
-						course_table_id: courseTableId,
-						execs: null,
-						quiz_obj: {},
-						ct_info: null,
-						error1: "",
-						error2: ""
+						call: function (ob) {
+							obj.course_table_history_obj = ob;
+							ob.course_table_id = courseTableId;
+							ob.init();
+							ob.set_correct(+is_correct);
+						}
 					};
 					this.currentView = "ct_history";
+				} else {
+					obj.course_table_history_obj.set_correct(+is_correct);
 				}
-				var child = FUNC.findVueChild(this, "ct_history");
-				if (!flag) {
-					child.init();
-				}
-				child.set_correct(+is_correct);
 			},
 			open_test: function (id) {
+				var obj = this;
 				if (this.currentView != "open_test") {
 					this.result = {
-						error: '',
-						warning: '',
-						test_obj: null,
-						course_search: {
-							is_init: true,
-							search: '',
-							title: '搜索课程的名称',
-							course: -1,
-							courseName: "",
-							error: "",
-							course_list_empty: false,
-							course_list: [],
-							callback: null
+						call: function (ob) {
+							obj.open_test_obj = ob;
+							ob.course_search.init_call = (function (open_test) {
+								return function (search_obj) {
+									open_test.course_search_obj = search_obj;
+									if (id != "") {
+										open_test.init_search(id);
+									}
+								};
+							})(ob);
+							ob.search(id);
 						}
 					};
 					this.currentView = "open_test";
+				} else {
+					if (id > 0 && id != obj.open_test_obj.course_search.course) {
+						obj.open_test_obj.init_search(id);
+					}
+					obj.open_test_obj.search(id);
 				}
-				var child = FUNC.findVueChild(this, "open_test");
-				if (id > 0 && id != this.result.course_search.course) {
-					child.init_search(id);
-				}
-				child.search(id);
 			},
 			quiz_history: function (is_correct) {
 				this.currentView = "quiz_history";

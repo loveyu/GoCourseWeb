@@ -44,6 +44,27 @@ _methods_ = {
 	}
 };//_methods_
 
-_props_ = {
-	data: Object
-};//_props_
+_props_ = ['data'];//_props_
+
+_data_ = function () {
+	return {
+		quiz_list: [],
+		teacher_id: Member.id,
+		error2: "",
+		course_search: {
+			is_init: true,
+			search: '',
+			title: '共享的测验',
+			course: -1,
+			courseName: "",
+			error: "",
+			course_list_empty: false,
+			course_list: [],
+			callback: null
+		}
+	};
+};//_data_
+
+_created_ = function () {
+	this.data.call(this);
+};//_created_
