@@ -1,19 +1,23 @@
 _methods_ = {
 	onSubmit: function (event) {
 		event.preventDefault();
-		this.status.success = false;
-		this.status.error = null;
+		this.data.status.success = false;
+		this.data.status.error = null;
 		var obj = {
-			user_description: this.user.description
+			user_description: this.data.user.description
 		};
 		var em_obj = this;
 		FUNC.ajax(CONFIG.api.teacher.update_info, "post", obj, function (data) {
 			if (data.status) {
-				em_obj.status.success = true;
+				em_obj.data.status.success = true;
 			} else {
-				em_obj.status.error = data.msg;
+				em_obj.data.status.error = data.msg;
 			}
 		});
 		return false;
 	}
 };//_methods_
+
+_props_ = {
+	data: Object
+};//_props_

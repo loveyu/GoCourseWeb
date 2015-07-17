@@ -24,3 +24,7 @@ _methods_ = {
 		this.search();
 	}
 };//_methods_
+
+_props_ = {
+	data: Object
+};//_props_

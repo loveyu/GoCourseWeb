@@ -1,21 +1,21 @@
-<p class="alert-danger alert" v-if="error">{{error}}</p>
-<div v-if="week_list.length>0">
+<p class="alert-danger alert" v-if="data.error">{{data.error}}</p>
+<div v-if="data.week_list.length>0">
 	<nav>
 		<ul class="pagination pagination-lg">
 			<li class="disabled"><a href="javascript:void(0)">周次</a></li>
-			<li v-repeat="week_list" v-class="$value==week_current?'active':''">
+			<li v-repeat="data.week_list" v-class="$value==week_current?'active':''">
 				<a href="#" v-on="click: setWeek($value, $event)">{{$value}}</a>
 			</li>
 		</ul>
 	</nav>
 </div>
-<div class="alert alert-warning" v-if="!has_course">
-	<p>本周没有任何课程, 第<strong>{{week_current}}</strong>周</p>
+<div class="alert alert-warning" v-if="!data.has_course">
+	<p>本周没有任何课程, 第<strong>{{data.week_current}}</strong>周</p>
 </div>
-<table v-if="has_course" class="table student-course-table">
+<table v-if="data.has_course" class="table student-course-table">
 	<thead>
 	<tr>
-		<th class="Weekly">第{{week_current}}周</th>
+		<th class="Weekly">第{{data.week_current}}周</th>
 		<th>星期一</th>
 		<th>星期二</th>
 		<th>星期三</th>
@@ -26,7 +26,7 @@
 	</tr>
 	</thead>
 	<tbody>
-	<tr v-repeat="week_table">
+	<tr v-repeat="data.week_table">
 		<td>{{$index| course_week_index_to_time}}<br>{{$index+1}}</td>
 		<td v-repeat="$value">
 			<div v-repeat="$value">

@@ -1,6 +1,6 @@
 <h3>添加课表</h3>
-<p class="alert-danger alert" v-if="error">{{error}}</p>
-<p class="alert-warning alert" v-if="warning">{{warning}}</p>
+<p class="alert-danger alert" v-if="data.error">{{data.error}}</p>
+<p class="alert-warning alert" v-if="data.warning">{{data.warning}}</p>
 <div class="course-table">
 	<table class="table">
 		<thead>
@@ -14,7 +14,7 @@
 			<th>地点</th>
 		</tr>
 		</thead>
-		<tbody v-repeat="list">
+		<tbody v-repeat="data.list">
 		<tr v-repeat="locations">
 			<td v-if="$index==0" rowspan="{{locations.length}}">
 				<button v-if="selected>-1" v-on="click:onAdd(course.courseTableID)"
@@ -22,7 +22,9 @@
 				        class="btn">{{selected==0?'添加':'已选'}}
 				</button>
 			</td>
-			<td v-if="$index==0" rowspan="{{locations.length}}">{{course.courseName}}</td>
+			<td v-if="$index==0" rowspan="{{locations.length}}">
+				<a href="#/course_table/{{courseTableID}}">{{course.courseName}}</a>
+			</td>
 			<td v-if="$index==0" rowspan="{{locations.length}}">
 				{{course.teacherName}}
 			</td>

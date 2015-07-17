@@ -187,3 +187,7 @@ _methods_ = {
 		this.initQuiz();
 	}
 };//_methods_
+
+_props_ = {
+	data: Object
+};//_props_

@@ -12,7 +12,8 @@ Page.course_student = function () {
 					my: {url: '#/', name: '我的课表', active: false},
 					add: {url: '#/add', name: '添加课程', active: false},
 					course_table: {url: '', name: '课程详情', active: false}
-				}
+				},
+				childMap: {}
 			},
 			methods: {
 				m_my: function () {
@@ -23,7 +24,10 @@ Page.course_student = function () {
 						has_course: false,
 						week_current: 0,
 						week_table: [],
-						week_list: []
+						week_list: [],
+						call: function (_obj) {
+							_obj.paresTable();
+						}
 					};
 					FUNC.ajax(CONFIG.api.student.my_course, "get", {}, function (result) {
 						if (result.status) {
@@ -33,10 +37,6 @@ Page.course_student = function () {
 							obj.result.error = result.msg;
 						}
 						obj.currentView = "my";
-						var my_obj = FUNC.findVueChild(obj, "my");
-						if (my_obj != null) {
-							my_obj.paresTable();
-						}
 					});
 				},
 				m_add: function () {
@@ -55,15 +55,18 @@ Page.course_student = function () {
 							var ids = [];
 							var data = result.data.list;
 							for (var i in data) {
-								data[i]["selected"] = -1;
-								ids.push(data[i].course.courseTableID);
+								if (data.hasOwnProperty(i)) {
+									data[i]["selected"] = -1;
+									ids.push(data[i].course.courseTableID);
+								}
 							}
 							obj.result.list = data;
 							if (ids.length > 0) {
 								FUNC.ajax(CONFIG.api.course_table.student_selected, "get", {ids: ids.join(",")}, function (result) {
 									if (result.status) {
 										for (var i in obj.result.list) {
-											if (result.data.hasOwnProperty(obj.result.list[i].course.courseTableID)) {
+											if (obj.result.list.hasOwnProperty(i) &&
+												result.data.hasOwnProperty(obj.result.list[i].course.courseTableID)) {
 												obj.result.list[i].selected = result.data[obj.result.list[i].course.courseTableID];
 											}
 										}
@@ -81,9 +84,17 @@ Page.course_student = function () {
 					});
 				},
 				m_course_table: function (id) {
-					this.result = {error: null, loading: true, table: null};
-					this.currentView = "course_table";
-					FUNC.findVueChild(this, "course_table").load(id);
+					this.result = {
+						error: null, loading: true, table: null, review: null,
+						call: function (_obj) {
+							_obj.load(id)
+						}
+					};
+					//强制更新
+					this.currentView = "";
+					Vue.nextTick(function () {
+						this.currentView = 'course_table'
+					}.bind(this));
 				},
 				set_error: function (msg) {
 					FUNC.alertOnElem(this.$el, msg);
@@ -117,7 +128,7 @@ Page.course_student = function () {
 	};
 	var router = Router(routes);//初始化一个路由器
 	var login_call = function (arg) {
-		if (Member.user_type != "student") {
+		if (!Member.is_student()) {
 			FUNC.alertOnElem(cs_vm.$el, "非法访问");
 			return arg;
 		}
@@ -134,5 +145,4 @@ Page.course_student = function () {
 		login_call();
 	}
 	return cs_vm;
-}
-;
+};

@@ -5,8 +5,8 @@ get_header("教师测验管理");
 
 <div id="ManagerQuiz">
 	<div class="container">
-		<div v-with="menus:menus" v-component="base-page-menu"></div>
-		<div class="content" v-with="result" v-component="{{currentView}}"></div>
+		<component menus="{{menus}}" is="base-page-menu"></component>
+		<component class="content" data="{{result}}" is="{{currentView}}"></component>
 	</div>
 </div>
 

@@ -14,7 +14,7 @@
 		</thead>
 		<tbody v-repeat="list">
 		<tr>
-			<td>{{course.courseName}}</td>
+			<td><a target="_blank" href="course_teacher.html#/course_table/{{course.courseTableID}}">{{course.courseName}}</a></td>
 			<td>
 				<span v-repeat="classes_info" class="btn-block">{{className}}</span>
 			</td>

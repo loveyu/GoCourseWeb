@@ -48,12 +48,7 @@ Page.home = function () {
 				home_vm.currentView = "edit_avatar";
 			},
 			m_edit_password: function () {
-				home_vm.result = {
-					old: "",
-					new_pwd: "",
-					error: null,
-					success: false
-				};
+				home_vm.result = {};
 				home_vm.currentView = "edit_password";
 			},
 			m_edit_profile_student: function (result) {

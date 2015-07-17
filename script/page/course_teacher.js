@@ -211,7 +211,7 @@ Page.course_teacher = function () {
 				}
 			},
 			m_course_table: function (id) {
-				this.result = {error: null, loading: true, table: null};
+				this.result = {error: null, loading: true, table: null, review: null};
 				this.currentView = "course_table";
 				FUNC.findVueChild(this, "course_table").load(id);
 			}

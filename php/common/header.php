@@ -40,18 +40,15 @@
 					</li>
 				</ul>
 				<ul v-if="!login_status" class="nav navbar-nav navbar-right">
-					<li v-repeat="nav_right" v-class="active?'active':''"><a v-attr="title:title" href="{{link}}">{{name}}</a>
-					</li>
+					<li v-repeat="nav_right" v-class="active?'active':''"><a v-attr="title:title" href="{{link}}">{{name}}</a></li>
 				</ul>
 				<ul v-if="login_status" class="nav navbar-nav navbar-right">
 					<li class="dropdown">
-						<a href="{{home_url}}" class="dropdown-toggle profile-info" data-toggle="dropdown" role="button"
-						   aria-expanded="false">
-							<img class="user-avatar" v-attr="src: avatar" alt="avatar">{{name}} <span
-								class="caret"></span></a>
+						<a href="{{home_url}}" class="dropdown-toggle profile-info" data-toggle="dropdown" role="button" aria-expanded="false">
+							<img class="user-avatar" v-attr="src: avatar" alt="avatar">{{name}} <span class="caret"></span>
+						</a>
 						<ul class="dropdown-menu" role="menu">
-							<li v-repeat="nav_private" v-class="active?'active':''"><a v-attr="title:title"
-							                                                           href="{{link}}">{{name}}</a>
+							<li v-repeat="nav_private" v-class="active?'active':''"><a v-attr="title:title" href="{{link}}">{{name}}</a>
 							<li class="divider"></li>
 							<li><a href="#" v-on="click: logout">退出登录</a></li>
 						</ul>

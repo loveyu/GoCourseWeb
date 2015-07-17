@@ -33,3 +33,11 @@ _methods_ = {
 		return false;
 	}
 };//_methods_
+
+_props_ = {
+	data: Object,
+	old: "",
+	new_pwd: "",
+	error: null,
+	success: false
+};//_props_

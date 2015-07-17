@@ -1,3 +1,3 @@
 _props_ = {
-	data: Object
+	item: Object
 };//_props_

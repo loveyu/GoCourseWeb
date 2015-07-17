@@ -35,3 +35,7 @@ _methods_ = {
 		});
 	}
 };//_methods_
+
+_props_ = {
+	data: Object
+};//_props_

@@ -16,3 +16,7 @@ _methods_ = {
 		return rt;
 	}
 };//_methods_
+
+_props_ = {
+	data: Object
+};//_props_

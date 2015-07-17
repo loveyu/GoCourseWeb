@@ -70,7 +70,7 @@ var CONFIG = {
 			get: "course_table/get",
 			search: "course_table/search",
 			student_selected: "course_table/student_selected",
-			student_select_add: "course_table/student_select_add",
+			student_select_add: "course_table/student_select_add"
 		},
 		quiz_teacher: {
 			course_list: "quiz_teacher/course_list",
@@ -105,6 +105,9 @@ var CONFIG = {
 		},
 		task: {
 			task_set_detail: "task/task_set_detail"
+		},
+		review: {
+			list: 'review/list'
 		}
 	},
 	current_week: {	//当前的周次，该数据会依据服务器状态而更新
@@ -137,6 +140,12 @@ var Member = {
 	login_status: false,
 	id: 0,
 	user_type: 'student',
-	data: null
+	data: null,
+	is_student: function () {
+		return this.user_type == 'student';
+	},
+	is_teacher: function () {
+		return this.user_type == 'teacher';
+	}
 };
 var Page = {};//用于保存完整的页面调用类

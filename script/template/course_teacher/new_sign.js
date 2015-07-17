@@ -33,3 +33,7 @@ _methods_ = {
 		return false;
 	}
 };//_methods_
+
+_props_ = {
+	data: Object
+};//_props_

@@ -28,6 +28,7 @@
 
 /* 主要的容器 */
 .main-container {
+    padding-bottom: 10px;
 }
 
 #Footer {

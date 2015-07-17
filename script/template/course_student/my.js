@@ -5,20 +5,20 @@ _methods_ = {
 	paresTable: function () {
 		var tmp = {};
 		var table = [];
-		for (var i in this.list) {
-			for (var j in this.list[i].location) {
-				var arr = this.list[i].location[j].week.split(",");
+		for (var i in this.data.list) {
+			for (var j in this.data.list[i].location) {
+				var arr = this.data.list[i].location[j].week.split(",");
 				for (var k in arr) {
 					arr[k] = +arr[k];
 					if (!tmp.hasOwnProperty(arr[k])) {
 						tmp[arr[k]] = arr[k];
-						table.push(arr[k])
+						table.push(arr[k]);
 					}
 				}
-				this.list[i].location[j].week = arr;
+				this.data.list[i].location[j].week = arr;
 			}
 		}
-		this.week_list = table.sort(function (a, b) {
+		this.data.week_list = table.sort(function (a, b) {
 			return a - b;
 		});
 		this.setWeek(CONFIG.current_week.week, null);
@@ -32,10 +32,10 @@ _methods_ = {
 		if (event != null && typeof event == "object") {
 			event.preventDefault();
 		}
-		if (this.week_current == week) {
+		if (this.data.week_current == week) {
 			return;
 		}
-		this.has_course = false;
+		this.data.has_course = false;
 		var table = [], arr = [];
 		var i, j;
 		for (i = 0; i < 6; i++) {
@@ -46,23 +46,31 @@ _methods_ = {
 			table.push(arr);
 		}
 		var flag = false;
-		for (i in this.list) {
-			for (j in this.list[i].location) {
-				if (FUNC.inArray(week, this.list[i].location[j].week)) {
-					var week_day = this.list[i].location[j].day;
-					var slot = this.list[i].location[j].slot;
-					var data = FUNC.clone(this.list[i]);
-					data.location = this.list[i].location[j].location;
+		for (i in this.data.list) {
+			for (j in this.data.list[i].location) {
+				if (FUNC.inArray(week, this.data.list[i].location[j].week)) {
+					var week_day = this.data.list[i].location[j].day;
+					var slot = this.data.list[i].location[j].slot;
+					var data = FUNC.clone(this.data.list[i]);
+					data.location = this.data.list[i].location[j].location;
 					table[slot - 1][week_day - 1].push(data);
 					flag = true;
 				}
 			}
 		}
-		this.week_current = week;//始终设置当前周次
+		this.data.week_current = week;//始终设置当前周次
 		if (flag) {
-			this.week_table = table;
-			this.has_course = true;
+			this.data.week_table = table;
+			this.data.has_course = true;
 		}
 		return false;
 	}
 };//_methods_
+
+_props_ = {
+	data: Object
+};//_props_
+
+_created_ = function () {
+	this.data.call(this);
+};//_created_

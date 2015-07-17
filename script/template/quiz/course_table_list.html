@@ -13,7 +13,7 @@
 		</thead>
 		<tbody v-repeat="course_table">
 		<tr>
-			<td>{{course.courseName}}</td>
+			<td><a target="_blank" href="course_student.html#/course_table/{{course.courseTableID}}">{{course.courseName}}</a></td>
 			<td>{{course.teacherName}}</td>
 			<td>
 				<a class="btn btn-success btn-sm" href="#/do/{{course.courseTableID}}">做题</a>

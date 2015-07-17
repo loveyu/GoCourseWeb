@@ -1,10 +1,10 @@
 <div>
 	<h4>当前头像:</h4>
-	<img class="img-circle img-responsive" v-attr="src: now_avatar">
+	<img class="img-circle img-responsive" v-attr="src: data.now_avatar">
 	<h4>上传新头像:</h4>
 
-	<div class="alert-danger alert" v-if="error">{{error}}</div>
-	<div class="alert-success alert" v-if="success">头像更换成功</div>
+	<div class="alert-danger alert" v-if="data.error">{{data.error}}</div>
+	<div class="alert-success alert" v-if="data.success">头像更换成功</div>
 	<form method="post" v-on="submit: onSubmitAvatar">
 		<div class="form-group">
 			<label for="InputFile">选择图片</label>
@@ -12,10 +12,10 @@
 
 			<p class="help-block">从这里选择你要上传的图片，最大2MB，将会默认居中裁剪为200x200的方形。</p>
 
-			<div class="progress" v-if="percentComplete>0">
-				<div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="{{percentComplete}}"
-				     aria-valuemin="0" aria-valuemax="100" style="width: {{percentComplete}}%">
-					<span v-if="percentComplete==100">上传结束，处理中</span>
+			<div class="progress" v-if="data.percentComplete>0">
+				<div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="{{data.percentComplete}}"
+				     aria-valuemin="0" aria-valuemax="100" style="width: {{data.percentComplete}}%">
+					<span v-if="data.percentComplete==100">上传结束，处理中</span>
 				</div>
 			</div>
 		</div>
