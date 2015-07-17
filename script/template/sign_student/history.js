@@ -32,3 +32,18 @@ _methods_ = {
 
 	}
 };//_methods_
+
+_props_ = ['data'];//_props_
+
+_data_ = function () {
+	return {
+		loading: true,
+		error: null,
+		list: null,
+		now_time: Math.floor((new Date()).getTime() / 1000)
+	};
+};//_data_
+
+_created_ = function () {
+	this.data.call(this);
+};//_created_

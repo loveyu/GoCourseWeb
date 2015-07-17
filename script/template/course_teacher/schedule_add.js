@@ -3,9 +3,9 @@ _methods_ = {
 		var obj = this;
 		FUNC.ajax(CONFIG.api.college.get_departments, "get", {college_id: college_id}, function (result) {
 			if (result.status) {
-				obj.data.departments = FUNC.mapToObjArr(result.data.departments, "id", "name");
+				obj.data.data.departments = FUNC.mapToObjArr(result.data.departments, "id", "name");
 			} else {
-				obj.data.departments = [];
+				obj.data.data.departments = [];
 			}
 		});
 	},
@@ -75,3 +75,28 @@ _methods_ = {
 _props_ = {
 	data: Object
 };//_props_
+
+_created_ = function(){
+	this.data.call(this);
+};//_created_
+
+_data_ = function () {
+	return {
+		error: "",
+		success: "",
+		form: {
+			department: "",
+			name: "",
+			openYear: "",
+			openTerm: "",
+			fromWeek: "",
+			endWeek: "",
+			requirement: "",
+			content: ""
+		},
+		courseName: {
+			list: null,
+			error: false
+		}
+	};
+};//_data_

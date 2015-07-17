@@ -4,14 +4,14 @@
 <form v-on="submit:submitScheduleAdd">
 	<div class="form-inline form-group">
 		<select class="form-control" disabled>
-			<option>{{data.uniNickname}}</option>
+			<option>{{data.data.uniNickname}}</option>
 		</select>
 		<select class="form-control" disabled>
-			<option>{{data.collegeName}}</option>
+			<option>{{data.data.collegeName}}</option>
 		</select>
 		<select class="form-control" name="dept" v-model="form.department">
 			<option value="">--请选择--</option>
-			<option v-repeat="data.departments" value="{{id}}">{{name}}</option>
+			<option v-repeat="data.data.departments" value="{{id}}">{{name}}</option>
 		</select>
 	</div>
 	<div class="form-inline form-group">
@@ -25,13 +25,13 @@
 		<div class="input-group">
 			<span class="input-group-addon">开学年份</span>
 			<select class="form-control" name="openYear" v-model="form.openYear">
-				<option v-repeat="data.openYear">{{year}}</option>
+				<option v-repeat="data.data.openYear">{{year}}</option>
 			</select>
 		</div>
 		<div class="input-group">
 			<span class="input-group-addon">学期</span>
 			<select class="form-control" name="openTerm" v-model="form.openTerm">
-				<option v-repeat="data.openTerm" value="{{id}}">{{term}}</option>
+				<option v-repeat="data.data.openTerm" value="{{id}}">{{term}}</option>
 			</select>
 		</div>
 	</div>

@@ -13,7 +13,7 @@
 			<th>操作</th>
 		</tr>
 		</thead>
-		<tbody v-repeat="list">
+		<tbody v-repeat="data.list">
 		<tr v-repeat="locations">
 			<td class="{{locations[$index] | course_location_check_today today none}}"></td>
 			<td v-if="$index==0" rowspan="{{locations.length}}">

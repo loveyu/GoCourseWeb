@@ -5,9 +5,9 @@ _methods_ = {
 	set_course_info: function () {
 		var obj = this;
 		obj.form.name = obj.course_data.courseName +
-		"(" + obj.course_data.teacherName + ")"
-		+ "，第" + obj.week.week + "周上课签到，" +
-		"星期" + CONST_MAP.weekMap[(new Date()).getDay()];
+			"(" + obj.course_data.teacherName + ")"
+			+ "，第" + obj.week.week + "周上课签到，" +
+			"星期" + CONST_MAP.weekMap[(new Date()).getDay()];
 	},
 	onSubmit: function (event) {
 		event.preventDefault();
@@ -37,3 +37,23 @@ _methods_ = {
 _props_ = {
 	data: Object
 };//_props_
+
+_data_ = function () {
+	return {
+		class_info: null,
+		course_data: null,
+		week: null,
+		error: null,
+		result: null,
+		form: {
+			course_table_id: -1,
+			name: '',
+			detail: '',
+			time: 45
+		}
+	};
+};//_data_
+
+_created_ = function () {
+	this.data.call(this);
+};//_created_

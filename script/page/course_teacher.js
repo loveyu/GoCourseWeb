@@ -29,10 +29,7 @@ Page.course_teacher = function () {
 		methods: {
 			m_my: function () {
 				var obj = this;
-				obj.result = {
-					error: "",
-					list: []
-				};
+				obj.result = {list: []};
 				FUNC.ajax(CONFIG.api.course_table.search, "get", {
 					search_type: "teacher",
 					set_class_info: 1,
@@ -49,13 +46,7 @@ Page.course_teacher = function () {
 			},
 			m_course_list: function () {
 				var obj = this;
-				obj.result = {
-					error: "",
-					form: {
-						name: ""
-					},
-					course_list: {}
-				};
+				obj.result = {course_list: {}};
 				FUNC.ajax(CONFIG.api.course.list, "get", {}, function (result) {
 					if (result.status) {
 						obj.result.course_list = FUNC.mapToObjArr(result.data, "id", "name");
@@ -70,32 +61,18 @@ Page.course_teacher = function () {
 				FUNC.ajax(CONFIG.api.teacher.info, "get", {}, function (result) {
 					if (result.status) {
 						obj.result = {
-							error: "",
-							success: "",
-							form: {
-								department: "",
-								name: "",
-								openYear: "",
-								openTerm: "",
-								fromWeek: "",
-								endWeek: "",
-								requirement: "",
-								content: ""
-							},
 							data: FUNC.objMerge(result.data.college, {
 								departments: [],
 								openYear: year_out(),
 								openTerm: [{id: 0, term: "春季"}, {id: 1, term: "秋季"}]
 							}),
-							courseName: {
-								list: null,
-								error: false
+							call: function (_ob) {
+								_ob.form.openYear = new Date().getFullYear();
+								_ob.form.openTerm = 0;
+								_ob.setDept(result.data.college.collegeID);
 							}
 						};
 						obj.currentView = "schedule_add";
-						obj.result.form.openYear = new Date().getFullYear();
-						obj.result.form.openTerm = 0;
-						FUNC.findVueChild(obj, "schedule_add").setDept(result.data.college.collegeID);
 					} else {
 						obj.m_load_error(result.msg);
 					}
@@ -126,10 +103,12 @@ Page.course_teacher = function () {
 								location: ""
 							},
 							location: [],
-							college: FUNC.objMerge(result.data.college, {departments: [], classes: [], years: []})
+							college: FUNC.objMerge(result.data.college, {departments: [], classes: [], years: []}),
+							call: function (_ob) {
+								_ob.setDept(result.data.college.collegeID);
+							}
 						};
 						obj.currentView = "add";
-						FUNC.findVueChild(obj, "add").setDept(result.data.college.collegeID);
 					} else {
 						obj.m_load_error(result.msg);
 					}
@@ -140,30 +119,22 @@ Page.course_teacher = function () {
 				FUNC.ajax(CONFIG.api.teacher.info, "get", {}, function (result) {
 					if (result.status) {
 						obj.result = {
-							error: "",
-							success: "",
-							form: {
-								department: "",
-								course_name: "",
-								course_id: "",
-								year: "",
-								status: "",
-								term: 0
-							},
 							data: FUNC.objMerge(result.data.college, {
 								departments: [],
 								year: year_out(),
 								term: CONST_MAP.course_term,
 								status: CONST_MAP.course_status
 							}),
-							result: null
+							call: null
 						};
 						FUNC.ajax(CONFIG.api.college.get_departments, "get", {college_id: result.data.college.collegeID}, function (result) {
 							obj.result.data.departments = result.status ? FUNC.mapToObjArr(result.data.departments, "id", "name") : [];
+							obj.result.call = function (_ob) {
+								_ob.form.year = new Date().getFullYear();
+								_ob.form.term = -1;
+								_ob.form.status = -1;
+							};
 							obj.currentView = "schedule_search";
-							obj.result.form.year = new Date().getFullYear();
-							obj.result.form.term = -1;
-							obj.result.form.status = -1;
 						});
 					} else {
 						obj.m_load_error(result.msg);
@@ -175,20 +146,15 @@ Page.course_teacher = function () {
 				FUNC.ajax(CONFIG.api.sign.prepare, "post", {course_table_id: courseTableId}, function (result) {
 					if (result.status) {
 						obj.result = {
-							course_data: result.data.course,
-							week: result.data.week,
-							error: null,
-							result: null,
-							class_info: result.data.classInfo,
-							form: {
-								course_table_id: courseTableId,
-								name: '',
-								detail: '',
-								time: 45
+							call: function (_ob) {
+								_ob.class_info = result.data.classInfo;
+								_ob.course_data = result.data.course;
+								_ob.week = result.data.week;
+								_ob.form.course_table_id = courseTableId;
+								_ob.set_course_info();
 							}
 						};
 						obj.currentView = "new_sign";
-						FUNC.findVueChild(obj, "new_sign").set_course_info();
 					} else {
 						obj.m_load_error(result);
 					}
@@ -211,9 +177,16 @@ Page.course_teacher = function () {
 				}
 			},
 			m_course_table: function (id) {
-				this.result = {error: null, loading: true, table: null, review: null};
-				this.currentView = "course_table";
-				FUNC.findVueChild(this, "course_table").load(id);
+				this.result = {
+					error: null, loading: true, table: null, review: null, call: function (_ob) {
+						_ob.load(id);
+					}
+				};
+				//强制更新
+				this.currentView = "";
+				Vue.nextTick(function () {
+					this.currentView = 'course_table'
+				}.bind(this));
 			}
 		},
 		components: {

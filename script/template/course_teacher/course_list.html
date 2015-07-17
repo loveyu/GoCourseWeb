@@ -10,6 +10,6 @@
 		<button type="submit" class="btn btn-primary">添加</button>
 	</div>
 </form>
-<div v-if="course_list.length>0">
-	<button class="btn btn-info" v-repeat="course_list" v-on="click: courseClick" data-value="{{id}}">{{name}}</button>
+<div v-if="data.course_list.length>0">
+	<button class="btn btn-info" v-repeat="data.course_list" v-on="click: courseClick" data-value="{{id}}">{{name}}</button>
 </div>

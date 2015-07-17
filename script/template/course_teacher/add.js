@@ -3,37 +3,37 @@ _methods_ = {
 		var obj = this;
 		FUNC.ajax(CONFIG.api.college.get_departments, "get", {college_id: college_id}, function (result) {
 			if (result.status) {
-				obj.college.departments = FUNC.mapToObjArr(result.data.departments, "id", "name");
+				obj.data.college.departments = FUNC.mapToObjArr(result.data.departments, "id", "name");
 			} else {
-				obj.college.departments = [];
+				obj.data.college.departments = [];
 			}
 		});
 	},
 	departmentChange: function (event) {
 		var obj = this;
-		obj.college.years = [];
-		obj.college.classes = [];
-		obj.form.classes = [];
-		FUNC.ajax(CONFIG.api.college.get_class_year, "get", {dept_id: obj.form.department}, function (result) {
+		obj.data.college.years = [];
+		obj.data.college.classes = [];
+		obj.data.form.classes = [];
+		FUNC.ajax(CONFIG.api.college.get_class_year, "get", {dept_id: obj.data.form.department}, function (result) {
 			if (result.status) {
-				obj.college.years = FUNC.arrToObjArr(result.data.class_year, "year");
+				obj.data.college.years = FUNC.arrToObjArr(result.data.class_year, "year");
 			} else {
-				obj.college.years = [];
+				obj.data.college.years = [];
 			}
 		});
 	},
 	yearChange: function (event) {
 		var obj = this;
-		obj.college.classes = [];
-		obj.form.classes = [];
+		obj.data.college.classes = [];
+		obj.data.form.classes = [];
 		FUNC.ajax(CONFIG.api.college.get_classes, "get", {
-			dept_id: obj.form.department,
-			year: obj.form.year
+			dept_id: obj.data.form.department,
+			year: obj.data.form.year
 		}, function (result) {
 			if (result.status) {
-				obj.college.classes = FUNC.mapToObjArr(result.data.classes, "id", "name");
+				obj.data.college.classes = FUNC.mapToObjArr(result.data.classes, "id", "name");
 			} else {
-				obj.college.classes = [];
+				obj.data.college.classes = [];
 			}
 		});
 	},
@@ -41,47 +41,47 @@ _methods_ = {
 		var obj = jQuery(event.target);
 		var val = obj.val();
 		if ((obj.is(":checked"))) {
-			this.form.classes.push(val);
+			this.data.form.classes.push(val);
 		} else {
 			var new_c = [];
-			for (var i in this.form.classes) {
-				if (this.form.classes[i] != val) {
-					new_c.push(this.form.classes[i]);
+			for (var i in this.data.form.classes) {
+				if (this.data.form.classes[i] != val) {
+					new_c.push(this.data.form.classes[i]);
 				}
 			}
-			this.form.classes = new_c;
+			this.data.form.classes = new_c;
 		}
 	},
 	onSearchName: function (event) {
 		event.preventDefault();
 		var obj = this;
-		obj.error = "";
-		if (obj.form.department == "") {
-			obj.error = "必须选择专业后进行查询课程";
+		obj.data.error = "";
+		if (obj.data.form.department == "") {
+			obj.data.error = "必须选择专业后进行查询课程";
 			return false;
 		}
-		if (obj.search.name == "") {
-			obj.error = "必须指定一个课程名称进行搜索";
+		if (obj.data.search.name == "") {
+			obj.data.error = "必须指定一个课程名称进行搜索";
 			return false;
 		}
 		FUNC.ajax(CONFIG.api.schedule.search, "get", {
-			department: obj.form.department,
-			course_name: obj.search.name,
+			department: obj.data.form.department,
+			course_name: obj.data.search.name,
 			year: new Date().getFullYear(),
 			status: 0,
 			detail: 2
 		}, function (result) {
 			if (result.status) {
-				obj.data.course_name = result.data.result;
+				obj.data.data.course_name = result.data.result;
 			} else {
-				obj.error = result.msg;
+				obj.data.error = result.msg;
 			}
 		});
 		return false;
 	},
 	addLocation: function (event) {
 		var obj = this;
-		obj.location.push({
+		obj.data.location.push({
 			location: '',
 			slot: 1,
 			day: 1,
@@ -95,39 +95,39 @@ _methods_ = {
 	removeLocation: function (index) {
 		var obj = this;
 		var new_l = [];
-		for (var i in obj.location) {
+		for (var i in obj.data.location) {
 			if (i == index)continue;
-			new_l.push(obj.location[i])
+			new_l.push(obj.data.location[i])
 		}
-		obj.location = new_l;
+		obj.data.location = new_l;
 	},
 	onSubmit: function (event) {
 		event.preventDefault();
 		var obj = this;
-		obj.form.location = "";
-		obj.error = "";
-		if (obj.form.department == "") {
-			obj.error = "请选择一个专业";
+		obj.data.form.location = "";
+		obj.data.error = "";
+		if (obj.data.form.department == "") {
+			obj.data.error = "请选择一个专业";
 			return false;
 		}
-		if (obj.form.year == "") {
-			obj.error = "必须选择合适的入学年份";
+		if (obj.data.form.year == "") {
+			obj.data.error = "必须选择合适的入学年份";
 			return false;
 		}
-		if (obj.form.classes.length == 0) {
-			obj.error = "没有选择一个合适的班级";
+		if (obj.data.form.classes.length == 0) {
+			obj.data.error = "没有选择一个合适的班级";
 			return false;
 		}
-		if (obj.form.scheduleID == "") {
-			obj.error = "必须查询一个课程添加到当前课程表";
+		if (obj.data.form.scheduleID == "") {
+			obj.data.error = "必须查询一个课程添加到当前课程表";
 			return false;
 		}
-		if (obj.location.length < 1) {
-			obj.error = "至少有一个上课地点";
+		if (obj.data.location.length < 1) {
+			obj.data.error = "至少有一个上课地点";
 			return false;
 		}
-		for (var i in obj.location) {
-			var x = obj.location[i];
+		for (var i in obj.data.location) {
+			var x = obj.data.location[i];
 			var x_n = "第" + (parseInt(i) + 1) + "个";
 			if (x.location == "") {
 				obj.error = x_n + "上课地点不能为空";
@@ -146,14 +146,14 @@ _methods_ = {
 				return false;
 			}
 		}
-		obj.form.location = JSON.stringify(obj.location);
+		obj.data.form.location = JSON.stringify(obj.data.location);
 		//var tmp = FUNC.clone(obj.form);
 		//tmp.classes = tmp.classes.join(",");
-		FUNC.ajax(CONFIG.api.course_table.add, "post", obj.form, function (result) {
+		FUNC.ajax(CONFIG.api.course_table.add, "post", obj.data.form, function (result) {
 			if (result.status) {
-				obj.error = "";
-				obj.success = "成功添加该课程";
-				obj.form = {
+				obj.data.error = "";
+				obj.data.success = "成功添加该课程";
+				obj.data.form = {
 					department: "",
 					year: "",
 					notice: "",
@@ -161,14 +161,14 @@ _methods_ = {
 					classes: [],
 					location: ""
 				};
-				obj.location = [];
+				obj.data.location = [];
 				setTimeout(function (obj) {
 					if (obj != null && obj.hasOwnProperty("success")) {
-						obj.success = "";
+						obj.data.success = "";
 					}
 				}, 5000)
 			} else {
-				obj.error = result.msg;
+				obj.data.error = result.msg;
 			}
 		});
 	}
@@ -177,3 +177,7 @@ _methods_ = {
 _props_ = {
 	data: Object
 };//_props_
+
+_created_ = function () {
+	this.data.call(this);
+};//_created_

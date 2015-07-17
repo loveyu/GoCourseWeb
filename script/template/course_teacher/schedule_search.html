@@ -4,32 +4,32 @@
 <form v-on="submit: onSearch">
 	<div class="form-inline form-group">
 		<select class="form-control" disabled>
-			<option>{{data.uniNickname}}</option>
+			<option>{{data.data.uniNickname}}</option>
 		</select>
 		<select class="form-control" disabled>
-			<option>{{data.collegeName}}</option>
+			<option>{{data.data.collegeName}}</option>
 		</select>
 		<select class="form-control" name="dept" v-model="form.department">
 			<option value="">--请选择--</option>
-			<option v-repeat="data.departments" value="{{id}}">{{name}}</option>
+			<option v-repeat="data.data.departments" value="{{id}}">{{name}}</option>
 		</select>
 
 		<div class="input-group">
 			<span class="input-group-addon">年份</span>
 			<select class="form-control" name="year" v-model="form.year">
-				<option v-repeat="data.year">{{year}}</option>
+				<option v-repeat="data.data.year">{{year}}</option>
 			</select>
 		</div>
 		<div class="input-group">
 			<span class="input-group-addon">学期</span>
 			<select class="form-control" name="term" v-model="form.term">
-				<option v-repeat="data.term" value="{{id}}">{{term}}</option>
+				<option v-repeat="data.data.term" value="{{id}}">{{term}}</option>
 			</select>
 		</div>
 		<div class="input-group">
 			<span class="input-group-addon">状态</span>
 			<select class="form-control" name="openTerm" v-model="form.status">
-				<option v-repeat="data.status" value="{{id}}">{{status}}</option>
+				<option v-repeat="data.data.status" value="{{id}}">{{status}}</option>
 			</select>
 		</div>
 	</div>

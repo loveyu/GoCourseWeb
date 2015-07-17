@@ -57,7 +57,7 @@ function get_template($path)
 	}
 	if (is_file($path . ".js")) {
 		$content = file_get_contents($path . ".js");
-		foreach (['methods', 'paramAttributes', 'data', 'props', 'created'] as $v) {
+		foreach (['methods', 'paramAttributes', 'data', 'props', 'created', 'data'] as $v) {
 			$match = [];
 			if (preg_match("/_{$v}_[ ]*=[ ]*([\\s\\S]+?)[;]*\\/\\/_{$v}_/", $content, $match)) {
 				if (isset($match[1])) {

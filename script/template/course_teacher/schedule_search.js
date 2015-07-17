@@ -34,3 +34,23 @@ _methods_ = {
 _props_ = {
 	data: Object
 };//_props_
+
+_created_ = function () {
+	this.data.call(this);
+};//_created_
+
+_data_ = function () {
+	return {
+		error: "",
+		success: "",
+		form: {
+			department: "",
+			course_name: "",
+			course_id: "",
+			year: "",
+			status: "",
+			term: 0
+		},
+		result: null
+	};
+};//_data_

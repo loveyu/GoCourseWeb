@@ -14,33 +14,27 @@ Page.sign_student = function () {
 		methods: {
 			history: function () {
 				this.result = {
-					loading: true,
-					error: null,
-					list: null,
-					now_time: Math.floor((new Date()).getTime() / 1000)
+					call: function (_ob) {
+						_ob.load();
+					}
 				};
 				this.currentView = "history";
-				FUNC.findVueChild(this, "history").load();
 			},
 			new_sign: function () {
 				this.result = {
-					loading: true,
-					error: null,
-					list: null,
-					success_obj: null
+					call: function (_ob) {
+						_ob.load();
+					}
 				};
 				this.currentView = "new_sign";
-				FUNC.findVueChild(this, "new_sign").load();
 			},
 			sign_detail: function (id) {
 				this.result = {
-					loading: true,
-					error: null,
-					sign: null,
-					now_time: Math.floor((new Date()).getTime() / 1000)
+					call: function (_ob) {
+						_ob.load(id);
+					}
 				};
 				this.currentView = "sign_detail";
-				FUNC.findVueChild(this, "sign_detail").load(id);
 			}
 		},
 		components: {
