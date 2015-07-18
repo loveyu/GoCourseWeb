@@ -1,15 +1,16 @@
-<div v-if="data.loading" class="alert alert-info">课程评价加载中</div>
-<div v-if="!data.loading">
-	<p v-if="data.error" class="alert alert-danger">课程评价出错：{{data.error}}</p>
+<div v-if="loading" class="alert alert-info">课程评价加载中</div>
+<div v-if="!loading">
+	<p v-if="error" class="alert alert-danger">课程评价出错：{{error}}</p>
 
-	<div v-if="data.list">
-		<component v-repeat="item:data.list" is="review-list"></component>
+	<div v-if="list">
+		<component v-repeat="item:list" is="review-list"></component>
 	</div>
-	<div v-if="data.list==null || data.list.length===0">
+	<div v-if="list==null || list.length===0">
 		<p>当前无评价信息</p>
 	</div>
-	<div v-if="data.allowComment">
+	<div v-if="allowComment">
 		<label for="CommentBox">评价信息：</label>
 		<textarea class="form-control" id="CommentBox"></textarea>
 	</div>
 </div>
+<pre>{{users|json}}</pre>

@@ -111,14 +111,17 @@ Param:
 * course_table_id (require) 课程表ID，必须指定对应的课程表ID
 * show_reply (可选) 是否显示老师对应的回复，默认不显示，值为`1`时显示
 * self (可选) 是否只显示自己的评价信息，默认全部，值为`1`时只显示自己。该参数只对学生有效，如果老师使用该参数会返回错误
+* show_user (可选) 是否显示用户信息，默认不显示，为`1`时显示
+* avatar_size (可选) 头像大小，在`show_user`有效时有效，可选大小有`large`,`middle`,`small`,默认值为`middle`
 
 **权限说明:** 学生只允许查询自己选课了的课程的全部评价，老师可以查看任何课程的评价，但只允许回复自己的课程评价
 
 #### 错误状态，错误标记`233`
 * `23300` 非法ID参数
-* `23301` 你没有权限查看该课程的评价信息
-* `23302` 教师无法查看自己的评价列表
-* `23303` 课程未找到
+* `23301` 头像大小参数不合法
+* `23302` 你没有权限查看该课程的评价信息
+* `23303` 教师无法查看自己的评价列表
+* `23304` 课程未找到
 
 **数据对象引用：** [*DataReviewList*](../javadoc/index.html?com/katoa/gocourse/model/data/DataReviewList.html)
 
@@ -132,6 +135,20 @@ Param:
   "data": {
 	"allowComment": true,			//是否允许学生评论
 	"allowReply": false,			//是否允许教师进行回复
+	"users": {						//值可能为null
+	  "1": {
+		"userSysID": 1,
+		"userID": "admin",
+		"userName": "管理员",
+		"userAvatar": "http://go.course.org/avatar/middle/001/1.png?_t=1437118907"
+	  },
+	  "32": {
+		"userSysID": 32,
+		"userID": "201410081",
+		"userName": "姓名",
+		"userAvatar": "http://go.course.org/avatar/middle/032/32.png?_t=1436600400"
+	  }
+	},
 	"list": [
 	  {
 		"review": {
@@ -141,10 +158,12 @@ Param:
 		  "content": "还不错哦",
 		  "rating": 1.5,
 		  "time": 1434642762,
-		  "upNum": 0,			//顶的人数
-		  "downNum": 1			//踩的人数
+		  "upNum": 0,
+		  //顶的人数
+		  "downNum": 1	  //踩的人数
 		},
-		"replies": [			//教师的回复列表
+		"replies": [
+		  //教师的回复列表
 		  {
 			"reviewReplyID": 2,
 			"reviewID": 7,

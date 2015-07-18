@@ -28,6 +28,7 @@
 
 /* 主要的容器 */
 .main-container {
+    padding-bottom: 10px;
 }
 
 #Footer {
@@ -311,6 +312,13 @@
 .course-table .blue {
     background-color: #5bc0de;
     border: 1px solid #28a2c6;
+}
+
+/**
+ * 测验选项样式
+ */
+.quiz-item{
+    padding: 2px 10px;
 }
 
 .sign-detail .count-sign span.count span {

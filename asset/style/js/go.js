@@ -74,43 +74,44 @@ if (!('localStorage' in window)) {
 
 /**
  * Created by loveyu on 2015/4/1.
+ * 基本的组件
  */
-Vue.component('base-login-form', {template:"<form method=\"get\" v-on=\"submit: onLoginFormSubmit\"> <fieldset> <legend v-if=\"show_title\">用户登录<\/legend> <div class=\"alert alert-danger\" role=\"alert\" v-if=\"error_msg\"> <span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"><\/span> <span class=\"sr-only\">Error:<\/span> {{error_msg}} <\/div> <div class=\"form-group\"> <div class=\"input-group\"> <span class=\"input-group-addon\">用户名<\/span> <input type=\"text\" v-model=\"username\" name=\"username\" class=\"form-control\" placeholder=\"Username\"> <\/div> <\/div> <div class=\"form-group\"> <div class=\"input-group\"> <span class=\"input-group-addon\">密　码<\/span> <input type=\"password\" v-model=\"password\" name=\"password\" class=\"form-control\" placeholder=\"Password\"> <\/div> <\/div> <div class=\"form-group\"> <button class=\"btn btn-primary form-control\" type=\"submit\">登录<\/button> <\/div> <\/fieldset> <p><a class=\"text-info\" href=\"forget.html\">忘记密码？<\/a><\/p> <\/form>",methods:{
+Vue.component('base-login-form', {template:"<form method=\"get\" v-on=\"submit: onLoginFormSubmit\"> <fieldset> <legend v-if=\"data.show_title\">用户登录<\/legend> <div class=\"alert alert-danger\" role=\"alert\" v-if=\"data.error_msg\"> <span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"><\/span> <span class=\"sr-only\">Error:<\/span> {{data.error_msg}} <\/div> <div class=\"form-group\"> <div class=\"input-group\"> <span class=\"input-group-addon\">用户名<\/span> <input type=\"text\" v-model=\"data.username\" name=\"username\" class=\"form-control\" placeholder=\"Username\"> <\/div> <\/div> <div class=\"form-group\"> <div class=\"input-group\"> <span class=\"input-group-addon\">密　码<\/span> <input type=\"password\" v-model=\"data.password\" name=\"password\" class=\"form-control\" placeholder=\"Password\"> <\/div> <\/div> <div class=\"form-group\"> <button class=\"btn btn-primary form-control\" type=\"submit\">登录<\/button> <\/div> <\/fieldset> <p><a class=\"text-info\" href=\"forget.html\">忘记密码？<\/a><\/p> <\/form>",methods:{
 	onLoginFormSubmit: function (event) {
 		event.preventDefault();
 		var flag = true;
-		if (this.username == '' || this.password == ''
-		//|| this.type == ''
-		) {
-			this.error_msg = "表单不允许有空值";
+		if (this.data.username == '' || this.data.password == '') {
+			this.data.error_msg = "表单不允许有空值";
 			flag = false;
 		}
 		if (flag) {
-			this.error_msg = "";
+			this.data.error_msg = "";
 			FUNC.ajax(CONFIG.api.user.login, 'post', {
-				username: this.username,
-				password: this.password,
+				username: this.data.username,
+				password: this.data.password,
 				client: "web"
 			}, this.onLoginResult);
 		}
 		return false;
 	}, onLoginResult: function (data) {
 		if (!data.status) {
-			this.error_msg = data.msg ? data.msg : '未知错误';
+			this.data.error_msg = data.msg ? data.msg : '未知错误';
 		} else {
 			FUNC.saveToken(data.data);
 			FUNC.redirect('home.html');
 		}
 	}
+},props:{
+	data: Object
 }});
 Vue.component('base-loading', {template:"<div class=\"jumbotron\"> <p class=\"text-center\">加载中.......<\/p> <\/div>"});
 Vue.component('base-page-menu', {template:"<!--component page_menu--> <div style=\"margin-bottom: 15px\"> <ul class=\"nav nav-pills\"> <li v-repeat=\"menus\" role=\"presentation\" v-show=\"url!='' || active\" v-class=\"active?'active':''\"> <a href=\"{{url==''?now_url(active):url}}\">{{name}}<\/a> <\/li> <\/ul> <\/div>",methods:{
 	now_url: function () {
 		return window.location.hash;
 	}
-}});
+},props:['menus']});
 Vue.component('base-error', {template:"<h3>请求发生了一些错误<\/h3> <div class=\"alert alert-danger\"> <p v-if=\"code\">错误代码: <code>{{code}}<\/code><\/p> <p>{{error?error:'未知错误'}}<\/p> <\/div>"});
-Vue.component('quiz-item', {template:"<h4>{{quiz.title}}<\/h4> <ul class=\"list-unstyled\"> <li v-repeat=\"options\"> <p><strong class=\"{{isCorrect?'text-success':''}}\"> {{index|quiz_option_translate_index}}:&nbsp; <span class=\"{{isCorrect?'glyphicon glyphicon-ok':''}}\"><\/span>&nbsp; <\/strong> {{description}}<\/p> <p v-if=\"feedback\"> <small><strong><i>选项解析：<\/i><\/strong>{{feedback}}<\/small> <\/p> <\/li> <\/ul> <blockquote style=\"padding: 2px 5px;margin-bottom: 5px\"> <p> <small> 章节: {{quiz.index}},&nbsp;&nbsp; 类型: {{quiz.type|quiz_translate_type}},&nbsp;&nbsp; 评论: {{quiz.reply}},&nbsp;&nbsp; 时间: {{quiz.time|timestamp_to_date}} <\/small> <\/p> <\/blockquote> <p class=\"bg-success\" v-if=\"quiz.desc\" style=\"padding: 10px 5px\"> <strong>答题解析：<\/strong>{{quiz.desc}} <\/p>"});
+Vue.component('quiz-item', {template:"<div class=\"quiz-item\"> <h4>{{item.quiz.title}}<\/h4> <ul class=\"list-unstyled\"> <li v-repeat=\"item.options\"> <p><strong class=\"{{isCorrect?'text-success':''}}\"> {{index|quiz_option_translate_index}}:&nbsp; <span class=\"{{isCorrect?'glyphicon glyphicon-ok':''}}\"><\/span>&nbsp; <\/strong> {{description}}<\/p> <p v-if=\"feedback\"> <small><strong><i>选项解析：<\/i><\/strong>{{feedback}}<\/small> <\/p> <\/li> <\/ul> <blockquote style=\"padding: 2px 5px;margin-bottom: 5px\"> <p> <small> 章节: {{item.quiz.index}},&nbsp;&nbsp; 类型: {{item.quiz.type|quiz_translate_type}},&nbsp;&nbsp; 评论: {{item.quiz.reply}},&nbsp;&nbsp; 时间: {{item.quiz.time|timestamp_to_date}} <\/small> <\/p> <\/blockquote> <p class=\"bg-success\" v-if=\"item.quiz.desc\" style=\"padding: 10px 5px\"> <strong>答题解析：<\/strong>{{item.quiz.desc}} <\/p> <\/div>",props:['item']});
 Vue.component('answer-item', {template:"<div class=\"answer-result-item\" xmlns=\"http:\/\/www.w3.org\/1999\/html\"> <strong v-if=\"answer.isCorrect==1\" class=\"text-success\">答题正确：<\/strong> <strong v-if=\"answer.isCorrect==0\" class=\"text-danger\">答题错误：<\/strong> <p v-if=\"answer.optionID>0\">你的选项为： <button class=\"btn btn-sm btn-{{answer.isCorrect==1?'success':'danger'}}\"> {{find_option_index(answer.optionID)|quiz_option_translate_index}} <\/button> <\/p> <p v-if=\"answer.optionID==0 && answer.optionMap\"> 你的选项为： <button v-repeat=\"parse_answer_map(answer)\" class=\"btn btn-sm\" v-class=\"answer.isCorrect==1?'btn-success':'btn-danger'\"> {{$value|quiz_option_translate_index}} <\/button> <\/p> <\/div>",methods:{
 	find_option_index: function (optionId) {
 		for (var i in this.quiz.options) {
@@ -128,8 +129,8 @@ Vue.component('answer-item', {template:"<div class=\"answer-result-item\" xmlns=
 		}
 		return rt;
 	}
-}});
-Vue.component('course-search', {template:"<div class=\"panel panel-info\"> <div class=\"panel-heading\">{{title}} <form action=\"\" class=\"form-inline form-group-sm\" v-on=\"submit: onSearch\" style=\"display: inline-block;\"> <div class=\"input-group\" style=\"margin-left: 10px;\"> <input v-model=\"search\" type=\"text\" class=\"form-control\" placeholder=\"搜索课程\"> <span class=\"input-group-btn\"> <button class=\"btn btn-primary btn-sm\" type=\"submit\">搜索<\/button> <\/span> <\/div> <\/form> <\/div> <div class=\"panel-body\"> <p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p> <p v-if=\"is_init\" class=\"help-block\">请先搜索课程<\/p> <p v-if=\"!is_init && course_list_empty\" class=\"alert alert-warning\">无任何课程请重新搜索<\/p> <button v-repeat=\"course_list\" class=\"btn\" type=\"button\" v-class=\"course==$key?'btn-success':'btn-default'\" v-on=\"click: onCourseClick($key)\" data-id=\"{{$key}}\"> {{$value}} <\/button> <\/div> <\/div>",methods:{
+},props:['answer', 'quiz']});
+Vue.component('course-search', {template:"<div class=\"panel panel-info\"> <div class=\"panel-heading\">{{data.title}} <form action=\"\" class=\"form-inline form-group-sm\" v-on=\"submit: onSearch\" style=\"display: inline-block;\"> <div class=\"input-group\" style=\"margin-left: 10px;\"> <input v-model=\"data.search\" type=\"text\" class=\"form-control\" placeholder=\"搜索课程\"> <span class=\"input-group-btn\"> <button class=\"btn btn-primary btn-sm\" type=\"submit\">搜索<\/button> <\/span> <\/div> <\/form> <\/div> <div class=\"panel-body\"> <p class=\"alert-danger alert\" v-if=\"data.error\">{{data.error}}<\/p> <p v-if=\"data.is_init\" class=\"help-block\">请先搜索课程<\/p> <p v-if=\"!data.is_init && data.course_list_empty\" class=\"alert alert-warning\">无任何课程请重新搜索<\/p> <button v-repeat=\"data.course_list\" class=\"btn\" type=\"button\" v-class=\"data.course==$key?'btn-success':'btn-default'\" v-on=\"click: onCourseClick($key)\" data-id=\"{{$key}}\"> {{$value}} <\/button> <\/div> <\/div>",methods:{
 	/**
 	 * @param event 可以手动调用搜索参数，如果event值为null,同时手动设置search对象
 	 * @param call 成功后的回调函数，对象参数this
@@ -140,36 +141,40 @@ Vue.component('course-search', {template:"<div class=\"panel panel-info\"> <div 
 			event.preventDefault();
 		}
 		var obj = this;
-		obj.error = "";
-		FUNC.ajax(CONFIG.api.course.search, "get", {query: this.search}, function (result) {
-			obj.is_init = false;
+		obj.data.error = "";
+		FUNC.ajax(CONFIG.api.course.search, "get", {query: this.data.search}, function (result) {
+			obj.data.is_init = false;
 			if (result.status) {
-				obj.course_list = result.data;
-				obj.course_list_empty = FUNC.isEmpty(result.data);
+				obj.data.course_list = result.data;
+				obj.data.course_list_empty = FUNC.isEmpty(result.data);
 				if (typeof call == "function") {
 					call(obj);
 				}
 			} else {
-				obj.error = result.msg;
+				obj.data.error = result.msg;
 			}
 		});
 		return false;
 	},
 	onCourseClick: function (index) {
 		index = parseInt(index);
-		var call = this.course != index;
-		this.course = index;
-		this.courseName = this.course_list[this.course];
+		var call = this.data.course != index;
+		this.data.course = index;
+		this.data.courseName = this.data.course_list[this.data.course];
 		if (call) {
-			if (typeof this.callback == "function") {
-				this.callback(index);
+			if (typeof this.data.callback == "function") {
+				this.data.callback(index);
 			} else {
 				console.warn("未定义搜索回调函数")
 			}
 		}
 	}
+},props:['data'],created:function () {
+	if (typeof this.data.init_call === "function") {
+		this.data.init_call(this);
+	}
 }});
-Vue.component('test-list', {template:"<div v-if=\"list!=null && list.length>0\"> <div v-repeat=\"list\"> <p class=\"test-title\"><span>{{$index+1}}.<\/span>&nbsp;<span class=\"small\">({{quiz.type|quiz_translate_type}})<\/span>&nbsp; {{quiz.title}} <\/p> <ul v-if=\"quiz.type==0\" class=\"quiz-single-option list-unstyled\"> <li v-repeat=\"options\"> <button class=\"btn btn-sm btn-{{$index==quiz.answer?'primary':'default'}}\" v-on=\"click: onSingleClick(quiz,$index)\"> {{$index|quiz_option_translate_index}} <\/button> &nbsp;{{description}} <\/li> <\/ul> <ul class=\"quiz-multi-option list-unstyled\" v-if=\"quiz.type==1 && quiz.size>0\"> <li v-repeat=\"options\"> <span class=\"display-char\">{{$index|quiz_option_translate_index}}.<\/span>&nbsp;{{description}} <\/li> <li v-repeat=\"createMultiOptionObj(quiz.size,options.length)\"> <span class=\"display-answer-index\">({{$index+1}})&nbsp;<\/span> <button v-repeat=\"now_option\" class=\"btn btn-sm btn-{{$index==quiz.answer[now_index]?'primary':'default'}}\" v-on=\"click: onMultiClick(quiz,now_index,$index)\"> {{$value|quiz_option_translate_index}} <\/button> <\/li> <\/ul> <ul class=\"quiz-multi-option list-unstyled\" v-if=\"quiz.type==1 && quiz.size==0\"> <li v-repeat=\"options\"> <button class=\"btn btn-sm btn-{{$index==quiz.answer[$index]?'primary':'default'}}\" v-on=\"click: onSimpleMultiClick(quiz,$index)\"> {{$index|quiz_option_translate_index}} <\/button> &nbsp;{{description}} <\/li> <\/ul> <div class=\"quiz-answer-submit\" v-if=\"!quiz.success && checkChoiceStatus(quiz)\"> <button class=\"btn btn-sm btn-success\" v-on=\"click:onSubmitSingle($index,quiz)\"> {{quiz.submit_lock?\"提交中\":\"提交答案\"}} <\/button> <span v-if=\"quiz.error\" class=\"text-danger\">{{quiz.error}}<\/span> <\/div> <div v-if=\"quiz.success\" class=\"alert alert-success\">恭喜成功答对<\/div> <\/div> <\/div>",methods:{
+Vue.component('test-list', {template:"<div class=\"test-list\"> <div v-if=\"list!=null && list.length>0\"> <div v-repeat=\"list\"> <p class=\"test-title\"><span>{{$index+1}}.<\/span>&nbsp;<span class=\"small\">({{quiz.type|quiz_translate_type}})<\/span>&nbsp; {{quiz.title}} <\/p> <ul v-if=\"quiz.type==0\" class=\"quiz-single-option list-unstyled\"> <li v-repeat=\"options\"> <button class=\"btn btn-sm btn-{{$index==quiz.answer?'primary':'default'}}\" v-on=\"click: onSingleClick(quiz,$index)\"> {{$index|quiz_option_translate_index}} <\/button> &nbsp;{{description}} <\/li> <\/ul> <ul class=\"quiz-multi-option list-unstyled\" v-if=\"quiz.type==1 && quiz.size>0\"> <li v-repeat=\"options\"> <span class=\"display-char\">{{$index|quiz_option_translate_index}}.<\/span>&nbsp;{{description}} <\/li> <li v-repeat=\"createMultiOptionObj(quiz.size,options.length)\"> <span class=\"display-answer-index\">({{$index+1}})&nbsp;<\/span> <button v-repeat=\"now_option\" class=\"btn btn-sm btn-{{$index==quiz.answer[now_index]?'primary':'default'}}\" v-on=\"click: onMultiClick(quiz,now_index,$index)\"> {{$value|quiz_option_translate_index}} <\/button> <\/li> <\/ul> <ul class=\"quiz-multi-option list-unstyled\" v-if=\"quiz.type==1 && quiz.size==0\"> <li v-repeat=\"options\"> <button class=\"btn btn-sm btn-{{$index==quiz.answer[$index]?'primary':'default'}}\" v-on=\"click: onSimpleMultiClick(quiz,$index)\"> {{$index|quiz_option_translate_index}} <\/button> &nbsp;{{description}} <\/li> <\/ul> <div class=\"quiz-answer-submit\" v-if=\"!quiz.success && checkChoiceStatus(quiz)\"> <button class=\"btn btn-sm btn-success\" v-on=\"click:onSubmitSingle($index,quiz)\"> {{quiz.submit_lock?\"提交中\":\"提交答案\"}} <\/button> <span v-if=\"quiz.error\" class=\"text-danger\">{{quiz.error}}<\/span> <\/div> <div v-if=\"quiz.success\" class=\"alert alert-success\">恭喜成功答对<\/div> <\/div> <\/div> <\/div>",methods:{
 	createMultiOptionObj: function (size, option_size) {
 		var rt = [];
 		for (var i = 0; i < size; i++) {
@@ -250,6 +255,42 @@ Vue.component('test-list', {template:"<div v-if=\"list!=null && list.length>0\">
 			return arr.join(",");
 		}
 	}
+},props:['list', 'answer']});
+
+/**
+ * 评价组件
+ */
+Vue.component('review-review', {template:"<div v-if=\"loading\" class=\"alert alert-info\">课程评价加载中<\/div> <div v-if=\"!loading\"> <p v-if=\"error\" class=\"alert alert-danger\">课程评价出错：{{error}}<\/p> <div v-if=\"list\"> <component v-repeat=\"item:list\" is=\"review-list\"><\/component> <\/div> <div v-if=\"list==null || list.length===0\"> <p>当前无评价信息<\/p> <\/div> <div v-if=\"allowComment\"> <label for=\"CommentBox\">评价信息：<\/label> <textarea class=\"form-control\" id=\"CommentBox\"><\/textarea> <\/div> <\/div> <pre>{{users|json}}<\/pre>",methods:{
+	load: function (id) {
+		var obj = this;
+		FUNC.ajax(CONFIG.api.review.list, "get", {course_table_id: id, show_reply: 1, show_user: 1}, function (result) {
+			if (result.status) {
+				obj.list = result.data.list;
+				obj.users = result.data.users;
+				obj.allowComment = result.data.allowComment && Member.is_student();
+				obj.allowReply = result.data.allowReply && Member.is_teacher();
+			} else {
+				obj.error = result.msg;
+			}
+			obj.loading = false;
+		});
+	}
+},data:function(){
+	return {
+		error: "",
+		loading: true,
+		list: null,
+		users: null,
+		allowComment: false,
+		allowReply: false
+	};
+},props:{
+	call: Function
+},created:function () {
+	this.call(this);
+}});
+Vue.component('review-list', {template:"<pre>{{item|json}}<\/pre> <div> <\/div>",props:{
+	item: Object
 }});
 
 
@@ -325,7 +366,7 @@ var CONFIG = {
 			get: "course_table/get",
 			search: "course_table/search",
 			student_selected: "course_table/student_selected",
-			student_select_add: "course_table/student_select_add",
+			student_select_add: "course_table/student_select_add"
 		},
 		quiz_teacher: {
 			course_list: "quiz_teacher/course_list",
@@ -360,6 +401,9 @@ var CONFIG = {
 		},
 		task: {
 			task_set_detail: "task/task_set_detail"
+		},
+		review: {
+			list: 'review/list'
 		}
 	},
 	current_week: {	//当前的周次，该数据会依据服务器状态而更新
@@ -392,7 +436,13 @@ var Member = {
 	login_status: false,
 	id: 0,
 	user_type: 'student',
-	data: null
+	data: null,
+	is_student: function () {
+		return this.user_type == 'student';
+	},
+	is_teacher: function () {
+		return this.user_type == 'teacher';
+	}
 };
 var Page = {};//用于保存完整的页面调用类
 
@@ -1166,7 +1216,8 @@ Page.course_student = function () {
 					my: {url: '#/', name: '我的课表', active: false},
 					add: {url: '#/add', name: '添加课程', active: false},
 					course_table: {url: '', name: '课程详情', active: false}
-				}
+				},
+				childMap: {}
 			},
 			methods: {
 				m_my: function () {
@@ -1177,7 +1228,10 @@ Page.course_student = function () {
 						has_course: false,
 						week_current: 0,
 						week_table: [],
-						week_list: []
+						week_list: [],
+						call: function (_obj) {
+							_obj.paresTable();
+						}
 					};
 					FUNC.ajax(CONFIG.api.student.my_course, "get", {}, function (result) {
 						if (result.status) {
@@ -1187,10 +1241,6 @@ Page.course_student = function () {
 							obj.result.error = result.msg;
 						}
 						obj.currentView = "my";
-						var my_obj = FUNC.findVueChild(obj, "my");
-						if (my_obj != null) {
-							my_obj.paresTable();
-						}
 					});
 				},
 				m_add: function () {
@@ -1209,15 +1259,18 @@ Page.course_student = function () {
 							var ids = [];
 							var data = result.data.list;
 							for (var i in data) {
-								data[i]["selected"] = -1;
-								ids.push(data[i].course.courseTableID);
+								if (data.hasOwnProperty(i)) {
+									data[i]["selected"] = -1;
+									ids.push(data[i].course.courseTableID);
+								}
 							}
 							obj.result.list = data;
 							if (ids.length > 0) {
 								FUNC.ajax(CONFIG.api.course_table.student_selected, "get", {ids: ids.join(",")}, function (result) {
 									if (result.status) {
 										for (var i in obj.result.list) {
-											if (result.data.hasOwnProperty(obj.result.list[i].course.courseTableID)) {
+											if (obj.result.list.hasOwnProperty(i) &&
+												result.data.hasOwnProperty(obj.result.list[i].course.courseTableID)) {
 												obj.result.list[i].selected = result.data[obj.result.list[i].course.courseTableID];
 											}
 										}
@@ -1235,36 +1288,44 @@ Page.course_student = function () {
 					});
 				},
 				m_course_table: function (id) {
-					this.result = {error: null, loading: true, table: null};
-					this.currentView = "course_table";
-					FUNC.findVueChild(this, "course_table").load(id);
+					this.result = {
+						error: null, loading: true, table: null, review: null,
+						call: function (_obj) {
+							_obj.load(id)
+						}
+					};
+					//强制更新
+					this.currentView = "";
+					Vue.nextTick(function () {
+						this.currentView = 'course_table'
+					}.bind(this));
 				},
 				set_error: function (msg) {
 					FUNC.alertOnElem(this.$el, msg);
 				}
 			},
 			components: {
-				my: {template:"<p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p> <div v-if=\"week_list.length>0\"> <nav> <ul class=\"pagination pagination-lg\"> <li class=\"disabled\"><a href=\"javascript:void(0)\">周次<\/a><\/li> <li v-repeat=\"week_list\" v-class=\"$value==week_current?'active':''\"> <a href=\"#\" v-on=\"click: setWeek($value, $event)\">{{$value}}<\/a> <\/li> <\/ul> <\/nav> <\/div> <div class=\"alert alert-warning\" v-if=\"!has_course\"> <p>本周没有任何课程, 第<strong>{{week_current}}<\/strong>周<\/p> <\/div> <table v-if=\"has_course\" class=\"table student-course-table\"> <thead> <tr> <th class=\"Weekly\">第{{week_current}}周<\/th> <th>星期一<\/th> <th>星期二<\/th> <th>星期三<\/th> <th>星期四<\/th> <th>星期五<\/th> <th>星期六<\/th> <th>星期日<\/th> <\/tr> <\/thead> <tbody> <tr v-repeat=\"week_table\"> <td>{{$index| course_week_index_to_time}}<br>{{$index+1}}<\/td> <td v-repeat=\"$value\"> <div v-repeat=\"$value\"> <h4><a href=\"#\/course_table\/{{courseTableID}}\">{{courseName}}<\/a><\/h4> <span class=\"teacher\">{{teacherName}}<\/span> <span class=\"address\">{{location}}<\/span> <\/div> <\/td> <\/tr> <\/tbody> <\/table>",methods:{
+				my: {template:"<p class=\"alert-danger alert\" v-if=\"data.error\">{{data.error}}<\/p> <div v-if=\"data.week_list.length>0\"> <nav> <ul class=\"pagination pagination-lg\"> <li class=\"disabled\"><a href=\"javascript:void(0)\">周次<\/a><\/li> <li v-repeat=\"data.week_list\" v-class=\"$value==week_current?'active':''\"> <a href=\"#\" v-on=\"click: setWeek($value, $event)\">{{$value}}<\/a> <\/li> <\/ul> <\/nav> <\/div> <div class=\"alert alert-warning\" v-if=\"!data.has_course\"> <p>本周没有任何课程, 第<strong>{{data.week_current}}<\/strong>周<\/p> <\/div> <table v-if=\"data.has_course\" class=\"table student-course-table\"> <thead> <tr> <th class=\"Weekly\">第{{data.week_current}}周<\/th> <th>星期一<\/th> <th>星期二<\/th> <th>星期三<\/th> <th>星期四<\/th> <th>星期五<\/th> <th>星期六<\/th> <th>星期日<\/th> <\/tr> <\/thead> <tbody> <tr v-repeat=\"data.week_table\"> <td>{{$index| course_week_index_to_time}}<br>{{$index+1}}<\/td> <td v-repeat=\"$value\"> <div v-repeat=\"$value\"> <h4><a href=\"#\/course_table\/{{courseTableID}}\">{{courseName}}<\/a><\/h4> <span class=\"teacher\">{{teacherName}}<\/span> <span class=\"address\">{{location}}<\/span> <\/div> <\/td> <\/tr> <\/tbody> <\/table>",methods:{
 	/**
 	 * 解析课表
 	 */
 	paresTable: function () {
 		var tmp = {};
 		var table = [];
-		for (var i in this.list) {
-			for (var j in this.list[i].location) {
-				var arr = this.list[i].location[j].week.split(",");
+		for (var i in this.data.list) {
+			for (var j in this.data.list[i].location) {
+				var arr = this.data.list[i].location[j].week.split(",");
 				for (var k in arr) {
 					arr[k] = +arr[k];
 					if (!tmp.hasOwnProperty(arr[k])) {
 						tmp[arr[k]] = arr[k];
-						table.push(arr[k])
+						table.push(arr[k]);
 					}
 				}
-				this.list[i].location[j].week = arr;
+				this.data.list[i].location[j].week = arr;
 			}
 		}
-		this.week_list = table.sort(function (a, b) {
+		this.data.week_list = table.sort(function (a, b) {
 			return a - b;
 		});
 		this.setWeek(CONFIG.current_week.week, null);
@@ -1278,10 +1339,10 @@ Page.course_student = function () {
 		if (event != null && typeof event == "object") {
 			event.preventDefault();
 		}
-		if (this.week_current == week) {
+		if (this.data.week_current == week) {
 			return;
 		}
-		this.has_course = false;
+		this.data.has_course = false;
 		var table = [], arr = [];
 		var i, j;
 		for (i = 0; i < 6; i++) {
@@ -1292,61 +1353,77 @@ Page.course_student = function () {
 			table.push(arr);
 		}
 		var flag = false;
-		for (i in this.list) {
-			for (j in this.list[i].location) {
-				if (FUNC.inArray(week, this.list[i].location[j].week)) {
-					var week_day = this.list[i].location[j].day;
-					var slot = this.list[i].location[j].slot;
-					var data = FUNC.clone(this.list[i]);
-					data.location = this.list[i].location[j].location;
+		for (i in this.data.list) {
+			for (j in this.data.list[i].location) {
+				if (FUNC.inArray(week, this.data.list[i].location[j].week)) {
+					var week_day = this.data.list[i].location[j].day;
+					var slot = this.data.list[i].location[j].slot;
+					var data = FUNC.clone(this.data.list[i]);
+					data.location = this.data.list[i].location[j].location;
 					table[slot - 1][week_day - 1].push(data);
 					flag = true;
 				}
 			}
 		}
-		this.week_current = week;//始终设置当前周次
+		this.data.week_current = week;//始终设置当前周次
 		if (flag) {
-			this.week_table = table;
-			this.has_course = true;
+			this.data.week_table = table;
+			this.data.has_course = true;
 		}
 		return false;
 	}
+},props:{
+	data: Object
+},created:function () {
+	this.data.call(this);
 }},
-				add: {template:"<h3>添加课表<\/h3> <p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p> <p class=\"alert-warning alert\" v-if=\"warning\">{{warning}}<\/p> <div class=\"course-table\"> <table class=\"table\"> <thead> <tr> <th>操作<\/th> <th>课程名称<\/th> <th>教师<\/th> <th>周次<\/th> <th>星期<\/th> <th>节次<\/th> <th>地点<\/th> <\/tr> <\/thead> <tbody v-repeat=\"list\"> <tr v-repeat=\"locations\"> <td v-if=\"$index==0\" rowspan=\"{{locations.length}}\"> <button v-if=\"selected>-1\" v-on=\"click:onAdd(course.courseTableID)\" v-class=\"selected==0?'btn-primary':'btn-success'\" class=\"btn\">{{selected==0?'添加':'已选'}} <\/button> <\/td> <td v-if=\"$index==0\" rowspan=\"{{locations.length}}\">{{course.courseName}}<\/td> <td v-if=\"$index==0\" rowspan=\"{{locations.length}}\"> {{course.teacherName}} <\/td> <td>{{week}}<\/td> <td>{{day|course_week_parse}}<\/td> <td><strong>{{slot}}<\/strong>大节<\/td> <td>{{location}}<\/td> <\/tr> <\/tbody> <\/table> <\/div>",methods:{
+				add: {template:"<h3>添加课表<\/h3> <p class=\"alert-danger alert\" v-if=\"data.error\">{{data.error}}<\/p> <p class=\"alert-warning alert\" v-if=\"data.warning\">{{data.warning}}<\/p> <div class=\"course-table\"> <table class=\"table\"> <thead> <tr> <th>操作<\/th> <th>课程名称<\/th> <th>教师<\/th> <th>周次<\/th> <th>星期<\/th> <th>节次<\/th> <th>地点<\/th> <\/tr> <\/thead> <tbody v-repeat=\"data.list\"> <tr v-repeat=\"locations\"> <td v-if=\"$index==0\" rowspan=\"{{locations.length}}\"> <button v-if=\"selected>-1\" v-on=\"click:onAdd(course.courseTableID)\" v-class=\"selected==0?'btn-primary':'btn-success'\" class=\"btn\">{{selected==0?'添加':'已选'}} <\/button> <\/td> <td v-if=\"$index==0\" rowspan=\"{{locations.length}}\"> <a href=\"#\/course_table\/{{courseTableID}}\">{{course.courseName}}<\/a> <\/td> <td v-if=\"$index==0\" rowspan=\"{{locations.length}}\"> {{course.teacherName}} <\/td> <td>{{week}}<\/td> <td>{{day|course_week_parse}}<\/td> <td><strong>{{slot}}<\/strong>大节<\/td> <td>{{location}}<\/td> <\/tr> <\/tbody> <\/table> <\/div>",methods:{
 	onAdd: function (id) {
 		var obj = this;
-		obj.error = "";
+		obj.data.error = "";
 		FUNC.ajax(CONFIG.api.course_table.student_select_add, "post", {id: id}, function (result) {
 			if (result.status) {
-				for (var i in obj.list) {
-					if (obj.list[i].course.courseTableID == id) {
-						obj.list[i].selected = 1;
+				for (var i in obj.data.list) {
+					if (obj.data.list.hasOwnProperty(i) && obj.data.list[i].course.courseTableID == id) {
+						obj.data.list[i].selected = 1;
 					}
 				}
 			} else {
-				obj.error = result.msg;
+				obj.data.error = result.msg;
 			}
 		});
 	}
+},props:{
+	data: Object
 }},
-				course_table: {template:"<p v-if=\"loading\" class=\"alert alert-info\">加载中<\/p> <p v-if=\"error\" class=\"alert alert-danger\">{{error}}<\/p> <div v-if=\"table!==null\" class=\"course-table-detail\"> <h3>{{table.course.courseName}}<\/h3> <ul class=\"list-unstyled\"> <li><strong>专业：<\/strong> {{table.course.deptName}}({{table.course.deptNickName}}{{table.course.enrolYear}}级) <\/li> <li><strong>老师：<\/strong> {{table.course.teacherName}}({{table.course.teacherID}}) <\/li> <li><strong>开课：<\/strong> {{table.course.openYear}} {{table.course.openTerm|course_term}} <\/li> <li><strong>周次：<\/strong> {{table.course.fromWeek}}-{{table.course.endWeek}} 周 <\/li> <li><strong>状态：<\/strong> {{{table.course.status|course_status_label}}} <\/li> <\/ul> <h5 class=\"class-info\" v-if=\"table.classes_info!==null\">所属班级信息： <span class=\"label label-info\" v-repeat=\"table.classes_info\"> {{className}} <\/span> <\/h5> <table v-if=\"table.locations!==null\" class=\"ct-location table table-responsive table-hover table-bordered\"> <caption><h4>上课地点<\/h4><\/caption> <thead> <tr> <th>&nbsp;<\/th> <th>地点<\/th> <th>周次<\/th> <th>节次<\/th> <th>星期<\/th> <th>备注<\/th> <\/tr> <\/thead> <tbody> <tr v-repeat=\"table.locations\"> <td class=\"ct-location-edit\"> <a href=\"#\" class=\"text-danger\"><span class=\"glyphicon glyphicon-edit\"><\/span><\/a> <\/td> <td>{{location}}<\/td> <td>{{week}}<\/td> <td>{{slot}}<\/td> <td>{{day|course_week_parse}}<\/td> <td class=\"notice\"> {{notice}} <\/td> <\/tr> <\/tbody> <\/table> <\/div>",methods:{
+				course_table: {template:"<p v-if=\"data.loading\" class=\"alert alert-info\">加载中<\/p> <p v-if=\"data.error\" class=\"alert alert-danger\">{{data.error}}<\/p> <div v-if=\"data.table!==null\" class=\"course-table-detail\"> <h3>{{data.table.course.courseName}}<\/h3> <ul class=\"list-unstyled\"> <li><strong>专业：<\/strong> {{data.table.course.deptName}}({{data.table.course.deptNickName}}{{data.table.course.enrolYear}}级) <\/li> <li><strong>老师：<\/strong> {{data.table.course.teacherName}}({{data.table.course.teacherID}}) <\/li> <li><strong>开课：<\/strong> {{data.table.course.openYear}} {{data.table.course.openTerm|course_term}} <\/li> <li><strong>周次：<\/strong> {{data.table.course.fromWeek}}-{{data.table.course.endWeek}} 周 <\/li> <li><strong>状态：<\/strong> {{{data.table.course.status|course_status_label}}} <\/li> <\/ul> <h5 class=\"class-info\" v-if=\"data.table.classes_info!==null\">所属班级信息： <span class=\"label label-info\" v-repeat=\"data.table.classes_info\"> {{className}} <\/span> <\/h5> <table v-if=\"data.table.locations!==null\" class=\"ct-location table table-responsive table-hover table-bordered\"> <caption><h4>上课地点<\/h4><\/caption> <thead> <tr> <th>&nbsp;<\/th> <th>地点<\/th> <th>周次<\/th> <th>节次<\/th> <th>星期<\/th> <th>备注<\/th> <\/tr> <\/thead> <tbody> <tr v-repeat=\"data.table.locations\"> <td class=\"ct-location-edit\"> <a href=\"#\" class=\"text-danger\"><span class=\"glyphicon glyphicon-edit\"><\/span><\/a> <\/td> <td>{{location}}<\/td> <td>{{week}}<\/td> <td>{{slot}}<\/td> <td>{{day|course_week_parse}}<\/td> <td class=\"notice\"> {{notice}} <\/td> <\/tr> <\/tbody> <\/table> <component call=\"{{data.review}}\" is=\"review-review\"><\/component> <\/div>",methods:{
 	load: function (id) {
 		var obj = this;
-		obj.loading = true;
-		obj.error = null;
+		obj.data.loading = true;
+		obj.data.error = null;
 		FUNC.ajax(CONFIG.api.course_table.get + "/" + id, "get", {
 			set_class_info: 1,
 			set_location: 1
 		}, function (result) {
-			obj.loading = false;
+			obj.data.loading = false;
 			if (result.status) {
-				obj.table = result.data;
+				obj.data.table = result.data;
+				obj.load_review(id);
 			} else {
-				obj.table = null;
-				obj.error = result.msg;
+				obj.data.table = null;
+				obj.data.error = result.msg;
 			}
 		});
+	},
+	load_review: function (id) {
+		this.data.review = function (_obj) {
+			_obj.load(id);
+		};
 	}
+},props:{
+	data: Object
+},created:function () {
+	this.data.call(this);
 }}
 			}
 		})
@@ -1372,7 +1449,7 @@ Page.course_student = function () {
 	};
 	var router = Router(routes);//初始化一个路由器
 	var login_call = function (arg) {
-		if (Member.user_type != "student") {
+		if (!Member.is_student()) {
 			FUNC.alertOnElem(cs_vm.$el, "非法访问");
 			return arg;
 		}
@@ -1389,8 +1466,7 @@ Page.course_student = function () {
 		login_call();
 	}
 	return cs_vm;
-}
-;
+};
 
 
 /**
@@ -1424,10 +1500,7 @@ Page.course_teacher = function () {
 		methods: {
 			m_my: function () {
 				var obj = this;
-				obj.result = {
-					error: "",
-					list: []
-				};
+				obj.result = {list: []};
 				FUNC.ajax(CONFIG.api.course_table.search, "get", {
 					search_type: "teacher",
 					set_class_info: 1,
@@ -1444,13 +1517,7 @@ Page.course_teacher = function () {
 			},
 			m_course_list: function () {
 				var obj = this;
-				obj.result = {
-					error: "",
-					form: {
-						name: ""
-					},
-					course_list: {}
-				};
+				obj.result = {course_list: {}};
 				FUNC.ajax(CONFIG.api.course.list, "get", {}, function (result) {
 					if (result.status) {
 						obj.result.course_list = FUNC.mapToObjArr(result.data, "id", "name");
@@ -1465,32 +1532,18 @@ Page.course_teacher = function () {
 				FUNC.ajax(CONFIG.api.teacher.info, "get", {}, function (result) {
 					if (result.status) {
 						obj.result = {
-							error: "",
-							success: "",
-							form: {
-								department: "",
-								name: "",
-								openYear: "",
-								openTerm: "",
-								fromWeek: "",
-								endWeek: "",
-								requirement: "",
-								content: ""
-							},
 							data: FUNC.objMerge(result.data.college, {
 								departments: [],
 								openYear: year_out(),
 								openTerm: [{id: 0, term: "春季"}, {id: 1, term: "秋季"}]
 							}),
-							courseName: {
-								list: null,
-								error: false
+							call: function (_ob) {
+								_ob.form.openYear = new Date().getFullYear();
+								_ob.form.openTerm = 0;
+								_ob.setDept(result.data.college.collegeID);
 							}
 						};
 						obj.currentView = "schedule_add";
-						obj.result.form.openYear = new Date().getFullYear();
-						obj.result.form.openTerm = 0;
-						FUNC.findVueChild(obj, "schedule_add").setDept(result.data.college.collegeID);
 					} else {
 						obj.m_load_error(result.msg);
 					}
@@ -1521,10 +1574,12 @@ Page.course_teacher = function () {
 								location: ""
 							},
 							location: [],
-							college: FUNC.objMerge(result.data.college, {departments: [], classes: [], years: []})
+							college: FUNC.objMerge(result.data.college, {departments: [], classes: [], years: []}),
+							call: function (_ob) {
+								_ob.setDept(result.data.college.collegeID);
+							}
 						};
 						obj.currentView = "add";
-						FUNC.findVueChild(obj, "add").setDept(result.data.college.collegeID);
 					} else {
 						obj.m_load_error(result.msg);
 					}
@@ -1535,30 +1590,22 @@ Page.course_teacher = function () {
 				FUNC.ajax(CONFIG.api.teacher.info, "get", {}, function (result) {
 					if (result.status) {
 						obj.result = {
-							error: "",
-							success: "",
-							form: {
-								department: "",
-								course_name: "",
-								course_id: "",
-								year: "",
-								status: "",
-								term: 0
-							},
 							data: FUNC.objMerge(result.data.college, {
 								departments: [],
 								year: year_out(),
 								term: CONST_MAP.course_term,
 								status: CONST_MAP.course_status
 							}),
-							result: null
+							call: null
 						};
 						FUNC.ajax(CONFIG.api.college.get_departments, "get", {college_id: result.data.college.collegeID}, function (result) {
 							obj.result.data.departments = result.status ? FUNC.mapToObjArr(result.data.departments, "id", "name") : [];
+							obj.result.call = function (_ob) {
+								_ob.form.year = new Date().getFullYear();
+								_ob.form.term = -1;
+								_ob.form.status = -1;
+							};
 							obj.currentView = "schedule_search";
-							obj.result.form.year = new Date().getFullYear();
-							obj.result.form.term = -1;
-							obj.result.form.status = -1;
 						});
 					} else {
 						obj.m_load_error(result.msg);
@@ -1570,20 +1617,15 @@ Page.course_teacher = function () {
 				FUNC.ajax(CONFIG.api.sign.prepare, "post", {course_table_id: courseTableId}, function (result) {
 					if (result.status) {
 						obj.result = {
-							course_data: result.data.course,
-							week: result.data.week,
-							error: null,
-							result: null,
-							class_info: result.data.classInfo,
-							form: {
-								course_table_id: courseTableId,
-								name: '',
-								detail: '',
-								time: 45
+							call: function (_ob) {
+								_ob.class_info = result.data.classInfo;
+								_ob.course_data = result.data.course;
+								_ob.week = result.data.week;
+								_ob.form.course_table_id = courseTableId;
+								_ob.set_course_info();
 							}
 						};
 						obj.currentView = "new_sign";
-						FUNC.findVueChild(obj, "new_sign").set_course_info();
 					} else {
 						obj.m_load_error(result);
 					}
@@ -1606,49 +1648,58 @@ Page.course_teacher = function () {
 				}
 			},
 			m_course_table: function (id) {
-				this.result = {error: null, loading: true, table: null};
-				this.currentView = "course_table";
-				FUNC.findVueChild(this, "course_table").load(id);
+				this.result = {
+					error: null, loading: true, table: null, review: null, call: function (_ob) {
+						_ob.load(id);
+					}
+				};
+				//强制更新
+				this.currentView = "";
+				Vue.nextTick(function () {
+					this.currentView = 'course_table'
+				}.bind(this));
 			}
 		},
 		components: {
-			my: {template:"<h3>教师课表<\/h3> <div class=\"course-table\"> <table class=\"table\"> <thead> <tr> <th>&nbsp;<\/th> <th>课程名称<\/th> <th>班级<\/th> <th>周次<\/th> <th>星期<\/th> <th>节次<\/th> <th>地点<\/th> <th>操作<\/th> <\/tr> <\/thead> <tbody v-repeat=\"list\"> <tr v-repeat=\"locations\"> <td class=\"{{locations[$index] | course_location_check_today today none}}\"><\/td> <td v-if=\"$index==0\" rowspan=\"{{locations.length}}\"> <a href=\"#\/course_table\/{{courseTableID}}\">{{course.courseName}}<\/a> <\/td> <td v-if=\"$index==0\" rowspan=\"{{locations.length}}\"> <span v-repeat=\"classes_info\" class=\"btn-block\">{{className}}<\/span> <\/td> <td>{{week}}<\/td> <td>{{day|course_week_parse}}<\/td> <td><strong>{{slot}}<\/strong>大节<\/td> <td>{{location}}<\/td> <td v-if=\"$index==0\" rowspan=\"{{locations.length}}\"> <button class=\"btn btn-primary btn-sm\">编辑<\/button> <a v-if=\"course.status==0\" class=\"btn btn-success btn-sm\" href=\"#\/new_sign\/{{course.courseTableID}}\">新签到<\/a> <\/td> <\/tr> <\/tbody> <\/table> <\/div>"},
-			add: {template:"<h3>添加课表<\/h3> <p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p> <p class=\"alert-success alert\" v-if=\"success\">{{success}}<\/p> <div class=\"form-inline form-group\"> <select class=\"form-control\" disabled> <option>{{college.uniNickname}}<\/option> <\/select> <select class=\"form-control\" disabled> <option>{{college.collegeName}}<\/option> <\/select> <select class=\"form-control\" name=\"dept\" v-model=\"form.department\" v-on=\"change:departmentChange\"> <option value=\"\">--请选择--<\/option> <option v-repeat=\"college.departments\" value=\"{{id}}\">{{name}}<\/option> <\/select> <div class=\"input-group\"> <span class=\"input-group-addon\">年级<\/span> <select class=\"form-control\" name=\"year\" v-model=\"form.year\" v-on=\"change:yearChange\"> <option value=\"\">--请选择--<\/option> <option v-repeat=\"college.years\" value=\"{{year}}\">{{year}}<\/option> <\/select> <\/div> <\/div> <div class=\"form-inline form-group\" v-if=\"college.classes && form.year\"> <strong>班级 : <\/strong> <span v-if=\"college.classes.length==0\">无数据<\/span> <label v-repeat=\"college.classes\"> <input class=\"checkbox\" type=\"checkbox\" v-on=\"change:classChange\" value=\"{{id}}\"> {{name}}&nbsp;&nbsp;&nbsp; <\/label> <\/div> <div class=\"form-inline form-group\"> <div class=\"input-group\"> <span class=\"input-group-addon\">课程搜索<\/span> <input type=\"text\" name=\"course\" v-model=\"search.name\" v-on=\"blur: onSearchName\" class=\"form-control\"> <\/div> <button class=\"btn btn-primary\" type=\"button\" v-on=\"click: onSearchName\">查询当前可添加课程 <\/button> <\/div> <p v-if=\"data.course_name!=null && data.course_name.length==0\" class=\"alert alert-warning\">当前查询结果为空<\/p> <div class=\"form-group form-inline\" v-if=\"data.course_name!=null && data.course_name.length>0\"> <strong>选择课程 : &nbsp;&nbsp;<\/strong> <label v-repeat=\"data.course_name\"> <input type=\"radio\" name=\"my_schedule\" value=\"{{scheduleID}}\" v-model=\"form.scheduleID\"\/>{{courseName}},{{openTerm?\"秋季\":\"春季\"}}{{fromWeek}}-{{endWeek}}周&nbsp;&nbsp; <\/label> <\/div> <div class=\"form-group\"> <label>该课程表的附加介绍信息:<\/label> <textarea class=\"form-control\" v-model=\"form.notice\"><\/textarea> <\/div> <div class=\"form-group\"> <strong>上课地点：<\/strong> <button class=\"btn btn-success\" v-on=\"click:addLocation\">添加<\/button> <\/div> <div v-repeat=\"location\"> <div class=\"form-group form-inline\"> <button class=\"btn btn-danger\" v-on=\"click:removeLocation($index)\">移除<\/button> <div class=\"input-group\"> <span class=\"input-group-addon\">上课地点<\/span> <input type=\"text\" name=\"location\" placeholder=\"如果：13-A-303\" v-model=\"location\" class=\"form-control\"> <\/div> <div class=\"input-group\"> <span class=\"input-group-addon\">节次<\/span> <select name=\"slot\" v-model=\"slot\" class=\"form-control\"> <option>1<\/option> <option>2<\/option> <option>3<\/option> <option>4<\/option> <option>5<\/option> <option>6<\/option> <\/select> <\/div> <div class=\"input-group\"> <span class=\"input-group-addon\">星期<\/span> <select name=\"slot\" v-model=\"day\" class=\"form-control\"> <option value=\"1\">一<\/option> <option value=\"2\">二<\/option> <option value=\"3\">三<\/option> <option value=\"4\">四<\/option> <option value=\"5\">五<\/option> <option value=\"6\">六<\/option> <option value=\"7\">日<\/option> <\/select> <\/div> <\/div> <div class=\"form-group\"> <div class=\"input-group\"> <span class=\"input-group-addon\">周次规则<\/span> <input type=\"text\" class=\"form-control\" placeholder=\"如:1,2,3或者1-4,5-9,这两种形式\" v-model=\"week\"\/> <\/div> <\/div> <div class=\"form-group\"> <textarea placeholder=\"备注提示\" name=\"notice\" rows=\"2\" v-model=\"notice\" class=\"form-control\"><\/textarea> <\/div> <hr> <\/div> <div class=\"form-group form-inline\"> <button class=\"btn btn-primary\" v-on=\"click:onSubmit\">创建课程表<\/button> <\/div>",methods:{
+			my: {template:"<h3>教师课表<\/h3> <div class=\"course-table\"> <table class=\"table\"> <thead> <tr> <th>&nbsp;<\/th> <th>课程名称<\/th> <th>班级<\/th> <th>周次<\/th> <th>星期<\/th> <th>节次<\/th> <th>地点<\/th> <th>操作<\/th> <\/tr> <\/thead> <tbody v-repeat=\"data.list\"> <tr v-repeat=\"locations\"> <td class=\"{{locations[$index] | course_location_check_today today none}}\"><\/td> <td v-if=\"$index==0\" rowspan=\"{{locations.length}}\"> <a href=\"#\/course_table\/{{courseTableID}}\">{{course.courseName}}<\/a> <\/td> <td v-if=\"$index==0\" rowspan=\"{{locations.length}}\"> <span v-repeat=\"classes_info\" class=\"btn-block\">{{className}}<\/span> <\/td> <td>{{week}}<\/td> <td>{{day|course_week_parse}}<\/td> <td><strong>{{slot}}<\/strong>大节<\/td> <td>{{location}}<\/td> <td v-if=\"$index==0\" rowspan=\"{{locations.length}}\"> <button class=\"btn btn-primary btn-sm\">编辑<\/button> <a v-if=\"course.status==0\" class=\"btn btn-success btn-sm\" href=\"#\/new_sign\/{{course.courseTableID}}\">新签到<\/a> <\/td> <\/tr> <\/tbody> <\/table> <\/div>",props:{
+	data: Object
+}},
+			add: {template:"<h3>添加课表<\/h3> <p class=\"alert-danger alert\" v-if=\"data.error\">{{data.error}}<\/p> <p class=\"alert-success alert\" v-if=\"data.success\">{{data.success}}<\/p> <div class=\"form-inline form-group\"> <select class=\"form-control\" disabled> <option>{{data.college.uniNickname}}<\/option> <\/select> <select class=\"form-control\" disabled> <option>{{data.college.collegeName}}<\/option> <\/select> <select class=\"form-control\" name=\"dept\" v-model=\"data.form.department\" v-on=\"change:departmentChange\"> <option value=\"\">--请选择--<\/option> <option v-repeat=\"data.college.departments\" value=\"{{id}}\">{{name}}<\/option> <\/select> <div class=\"input-group\"> <span class=\"input-group-addon\">年级<\/span> <select class=\"form-control\" name=\"year\" v-model=\"data.form.year\" v-on=\"change:yearChange\"> <option value=\"\">--请选择--<\/option> <option v-repeat=\"data.college.years\" value=\"{{year}}\">{{year}}<\/option> <\/select> <\/div> <\/div> <div class=\"form-inline form-group\" v-if=\"data.college.classes && data.form.year\"> <strong>班级 : <\/strong> <span v-if=\"data.college.classes.length==0\">无数据<\/span> <label v-repeat=\"data.college.classes\"> <input class=\"checkbox\" type=\"checkbox\" v-on=\"change:classChange\" value=\"{{id}}\"> {{name}}&nbsp;&nbsp;&nbsp; <\/label> <\/div> <div class=\"form-inline form-group\"> <div class=\"input-group\"> <span class=\"input-group-addon\">课程搜索<\/span> <input type=\"text\" name=\"course\" v-model=\"data.search.name\" v-on=\"blur: onSearchName\" class=\"form-control\"> <\/div> <button class=\"btn btn-primary\" type=\"button\" v-on=\"click: onSearchName\">查询当前可添加课程 <\/button> <\/div> <p v-if=\"data.data.course_name!=null && data.data.course_name.length==0\" class=\"alert alert-warning\">当前查询结果为空<\/p> <div class=\"form-group form-inline\" v-if=\"data.data.course_name!=null && data.data.course_name.length>0\"> <strong>选择课程 : &nbsp;&nbsp;<\/strong> <label v-repeat=\"data.data.course_name\"> <input type=\"radio\" name=\"my_schedule\" value=\"{{scheduleID}}\" v-model=\"data.form.scheduleID\"\/>{{courseName}},{{openTerm?\"秋季\":\"春季\"}}{{fromWeek}}-{{endWeek}}周&nbsp;&nbsp; <\/label> <\/div> <div class=\"form-group\"> <label>该课程表的附加介绍信息:<\/label> <textarea class=\"form-control\" v-model=\"data.form.notice\"><\/textarea> <\/div> <div class=\"form-group\"> <strong>上课地点：<\/strong> <button class=\"btn btn-success\" v-on=\"click:addLocation\">添加<\/button> <\/div> <div v-repeat=\"data.location\"> <div class=\"form-group form-inline\"> <button class=\"btn btn-danger\" v-on=\"click:removeLocation($index)\">移除<\/button> <div class=\"input-group\"> <span class=\"input-group-addon\">上课地点<\/span> <input type=\"text\" name=\"location\" placeholder=\"如果：13-A-303\" v-model=\"location\" class=\"form-control\"> <\/div> <div class=\"input-group\"> <span class=\"input-group-addon\">节次<\/span> <select name=\"slot\" v-model=\"slot\" class=\"form-control\"> <option>1<\/option> <option>2<\/option> <option>3<\/option> <option>4<\/option> <option>5<\/option> <option>6<\/option> <\/select> <\/div> <div class=\"input-group\"> <span class=\"input-group-addon\">星期<\/span> <select name=\"slot\" v-model=\"day\" class=\"form-control\"> <option value=\"1\">一<\/option> <option value=\"2\">二<\/option> <option value=\"3\">三<\/option> <option value=\"4\">四<\/option> <option value=\"5\">五<\/option> <option value=\"6\">六<\/option> <option value=\"7\">日<\/option> <\/select> <\/div> <\/div> <div class=\"form-group\"> <div class=\"input-group\"> <span class=\"input-group-addon\">周次规则<\/span> <input type=\"text\" class=\"form-control\" placeholder=\"如:1,2,3或者1-4,5-9,这两种形式\" v-model=\"week\"\/> <\/div> <\/div> <div class=\"form-group\"> <textarea placeholder=\"备注提示\" name=\"notice\" rows=\"2\" v-model=\"notice\" class=\"form-control\"><\/textarea> <\/div> <hr> <\/div> <div class=\"form-group form-inline\"> <button class=\"btn btn-primary\" v-on=\"click:onSubmit\">创建课程表<\/button> <\/div>",methods:{
 	setDept: function (college_id) {
 		var obj = this;
 		FUNC.ajax(CONFIG.api.college.get_departments, "get", {college_id: college_id}, function (result) {
 			if (result.status) {
-				obj.college.departments = FUNC.mapToObjArr(result.data.departments, "id", "name");
+				obj.data.college.departments = FUNC.mapToObjArr(result.data.departments, "id", "name");
 			} else {
-				obj.college.departments = [];
+				obj.data.college.departments = [];
 			}
 		});
 	},
 	departmentChange: function (event) {
 		var obj = this;
-		obj.college.years = [];
-		obj.college.classes = [];
-		obj.form.classes = [];
-		FUNC.ajax(CONFIG.api.college.get_class_year, "get", {dept_id: obj.form.department}, function (result) {
+		obj.data.college.years = [];
+		obj.data.college.classes = [];
+		obj.data.form.classes = [];
+		FUNC.ajax(CONFIG.api.college.get_class_year, "get", {dept_id: obj.data.form.department}, function (result) {
 			if (result.status) {
-				obj.college.years = FUNC.arrToObjArr(result.data.class_year, "year");
+				obj.data.college.years = FUNC.arrToObjArr(result.data.class_year, "year");
 			} else {
-				obj.college.years = [];
+				obj.data.college.years = [];
 			}
 		});
 	},
 	yearChange: function (event) {
 		var obj = this;
-		obj.college.classes = [];
-		obj.form.classes = [];
+		obj.data.college.classes = [];
+		obj.data.form.classes = [];
 		FUNC.ajax(CONFIG.api.college.get_classes, "get", {
-			dept_id: obj.form.department,
-			year: obj.form.year
+			dept_id: obj.data.form.department,
+			year: obj.data.form.year
 		}, function (result) {
 			if (result.status) {
-				obj.college.classes = FUNC.mapToObjArr(result.data.classes, "id", "name");
+				obj.data.college.classes = FUNC.mapToObjArr(result.data.classes, "id", "name");
 			} else {
-				obj.college.classes = [];
+				obj.data.college.classes = [];
 			}
 		});
 	},
@@ -1656,47 +1707,47 @@ Page.course_teacher = function () {
 		var obj = jQuery(event.target);
 		var val = obj.val();
 		if ((obj.is(":checked"))) {
-			this.form.classes.push(val);
+			this.data.form.classes.push(val);
 		} else {
 			var new_c = [];
-			for (var i in this.form.classes) {
-				if (this.form.classes[i] != val) {
-					new_c.push(this.form.classes[i]);
+			for (var i in this.data.form.classes) {
+				if (this.data.form.classes[i] != val) {
+					new_c.push(this.data.form.classes[i]);
 				}
 			}
-			this.form.classes = new_c;
+			this.data.form.classes = new_c;
 		}
 	},
 	onSearchName: function (event) {
 		event.preventDefault();
 		var obj = this;
-		obj.error = "";
-		if (obj.form.department == "") {
-			obj.error = "必须选择专业后进行查询课程";
+		obj.data.error = "";
+		if (obj.data.form.department == "") {
+			obj.data.error = "必须选择专业后进行查询课程";
 			return false;
 		}
-		if (obj.search.name == "") {
-			obj.error = "必须指定一个课程名称进行搜索";
+		if (obj.data.search.name == "") {
+			obj.data.error = "必须指定一个课程名称进行搜索";
 			return false;
 		}
 		FUNC.ajax(CONFIG.api.schedule.search, "get", {
-			department: obj.form.department,
-			course_name: obj.search.name,
+			department: obj.data.form.department,
+			course_name: obj.data.search.name,
 			year: new Date().getFullYear(),
 			status: 0,
 			detail: 2
 		}, function (result) {
 			if (result.status) {
-				obj.data.course_name = result.data.result;
+				obj.data.data.course_name = result.data.result;
 			} else {
-				obj.error = result.msg;
+				obj.data.error = result.msg;
 			}
 		});
 		return false;
 	},
 	addLocation: function (event) {
 		var obj = this;
-		obj.location.push({
+		obj.data.location.push({
 			location: '',
 			slot: 1,
 			day: 1,
@@ -1710,39 +1761,39 @@ Page.course_teacher = function () {
 	removeLocation: function (index) {
 		var obj = this;
 		var new_l = [];
-		for (var i in obj.location) {
+		for (var i in obj.data.location) {
 			if (i == index)continue;
-			new_l.push(obj.location[i])
+			new_l.push(obj.data.location[i])
 		}
-		obj.location = new_l;
+		obj.data.location = new_l;
 	},
 	onSubmit: function (event) {
 		event.preventDefault();
 		var obj = this;
-		obj.form.location = "";
-		obj.error = "";
-		if (obj.form.department == "") {
-			obj.error = "请选择一个专业";
+		obj.data.form.location = "";
+		obj.data.error = "";
+		if (obj.data.form.department == "") {
+			obj.data.error = "请选择一个专业";
 			return false;
 		}
-		if (obj.form.year == "") {
-			obj.error = "必须选择合适的入学年份";
+		if (obj.data.form.year == "") {
+			obj.data.error = "必须选择合适的入学年份";
 			return false;
 		}
-		if (obj.form.classes.length == 0) {
-			obj.error = "没有选择一个合适的班级";
+		if (obj.data.form.classes.length == 0) {
+			obj.data.error = "没有选择一个合适的班级";
 			return false;
 		}
-		if (obj.form.scheduleID == "") {
-			obj.error = "必须查询一个课程添加到当前课程表";
+		if (obj.data.form.scheduleID == "") {
+			obj.data.error = "必须查询一个课程添加到当前课程表";
 			return false;
 		}
-		if (obj.location.length < 1) {
-			obj.error = "至少有一个上课地点";
+		if (obj.data.location.length < 1) {
+			obj.data.error = "至少有一个上课地点";
 			return false;
 		}
-		for (var i in obj.location) {
-			var x = obj.location[i];
+		for (var i in obj.data.location) {
+			var x = obj.data.location[i];
 			var x_n = "第" + (parseInt(i) + 1) + "个";
 			if (x.location == "") {
 				obj.error = x_n + "上课地点不能为空";
@@ -1761,14 +1812,14 @@ Page.course_teacher = function () {
 				return false;
 			}
 		}
-		obj.form.location = JSON.stringify(obj.location);
+		obj.data.form.location = JSON.stringify(obj.data.location);
 		//var tmp = FUNC.clone(obj.form);
 		//tmp.classes = tmp.classes.join(",");
-		FUNC.ajax(CONFIG.api.course_table.add, "post", obj.form, function (result) {
+		FUNC.ajax(CONFIG.api.course_table.add, "post", obj.data.form, function (result) {
 			if (result.status) {
-				obj.error = "";
-				obj.success = "成功添加该课程";
-				obj.form = {
+				obj.data.error = "";
+				obj.data.success = "成功添加该课程";
+				obj.data.form = {
 					department: "",
 					year: "",
 					notice: "",
@@ -1776,19 +1827,23 @@ Page.course_teacher = function () {
 					classes: [],
 					location: ""
 				};
-				obj.location = [];
+				obj.data.location = [];
 				setTimeout(function (obj) {
 					if (obj != null && obj.hasOwnProperty("success")) {
-						obj.success = "";
+						obj.data.success = "";
 					}
 				}, 5000)
 			} else {
-				obj.error = result.msg;
+				obj.data.error = result.msg;
 			}
 		});
 	}
+},props:{
+	data: Object
+},created:function () {
+	this.data.call(this);
 }},
-			course_list: {template:"<h3>课程列表<\/h3> <p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p> <form v-on=\"submit: submitCourseAdd\" class=\"form-group\"> <div class=\"form-inline\"> <div class=\"input-group\"> <span class=\"input-group-addon\">课程名<\/span> <input type=\"text\" v-model=\"form.name\" name=\"name\" class=\"form-control\" placeholder=\"如：计算机网络, 组成原理等课程名称\"> <\/div> <button type=\"submit\" class=\"btn btn-primary\">添加<\/button> <\/div> <\/form> <div v-if=\"course_list.length>0\"> <button class=\"btn btn-info\" v-repeat=\"course_list\" v-on=\"click: courseClick\" data-value=\"{{id}}\">{{name}}<\/button> <\/div>",methods:{
+			course_list: {template:"<h3>课程列表<\/h3> <p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p> <form v-on=\"submit: submitCourseAdd\" class=\"form-group\"> <div class=\"form-inline\"> <div class=\"input-group\"> <span class=\"input-group-addon\">课程名<\/span> <input type=\"text\" v-model=\"form.name\" name=\"name\" class=\"form-control\" placeholder=\"如：计算机网络, 组成原理等课程名称\"> <\/div> <button type=\"submit\" class=\"btn btn-primary\">添加<\/button> <\/div> <\/form> <div v-if=\"data.course_list.length>0\"> <button class=\"btn btn-info\" v-repeat=\"data.course_list\" v-on=\"click: courseClick\" data-value=\"{{id}}\">{{name}}<\/button> <\/div>",methods:{
 	submitCourseAdd: function (event) {
 		event.preventDefault();
 		var obj = this;
@@ -1800,7 +1855,7 @@ Page.course_teacher = function () {
 		FUNC.ajax(CONFIG.api.course.add, "post", {name: obj.form.name}, function (result) {
 			obj.error = "";
 			if (result.status) {
-				obj.course_list.push(result.data);
+				obj.data.course_list.push(result.data);
 				obj.form.name = "";
 			} else {
 				obj.error = result.msg;
@@ -1819,20 +1874,30 @@ Page.course_teacher = function () {
 				if (result.status) {
 					obj.error = "";
 					var n_data = [];
-					for (var i in obj.course_list) {
-						if (obj.course_list[i].id != id) {
-							n_data.push(obj.course_list[i]);
+					for (var i in obj.data.course_list) {
+						if (obj.data.course_list[i].id != id) {
+							n_data.push(obj.data.course_list[i]);
 						}
 					}
-					obj.course_list = n_data;
+					obj.data.course_list = n_data;
 				} else {
 					obj.error = result.msg;
 				}
 			});
 		}
 	}
+},data:function () {
+	return {
+		error: "",
+		form: {
+			name: ""
+		}
+	}
+},props:{
+	data: Object
+
 }},
-			schedule_search: {template:"<h3>课程表搜索<\/h3> <p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p> <p class=\"alert-success alert\" v-if=\"success\">{{success}}<\/p> <form v-on=\"submit: onSearch\"> <div class=\"form-inline form-group\"> <select class=\"form-control\" disabled> <option>{{data.uniNickname}}<\/option> <\/select> <select class=\"form-control\" disabled> <option>{{data.collegeName}}<\/option> <\/select> <select class=\"form-control\" name=\"dept\" v-model=\"form.department\"> <option value=\"\">--请选择--<\/option> <option v-repeat=\"data.departments\" value=\"{{id}}\">{{name}}<\/option> <\/select> <div class=\"input-group\"> <span class=\"input-group-addon\">年份<\/span> <select class=\"form-control\" name=\"year\" v-model=\"form.year\"> <option v-repeat=\"data.year\">{{year}}<\/option> <\/select> <\/div> <div class=\"input-group\"> <span class=\"input-group-addon\">学期<\/span> <select class=\"form-control\" name=\"term\" v-model=\"form.term\"> <option v-repeat=\"data.term\" value=\"{{id}}\">{{term}}<\/option> <\/select> <\/div> <div class=\"input-group\"> <span class=\"input-group-addon\">状态<\/span> <select class=\"form-control\" name=\"openTerm\" v-model=\"form.status\"> <option v-repeat=\"data.status\" value=\"{{id}}\">{{status}}<\/option> <\/select> <\/div> <\/div> <div class=\"form-inline form-group\"> <div class=\"input-group\"> <span class=\"input-group-addon\">课程名<\/span> <input type=\"text\" class=\"form-control\" v-model=\"form.course_name\"> <\/div> <div class=\"input-group\"> <span class=\"input-group-addon\">课程名ID(唯一搜索)<\/span> <input type=\"number\" class=\"form-control\" v-model=\"form.course_id\"> <\/div> <button class=\"btn btn-primary\" type=\"submit\">搜索<\/button> <\/div> <\/form> <p v-if=\"result!=null && result.length==0\" class=\"alert alert-warning\">当前查询结果为空<\/p> <table v-if=\"result!=null && result.length>0\" class=\"table table-responsive table-striped table-hover\"> <thead> <tr> <th>课程ID<\/th> <th>课程名<\/th> <th>年份<\/th> <th>周次<\/th> <th>状态<\/th> <\/tr> <\/thead> <tbody> <tr v-repeat=\"result\"> <td>{{scheduleID}}<\/td> <td>{{courseName}}({{courseID}})<\/td> <td>{{openYear}}年{{openTerm?\"秋季\":\"春季\"}}<\/td> <td>{{fromWeek}}-{{endWeek}} 周<\/td> <td> <span class=\"label label-primary\" v-if=\"status==0\">开课中<\/span> <span class=\"label label-warning\" v-if=\"status==1\">未开课<\/span> <span class=\"label label-danger\" v-if=\"status==2\">已结束<\/span> <\/td> <\/tr> <\/tbody> <\/table>",methods:{
+			schedule_search: {template:"<h3>课程表搜索<\/h3> <p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p> <p class=\"alert-success alert\" v-if=\"success\">{{success}}<\/p> <form v-on=\"submit: onSearch\"> <div class=\"form-inline form-group\"> <select class=\"form-control\" disabled> <option>{{data.data.uniNickname}}<\/option> <\/select> <select class=\"form-control\" disabled> <option>{{data.data.collegeName}}<\/option> <\/select> <select class=\"form-control\" name=\"dept\" v-model=\"form.department\"> <option value=\"\">--请选择--<\/option> <option v-repeat=\"data.data.departments\" value=\"{{id}}\">{{name}}<\/option> <\/select> <div class=\"input-group\"> <span class=\"input-group-addon\">年份<\/span> <select class=\"form-control\" name=\"year\" v-model=\"form.year\"> <option v-repeat=\"data.data.year\">{{year}}<\/option> <\/select> <\/div> <div class=\"input-group\"> <span class=\"input-group-addon\">学期<\/span> <select class=\"form-control\" name=\"term\" v-model=\"form.term\"> <option v-repeat=\"data.data.term\" value=\"{{id}}\">{{term}}<\/option> <\/select> <\/div> <div class=\"input-group\"> <span class=\"input-group-addon\">状态<\/span> <select class=\"form-control\" name=\"openTerm\" v-model=\"form.status\"> <option v-repeat=\"data.data.status\" value=\"{{id}}\">{{status}}<\/option> <\/select> <\/div> <\/div> <div class=\"form-inline form-group\"> <div class=\"input-group\"> <span class=\"input-group-addon\">课程名<\/span> <input type=\"text\" class=\"form-control\" v-model=\"form.course_name\"> <\/div> <div class=\"input-group\"> <span class=\"input-group-addon\">课程名ID(唯一搜索)<\/span> <input type=\"number\" class=\"form-control\" v-model=\"form.course_id\"> <\/div> <button class=\"btn btn-primary\" type=\"submit\">搜索<\/button> <\/div> <\/form> <p v-if=\"result!=null && result.length==0\" class=\"alert alert-warning\">当前查询结果为空<\/p> <table v-if=\"result!=null && result.length>0\" class=\"table table-responsive table-striped table-hover\"> <thead> <tr> <th>课程ID<\/th> <th>课程名<\/th> <th>年份<\/th> <th>周次<\/th> <th>状态<\/th> <\/tr> <\/thead> <tbody> <tr v-repeat=\"result\"> <td>{{scheduleID}}<\/td> <td>{{courseName}}({{courseID}})<\/td> <td>{{openYear}}年{{openTerm?\"秋季\":\"春季\"}}<\/td> <td>{{fromWeek}}-{{endWeek}} 周<\/td> <td> <span class=\"label label-primary\" v-if=\"status==0\">开课中<\/span> <span class=\"label label-warning\" v-if=\"status==1\">未开课<\/span> <span class=\"label label-danger\" v-if=\"status==2\">已结束<\/span> <\/td> <\/tr> <\/tbody> <\/table>",methods:{
 	onSearch: function (event) {
 		event.preventDefault();
 		var obj = this;
@@ -1863,15 +1928,33 @@ Page.course_teacher = function () {
 		});
 		return false;
 	}
+},data:function () {
+	return {
+		error: "",
+		success: "",
+		form: {
+			department: "",
+			course_name: "",
+			course_id: "",
+			year: "",
+			status: "",
+			term: 0
+		},
+		result: null
+	};
+},props:{
+	data: Object
+},created:function () {
+	this.data.call(this);
 }},
-			schedule_add: {template:"<h3>添加课程<\/h3> <p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p> <p class=\"alert-success alert\" v-if=\"success\">{{success}}<\/p> <form v-on=\"submit:submitScheduleAdd\"> <div class=\"form-inline form-group\"> <select class=\"form-control\" disabled> <option>{{data.uniNickname}}<\/option> <\/select> <select class=\"form-control\" disabled> <option>{{data.collegeName}}<\/option> <\/select> <select class=\"form-control\" name=\"dept\" v-model=\"form.department\"> <option value=\"\">--请选择--<\/option> <option v-repeat=\"data.departments\" value=\"{{id}}\">{{name}}<\/option> <\/select> <\/div> <div class=\"form-inline form-group\"> <div class=\"input-group\" v-class=\"courseName.error?'has-error':''\"> <span class=\"input-group-addon\">课程名<\/span> <input type=\"text\" v-model=\"form.name\" name=\"name\" class=\"form-control\" v-on=\"blur: onSearchName\" placeholder=\"一个存在课程名称\"> <\/div> <div class=\"input-group\"> <span class=\"input-group-addon\">开学年份<\/span> <select class=\"form-control\" name=\"openYear\" v-model=\"form.openYear\"> <option v-repeat=\"data.openYear\">{{year}}<\/option> <\/select> <\/div> <div class=\"input-group\"> <span class=\"input-group-addon\">学期<\/span> <select class=\"form-control\" name=\"openTerm\" v-model=\"form.openTerm\"> <option v-repeat=\"data.openTerm\" value=\"{{id}}\">{{term}}<\/option> <\/select> <\/div> <\/div> <div v-if=\"courseName.list!==null\" class=\"form-inline form-group\"> 选择一个课程名称： <button class=\"btn btn-sm btn-info\" type=\"button\" v-repeat=\"courseName.list\" v-on=\"click: onSelectCourseName($value)\">{{$value}} <\/button> <\/div> <div class=\"form-inline form-group\"> <div class=\"input-group\"> <span class=\"input-group-addon\">开始周<\/span> <input type=\"number\" v-model=\"form.fromWeek\" name=\"fromWeek\" class=\"form-control\" placeholder=\"开课周，1-28\"> <\/div> <div class=\"input-group\"> <span class=\"input-group-addon\">结束周<\/span> <input type=\"number\" v-model=\"form.endWeek\" name=\"endWeek\" class=\"form-control\" placeholder=\"结束周，1-28\"> <\/div> <\/div> <div class=\"form-group\"> <label for=\"TextareaRequirement\">课程需求<\/label> <textarea class=\"form-control\" v-model=\"form.requirement\" id=\"TextareaRequirement\"><\/textarea> <\/div> <div class=\"form-group\"> <label for=\"TextareaContent\">主要内容<\/label> <textarea rows=\"3\" class=\"form-control\" v-model=\"form.content\" id=\"TextareaContent\"><\/textarea> <\/div> <div class=\"form-group\"> <button class=\"btn btn-primary\">创建课程<\/button> <\/div> <\/form> ",methods:{
+			schedule_add: {template:"<h3>添加课程<\/h3> <p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p> <p class=\"alert-success alert\" v-if=\"success\">{{success}}<\/p> <form v-on=\"submit:submitScheduleAdd\"> <div class=\"form-inline form-group\"> <select class=\"form-control\" disabled> <option>{{data.data.uniNickname}}<\/option> <\/select> <select class=\"form-control\" disabled> <option>{{data.data.collegeName}}<\/option> <\/select> <select class=\"form-control\" name=\"dept\" v-model=\"form.department\"> <option value=\"\">--请选择--<\/option> <option v-repeat=\"data.data.departments\" value=\"{{id}}\">{{name}}<\/option> <\/select> <\/div> <div class=\"form-inline form-group\"> <div class=\"input-group\" v-class=\"courseName.error?'has-error':''\"> <span class=\"input-group-addon\">课程名<\/span> <input type=\"text\" v-model=\"form.name\" name=\"name\" class=\"form-control\" v-on=\"blur: onSearchName\" placeholder=\"一个存在课程名称\"> <\/div> <div class=\"input-group\"> <span class=\"input-group-addon\">开学年份<\/span> <select class=\"form-control\" name=\"openYear\" v-model=\"form.openYear\"> <option v-repeat=\"data.data.openYear\">{{year}}<\/option> <\/select> <\/div> <div class=\"input-group\"> <span class=\"input-group-addon\">学期<\/span> <select class=\"form-control\" name=\"openTerm\" v-model=\"form.openTerm\"> <option v-repeat=\"data.data.openTerm\" value=\"{{id}}\">{{term}}<\/option> <\/select> <\/div> <\/div> <div v-if=\"courseName.list!==null\" class=\"form-inline form-group\"> 选择一个课程名称： <button class=\"btn btn-sm btn-info\" type=\"button\" v-repeat=\"courseName.list\" v-on=\"click: onSelectCourseName($value)\">{{$value}} <\/button> <\/div> <div class=\"form-inline form-group\"> <div class=\"input-group\"> <span class=\"input-group-addon\">开始周<\/span> <input type=\"number\" v-model=\"form.fromWeek\" name=\"fromWeek\" class=\"form-control\" placeholder=\"开课周，1-28\"> <\/div> <div class=\"input-group\"> <span class=\"input-group-addon\">结束周<\/span> <input type=\"number\" v-model=\"form.endWeek\" name=\"endWeek\" class=\"form-control\" placeholder=\"结束周，1-28\"> <\/div> <\/div> <div class=\"form-group\"> <label for=\"TextareaRequirement\">课程需求<\/label> <textarea class=\"form-control\" v-model=\"form.requirement\" id=\"TextareaRequirement\"><\/textarea> <\/div> <div class=\"form-group\"> <label for=\"TextareaContent\">主要内容<\/label> <textarea rows=\"3\" class=\"form-control\" v-model=\"form.content\" id=\"TextareaContent\"><\/textarea> <\/div> <div class=\"form-group\"> <button class=\"btn btn-primary\">创建课程<\/button> <\/div> <\/form> ",methods:{
 	setDept: function (college_id) {
 		var obj = this;
 		FUNC.ajax(CONFIG.api.college.get_departments, "get", {college_id: college_id}, function (result) {
 			if (result.status) {
-				obj.data.departments = FUNC.mapToObjArr(result.data.departments, "id", "name");
+				obj.data.data.departments = FUNC.mapToObjArr(result.data.departments, "id", "name");
 			} else {
-				obj.data.departments = [];
+				obj.data.data.departments = [];
 			}
 		});
 	},
@@ -1936,6 +2019,29 @@ Page.course_teacher = function () {
 			}
 		});
 	}
+},data:function () {
+	return {
+		error: "",
+		success: "",
+		form: {
+			department: "",
+			name: "",
+			openYear: "",
+			openTerm: "",
+			fromWeek: "",
+			endWeek: "",
+			requirement: "",
+			content: ""
+		},
+		courseName: {
+			list: null,
+			error: false
+		}
+	};
+},props:{
+	data: Object
+},created:function(){
+	this.data.call(this);
 }},
 			new_sign: {template:"<h3>创建一个新的签到<\/h3> <p class=\"alert alert-danger\" v-if=\"error\">{{error}}<\/p> <div v-if=\"result\" class=\"alert alert-success\"> <p>成功创建了签到任务:<\/p> <p>签到ID为：<strong class=\"text-danger\">{{result.signID}}<\/strong><\/p> <p>有效期为: <small>{{result.beginTime|timestamp_to_date}}<\/small> - <small>{{result.endTime|timestamp_to_date}}<\/small><\/p> <\/div> <form v-if=\"!result\" method=\"post\" v-on=\"submit:onSubmit\"> <div class=\"form-group\"> <p><strong>课程：<\/strong>{{course_data.courseName}}, {{course_data.deptName}}, {{course_data.enrolYear}}级<\/p> <p><strong>班级：<\/strong><span v-repeat=\"class_info\" class=\"label label-info\">{{className}}<\/span><\/p> <\/div> <div class=\"form-group\"> <label class=\"control-label\" for=\"InputName\">签到名称<\/label> <input id=\"InputName\" type=\"text\" v-model=\"form.name\" class=\"form-control\"\/> <\/div> <div class=\"form-group\"> <label class=\"control-label\" for=\"InputDetail\">细节<\/label> <textarea id=\"InputDetail\" v-model=\"form.detail\" placeholder=\"可留空\" class=\"form-control\"><\/textarea> <\/div> <div class=\"form-group form-inline\"> <div class=\"input-group\"> <span class=\"input-group-addon\">有效时间<\/span> <div class=\"input-group-btn\"> <button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\">{{form.time>0?(form.time+'分钟'):'无效时间'}}<span class=\"caret\"><\/span> <\/button> <ul class=\"dropdown-menu\" role=\"menu\"> <li><a href=\"javascript:void(0)\" v-on=\"click:form.time=30\">30分钟<\/a><\/li> <li><a href=\"javascript:void(0)\" v-on=\"click:form.time=90\">90分钟<\/a><\/li> <li><a href=\"javascript:void(0)\" v-on=\"click:form.time=45\">45分钟<\/a><\/li> <li><a href=\"javascript:void(0)\" v-on=\"click:form.time=15\">15分钟<\/a><\/li> <\/ul> <\/div> <input type=\"number\" class=\"form-control\" placeholder=\"有效时间，分钟\" v-model=\"form.time\" aria-describedby=\"basic-addon1\"> <\/div> <\/div> <div class=\"form-group\"> <button class=\"btn btn-primary\" type=\"submit\">创建一个签到<\/button> <\/div> <\/form>",methods:{
 	/**
@@ -1944,9 +2050,9 @@ Page.course_teacher = function () {
 	set_course_info: function () {
 		var obj = this;
 		obj.form.name = obj.course_data.courseName +
-		"(" + obj.course_data.teacherName + ")"
-		+ "，第" + obj.week.week + "周上课签到，" +
-		"星期" + CONST_MAP.weekMap[(new Date()).getDay()];
+			"(" + obj.course_data.teacherName + ")"
+			+ "，第" + obj.week.week + "周上课签到，" +
+			"星期" + CONST_MAP.weekMap[(new Date()).getDay()];
 	},
 	onSubmit: function (event) {
 		event.preventDefault();
@@ -1971,25 +2077,53 @@ Page.course_teacher = function () {
 		});
 		return false;
 	}
+},data:function () {
+	return {
+		class_info: null,
+		course_data: null,
+		week: null,
+		error: null,
+		result: null,
+		form: {
+			course_table_id: -1,
+			name: '',
+			detail: '',
+			time: 45
+		}
+	};
+},props:{
+	data: Object
+},created:function () {
+	this.data.call(this);
 }},
-			course_table: {template:"<p v-if=\"loading\" class=\"alert alert-info\">加载中<\/p> <p v-if=\"error\" class=\"alert alert-danger\">{{error}}<\/p> <div v-if=\"table!==null\" class=\"course-table-detail\"> <h3>{{table.course.courseName}}<\/h3> <ul class=\"list-unstyled\"> <li><strong>专业：<\/strong> {{table.course.deptName}}({{table.course.deptNickName}}{{table.course.enrolYear}}级) <\/li> <li><strong>老师：<\/strong> {{table.course.teacherName}}({{table.course.teacherID}}) <\/li> <li><strong>开课：<\/strong> {{table.course.openYear}} {{table.course.openTerm|course_term}} <\/li> <li><strong>周次：<\/strong> {{table.course.fromWeek}}-{{table.course.endWeek}} 周 <\/li> <li><strong>状态：<\/strong> {{{table.course.status|course_status_label}}} <\/li> <\/ul> <h5 class=\"class-info\" v-if=\"table.classes_info!==null\">所属班级信息： <span class=\"label label-info\" v-repeat=\"table.classes_info\"> {{className}} <\/span> <\/h5> <table v-if=\"table.locations!==null\" class=\"ct-location table table-responsive table-hover table-bordered\"> <caption><h4>上课地点<\/h4><\/caption> <thead> <tr> <th>&nbsp;<\/th> <th>地点<\/th> <th>周次<\/th> <th>节次<\/th> <th>星期<\/th> <th>备注<\/th> <\/tr> <\/thead> <tbody> <tr v-repeat=\"table.locations\"> <td class=\"ct-location-edit\"> <a href=\"#\" class=\"text-danger\"><span class=\"glyphicon glyphicon-edit\"><\/span><\/a> <\/td> <td>{{location}}<\/td> <td>{{week}}<\/td> <td>{{slot}}<\/td> <td>{{day|course_week_parse}}<\/td> <td class=\"notice\"> {{notice}} <\/td> <\/tr> <\/tbody> <\/table> <\/div>",methods:{
+			course_table: {template:"<p v-if=\"data.loading\" class=\"alert alert-info\">加载中<\/p> <p v-if=\"data.error\" class=\"alert alert-danger\">{{data.error}}<\/p> <div v-if=\"data.table!==null\" class=\"course-table-detail\"> <h3>{{data.table.course.courseName}}<\/h3> <ul class=\"list-unstyled\"> <li><strong>专业：<\/strong> {{data.table.course.deptName}}({{data.table.course.deptNickName}}{{data.table.course.enrolYear}}级) <\/li> <li><strong>老师：<\/strong> {{data.table.course.teacherName}}({{data.table.course.teacherID}}) <\/li> <li><strong>开课：<\/strong> {{data.table.course.openYear}} {{data.table.course.openTerm|course_term}} <\/li> <li><strong>周次：<\/strong> {{data.table.course.fromWeek}}-{{data.table.course.endWeek}} 周 <\/li> <li><strong>状态：<\/strong> {{{data.table.course.status|course_status_label}}} <\/li> <\/ul> <h5 class=\"class-info\" v-if=\"data.table.classes_info!==null\">所属班级信息： <span class=\"label label-info\" v-repeat=\"data.table.classes_info\"> {{className}} <\/span> <\/h5> <table v-if=\"data.table.locations!==null\" class=\"ct-location table table-responsive table-hover table-bordered\"> <caption><h4>上课地点<\/h4><\/caption> <thead> <tr> <th>&nbsp;<\/th> <th>地点<\/th> <th>周次<\/th> <th>节次<\/th> <th>星期<\/th> <th>备注<\/th> <\/tr> <\/thead> <tbody> <tr v-repeat=\"data.table.locations\"> <td class=\"ct-location-edit\"> <a href=\"#\" class=\"text-danger\"><span class=\"glyphicon glyphicon-edit\"><\/span><\/a> <\/td> <td>{{location}}<\/td> <td>{{week}}<\/td> <td>{{slot}}<\/td> <td>{{day|course_week_parse}}<\/td> <td class=\"notice\"> {{notice}} <\/td> <\/tr> <\/tbody> <\/table> <component call=\"{{data.review}}\" is=\"review-review\"><\/component> <\/div>",methods:{
 	load: function (id) {
 		var obj = this;
-		obj.loading = true;
-		obj.error = null;
+		obj.data.loading = true;
+		obj.data.error = null;
 		FUNC.ajax(CONFIG.api.course_table.get + "/" + id, "get", {
 			set_class_info: 1,
 			set_location: 1
 		}, function (result) {
-			obj.loading = false;
+			obj.data.loading = false;
 			if (result.status) {
-				obj.table = result.data;
+				obj.data.table = result.data;
+				obj.load_review(id);
 			} else {
-				obj.table = null;
-				obj.error = result.msg;
+				obj.data.table = null;
+				obj.data.error = result.msg;
 			}
 		});
+	},
+	load_review: function (id) {
+		this.data.review = function (_obj) {
+			_obj.load(id);
+		};
 	}
+},props:{
+	data: Object
+},created:function () {
+	this.data.call(this);
 }}
 		}
 	});
@@ -2307,12 +2441,7 @@ Page.home = function () {
 				home_vm.currentView = "edit_avatar";
 			},
 			m_edit_password: function () {
-				home_vm.result = {
-					old: "",
-					new_pwd: "",
-					error: null,
-					success: false
-				};
+				home_vm.result = {};
 				home_vm.currentView = "edit_password";
 			},
 			m_edit_profile_student: function (result) {
@@ -2353,68 +2482,72 @@ Page.home = function () {
 			}
 		},
 		components: {
-			student_info: {template:"<div class=\"home-student-info\"> <h3>我的个人信息<\/h3> <dl class=\"dl-horizontal\"> <dt>用户名<\/dt> <dd>{{user.uid}}<\/dd> <dt>姓名<\/dt> <dd>{{user.name}}<\/dd> <dt>性别<\/dt> <dd>{{user.sex}}<\/dd> <dt>学校<\/dt> <dd>{{college.uniName}}<\/dd> <dt>学院<\/dt> <dd>{{college.collegeName}}<\/dd> <dt>专业<\/dt> <dd>{{college.deptName}}<\/dd> <dt>班级<\/dt> <dd>{{college.className}}<\/dd> <dt>个人简介<\/dt> <dd>{{user.description}}<\/dd> <\/dl> <\/div>"},
-			teacher_info: {template:"<div class=\"home-student-info\"> <h3>教师信息<\/h3> <dl class=\"dl-horizontal\"> <dt>用户名<\/dt> <dd>{{user.uid}}<\/dd> <dt>姓名<\/dt> <dd>{{user.name}}<\/dd> <dt>性别<\/dt> <dd>{{user.sex}}<\/dd> <dt>学校<\/dt> <dd>{{college.uniName}}<\/dd> <dt>学院<\/dt> <dd>{{college.collegeName}}<\/dd> <dt>个人简介<\/dt> <dd>{{user.description}}<\/dd> <\/dl> <\/div>"},
-			edit_avatar: {template:"<div> <h4>当前头像:<\/h4> <img class=\"img-circle img-responsive\" v-attr=\"src: now_avatar\"> <h4>上传新头像:<\/h4> <div class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/div> <div class=\"alert-success alert\" v-if=\"success\">头像更换成功<\/div> <form method=\"post\" v-on=\"submit: onSubmitAvatar\"> <div class=\"form-group\"> <label for=\"InputFile\">选择图片<\/label> <input type=\"file\" id=\"InputFile\" v-on=\"change: fileChange\"> <p class=\"help-block\">从这里选择你要上传的图片，最大2MB，将会默认居中裁剪为200x200的方形。<\/p> <div class=\"progress\" v-if=\"percentComplete>0\"> <div class=\"progress-bar progress-bar-info progress-bar-striped\" role=\"progressbar\" aria-valuenow=\"{{percentComplete}}\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: {{percentComplete}}%\"> <span v-if=\"percentComplete==100\">上传结束，处理中<\/span> <\/div> <\/div> <\/div> <div class=\"form-group\"> <button type=\"submit\" class=\"btn btn-primary\">上传新的头像<\/button> <\/div> <\/form> <\/div>",methods:{
+			student_info: {template:"<div class=\"home-student-info\"> <h3>我的个人信息<\/h3> <dl class=\"dl-horizontal\"> <dt>用户名<\/dt> <dd>{{data.user.uid}}<\/dd> <dt>姓名<\/dt> <dd>{{data.user.name}}<\/dd> <dt>性别<\/dt> <dd>{{data.user.sex}}<\/dd> <dt>学校<\/dt> <dd>{{data.college.uniName}}<\/dd> <dt>学院<\/dt> <dd>{{data.college.collegeName}}<\/dd> <dt>专业<\/dt> <dd>{{data.college.deptName}}<\/dd> <dt>班级<\/dt> <dd>{{data.college.className}}<\/dd> <dt>个人简介<\/dt> <dd>{{data.user.description}}<\/dd> <\/dl> <\/div>",props:{
+	data: Object
+}},
+			teacher_info: {template:"<div class=\"home-student-info\"> <h3>教师信息<\/h3> <dl class=\"dl-horizontal\"> <dt>用户名<\/dt> <dd>{{data.user.uid}}<\/dd> <dt>姓名<\/dt> <dd>{{data.user.name}}<\/dd> <dt>性别<\/dt> <dd>{{data.user.sex}}<\/dd> <dt>学校<\/dt> <dd>{{data.college.uniName}}<\/dd> <dt>学院<\/dt> <dd>{{data.college.collegeName}}<\/dd> <dt>个人简介<\/dt> <dd>{{data.user.description}}<\/dd> <\/dl> <\/div>",props:{
+	data: Object
+}},
+			edit_avatar: {template:"<div> <h4>当前头像:<\/h4> <img class=\"img-circle img-responsive\" v-attr=\"src: data.now_avatar\"> <h4>上传新头像:<\/h4> <div class=\"alert-danger alert\" v-if=\"data.error\">{{data.error}}<\/div> <div class=\"alert-success alert\" v-if=\"data.success\">头像更换成功<\/div> <form method=\"post\" v-on=\"submit: onSubmitAvatar\"> <div class=\"form-group\"> <label for=\"InputFile\">选择图片<\/label> <input type=\"file\" id=\"InputFile\" v-on=\"change: fileChange\"> <p class=\"help-block\">从这里选择你要上传的图片，最大2MB，将会默认居中裁剪为200x200的方形。<\/p> <div class=\"progress\" v-if=\"data.percentComplete>0\"> <div class=\"progress-bar progress-bar-info progress-bar-striped\" role=\"progressbar\" aria-valuenow=\"{{data.percentComplete}}\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: {{data.percentComplete}}%\"> <span v-if=\"data.percentComplete==100\">上传结束，处理中<\/span> <\/div> <\/div> <\/div> <div class=\"form-group\"> <button type=\"submit\" class=\"btn btn-primary\">上传新的头像<\/button> <\/div> <\/form> <\/div>",methods:{
 	onSubmitAvatar: function (event) {
 		event.preventDefault();
-		this.error = null;
-		this.success = false;
-		if (this.file) {
+		this.data.error = null;
+		this.data.success = false;
+		if (this.data.file) {
 			var fd = new FormData(); //创建表单
-			fd.append("avatar", this.file);
+			fd.append("avatar", this.data.file);
 			var obj = this;
-			obj.percentComplete = -1;//-1表示未开始
+			obj.data.percentComplete = -1;//-1表示未开始
 			FUNC.fileUpload(CONFIG.api.user.upload_avatar, fd, function () {
-				obj.percentComplete = -1;
+				obj.data.percentComplete = -1;
 				if (this.status !== 200) {
-					obj.error = "请求错误：" + this.status + " - " + this.statusText;
+					obj.data.error = "请求错误：" + this.status + " - " + this.statusText;
 					return;
 				}
 				var data = FUNC.parseJSON(this.response);
 				if (data.status) {
-					obj.error = "";
-					obj.success = true;
+					obj.data.error = "";
+					obj.data.success = true;
 					var rand = Math.random();
-					obj.now_avatar = data.data.avatar_more.lager + "?_=" + rand;//更新当前头像
+					obj.data.now_avatar = data.data.avatar_more.lager + "?_=" + rand;//更新当前头像
 					Member.data = data.data;//更新数据
 					if (APP.page.hasOwnProperty("header")) {
 						APP.page.header.avatar = data.data.avatar + "?_=" + rand;
 					}
 				} else {
-					obj.error = data.msg;
+					obj.data.error = data.msg;
 				}
 			}, this.progress);
 		} else {
-			this.error = "未选择正确的图片";
+			this.data.error = "未选择正确的图片";
 		}
 		return false;
 	},
 	progress: function (event) {
 		if (event.lengthComputable) {
-			var percent = Math.round(event.loaded * 100 / event.total);
-			this.percentComplete = percent;
-			console.log(percent);
+			this.data.percentComplete = Math.round(event.loaded * 100 / event.total);
 		}
 	},
 	fileChange: function (event) {
-		this.file = event.target.files[0];
-		this.error = null;
-		if (this.file.size > 1024 * 2 * 1024) {
-			this.error = "当前文件大于2MB，大小：" + FUNC.fileSize(this.file.size);
+		this.data.file = event.target.files[0];
+		this.data.error = null;
+		if (this.data.file.size > 1024 * 2 * 1024) {
+			this.data.error = "当前文件大于2MB，大小：" + FUNC.fileSize(this.data.file.size);
 			this.file = null;
-		} else if (this.file.type.indexOf("image/") != 0) {
-			this.error = "当前文件非图片文件";
-			this.file = null;
-		} else if (this.file == null) {
-			this.error = "文件为空，不存在";
+		} else if (this.data.file.type.indexOf("image/") != 0) {
+			this.data.error = "当前文件非图片文件";
+			this.data.file = null;
+		} else if (this.data.file == null) {
+			this.data.error = "文件为空，不存在";
 		}
-		if (this.error !== null) {
+		if (this.data.error !== null) {
 			$("#InputFile").val("");
 		}
-		this.success = false;
-		this.percentComplete = -1;
+		this.data.success = false;
+		this.data.percentComplete = -1;
 	}
+},props:{
+	data: Object
 }},
 			edit_password: {template:"<div> <form v-on=\"submit: onSubmit\" style=\"max-width: 500px;margin: 15px auto\" action=\"\" method=\"post\"> <h3>修改我的密码<\/h3> <p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p> <p class=\"alert-success alert\" v-if=\"success\">成功修改密码<\/p> <div class=\"form-group\"> <label class=\"sr-only\" for=\"InputOld\">旧密码<\/label> <div class=\"input-group\"> <div class=\"input-group-addon\">旧密码<\/div> <input type=\"password\" name=\"old\" v-model=\"old\" class=\"form-control\" id=\"InputOld\" placeholder=\"输入旧密码\"> <\/div> <\/div> <div class=\"form-group\"> <label class=\"sr-only\" for=\"InputNew\">新密码<\/label> <div class=\"input-group\"> <div class=\"input-group-addon\">新密码<\/div> <input type=\"password\" name=\"new\" v-model=\"new_pwd\" class=\"form-control\" id=\"InputNew\" placeholder=\"输入新密码\"> <\/div> <\/div> <div class=\"form-group\"> <button type=\"submit\" class=\"btn btn-warning\">确认修改<\/button> <\/div> <\/form> <\/div>",methods:{
 	onSubmit: function (event) {
@@ -2450,77 +2583,87 @@ Page.home = function () {
 		event.preventDefault();
 		return false;
 	}
+},props:{
+	data: Object,
+	old: "",
+	new_pwd: "",
+	error: null,
+	success: false
 }},
-			edit_profile_student: {template:"<h3>编辑个人信息<\/h3> <form style=\"max-width: 600px;margin: 0 auto\" method=\"post\" v-on=\"submit:onSubmit\"> <p class=\"alert-danger alert\" v-if=\"status.error\">{{status.error}}<\/p> <p class=\"alert-success alert\" v-if=\"status.success\">成功更新个人信息<\/p> <div class=\"form-group\"> <label class=\"control-label\" for=\"inputDesc\">个人描述<\/label> <div> <p class=\"help-block\">你的个人简单介绍<\/p> <textarea id=\"inputDesc\" class=\"form-control\" v-model=\"user.description\"><\/textarea> <\/div> <\/div> <div class=\"form-group\"> <div> <button type=\"submit\" class=\"btn btn-primary\">更新个人信息<\/button> <\/div> <\/div> <\/form>",methods:{
+			edit_profile_student: {template:"<h3>编辑个人信息<\/h3> <form style=\"max-width: 600px;margin: 0 auto\" method=\"post\" v-on=\"submit:onSubmit\"> <p class=\"alert-danger alert\" v-if=\"data.status.error\">{{data.status.error}}<\/p> <p class=\"alert-success alert\" v-if=\"data.status.success\">成功更新个人信息<\/p> <div class=\"form-group\"> <label class=\"control-label\" for=\"inputDesc\">个人描述<\/label> <div> <p class=\"help-block\">你的个人简单介绍<\/p> <textarea id=\"inputDesc\" class=\"form-control\" v-model=\"data.user.description\"><\/textarea> <\/div> <\/div> <div class=\"form-group\"> <div> <button type=\"submit\" class=\"btn btn-primary\">更新个人信息<\/button> <\/div> <\/div> <\/form>",methods:{
 	onSubmit: function (event) {
 		event.preventDefault();
-		this.status.success = false;
-		this.status.error = null;
+		this.data.status.success = false;
+		this.data.status.error = null;
 		var obj = {
-			user_description: this.user.description
+			user_description: this.data.user.description
 		};
 		var em_obj = this;
 		FUNC.ajax(CONFIG.api.student.update_info, "post", obj, function (data) {
 			if (data.status) {
-				em_obj.status.success = true;
+				em_obj.data.status.success = true;
 			} else {
-				em_obj.status.error = data.msg;
+				em_obj.data.status.error = data.msg;
 			}
 		});
 		return false;
 	}
+},props:{
+	data: Object
 }},
-			edit_profile_teacher: {template:"<h3>编辑个人信息<\/h3> <form style=\"max-width: 600px;margin: 0 auto\" method=\"post\" v-on=\"submit:onSubmit\"> <p class=\"alert-danger alert\" v-if=\"status.error\">{{status.error}}<\/p> <p class=\"alert-success alert\" v-if=\"status.success\">成功更新个人信息<\/p> <div class=\"form-group\"> <label class=\"control-label\" for=\"inputDesc\">个人描述<\/label> <div> <p class=\"help-block\">你的个人简单介绍<\/p> <textarea id=\"inputDesc\" class=\"form-control\" v-model=\"user.description\"><\/textarea> <\/div> <\/div> <div class=\"form-group\"> <div> <button type=\"submit\" class=\"btn btn-primary\">更新个人信息<\/button> <\/div> <\/div> <\/form>",methods:{
+			edit_profile_teacher: {template:"<h3>编辑个人信息<\/h3> <form style=\"max-width: 600px;margin: 0 auto\" method=\"post\" v-on=\"submit:onSubmit\"> <p class=\"alert-danger alert\" v-if=\"data.status.error\">{{data.status.error}}<\/p> <p class=\"alert-success alert\" v-if=\"data.status.success\">成功更新个人信息<\/p> <div class=\"form-group\"> <label class=\"control-label\" for=\"inputDesc\">个人描述<\/label> <div> <p class=\"help-block\">你的个人简单介绍<\/p> <textarea id=\"inputDesc\" class=\"form-control\" v-model=\"data.user.description\"><\/textarea> <\/div> <\/div> <div class=\"form-group\"> <div> <button type=\"submit\" class=\"btn btn-primary\">更新个人信息<\/button> <\/div> <\/div> <\/form>",methods:{
 	onSubmit: function (event) {
 		event.preventDefault();
-		this.status.success = false;
-		this.status.error = null;
+		this.data.status.success = false;
+		this.data.status.error = null;
 		var obj = {
-			user_description: this.user.description
+			user_description: this.data.user.description
 		};
 		var em_obj = this;
 		FUNC.ajax(CONFIG.api.teacher.update_info, "post", obj, function (data) {
 			if (data.status) {
-				em_obj.status.success = true;
+				em_obj.data.status.success = true;
 			} else {
-				em_obj.status.error = data.msg;
+				em_obj.data.status.error = data.msg;
 			}
 		});
 		return false;
 	}
+},props:{
+	data: Object
 }},
-			email_bind: {template:"<div> <h3>绑定邮箱账号<\/h3> <div class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/div> <div class=\"alert-success alert\" v-if=\"success\">{{success}}<\/div> <div v-if=\"email!=null\"> <blockquote> <p>当前邮箱: <code>{{email}}<\/code><\/p> <p v-if=\"new_email_set_on_no_bind\" class=\"text-warning\">新的邮箱: <code>{{new_email_set_on_no_bind}}<\/code><\/p> <p>状态: <span class=\"label label-success\" v-if=\"email_status==1\">已验证<\/span> <span class=\"label label-warning\" v-if=\"email_status==0\">未验证<\/span> <\/p> <div v-if=\"email_status==1\" class=\"form-inline\"> <button class=\"btn btn-danger btn-sm\" v-on=\"click: bind_change_btn\">更换新邮箱<\/button> <button class=\"btn btn-warning btn-sm\" v-on=\"click: bind_change_btn_have_code\">已有验证码<\/button> <\/div> <div v-if=\"email_status==0\" class=\"form-inline\"> <div class=\"form-group\"> <label for=\"InputCaptcha\">验证码:<\/label> <input type=\"text\" v-model=\"captcha\" class=\"form-control\" id=\"InputCaptcha\"\/> <button class=\"btn btn-primary\" v-on=\"click: submit_unbind\">验证<\/button> <\/div> <\/div> <\/blockquote> <div v-if=\"email_status==1\"> <div v-if=\"set_new_email\" class=\"form-inline\"> <p> <label for=\"InputNewBindEmail\">输入新的邮箱:<\/label> 该操作会发送两封邮件分别到你的邮箱，<span class=\"text-danger\">如果旧邮箱无法验证，请联系老师。<\/span> <\/p> <div class=\"form-group\"> <input type=\"email\" v-model=\"new_email\" class=\"form-control\" id=\"InputNewBindEmail\"\/> <button class=\"btn btn-primary\" v-on=\"click: bind_change_with_email\">确认<\/button> <\/div> <\/div> <\/div> <div v-if=\"email_status==1 && input_new_bind_captcha\" class=\"form-inline\"> <div class=\"form-group\"> <p><label for=\"InputOldEmailCaptcha\">输入原邮箱验证码：<\/label> <input type=\"email\" v-model=\"captcha\" class=\"form-control\" id=\"InputOldEmailCaptcha\"\/> <\/p> <p> <label for=\"InputNewEmailCaptcha\">输入新邮箱验证码：<\/label> <input type=\"email\" v-model=\"captcha_new\" class=\"form-control\" id=\"InputNewEmailCaptcha\"\/> <\/p> <button class=\"btn btn-primary\" v-on=\"click: bind_captcha\">确认<\/button> <\/div> <\/div> <div v-if=\"email_status==0\"> <div v-if=\"set_new_email\" class=\"form-inline\"> <div class=\"form-group\"> <label for=\"InputNewEmail\">新邮箱:<\/label> <input type=\"email\" v-model=\"new_email\" class=\"form-control\" id=\"InputNewEmail\"\/> <button class=\"btn btn-primary\" v-on=\"click: no_bind_change\">确认<\/button> <\/div> <\/div> <div v-if=\"!set_new_email\"> <h5>无法发送接收到邮件么？ <a href=\"#\" v-on=\"click: send_email_again\" v-class=\"email_send_status?('btn-'+email_send_status):'btn-warning'\" class=\"btn btn-sm\"> {{email_send_notice?email_send_notice:\"再次发送邮件\"}} <\/a> <\/h5> <h5>还是邮箱地址不正确？<a href=\"#\" v-on=\"click: edit_email\" class=\"btn btn-sm btn-danger\">修改邮件地址<\/a> <\/h5> <\/div> <p class=\"help-block\"><strong class=\"text-danger\">提示：<\/strong>验证码有效期仅为当前浏览器有效期内，请尽快通过验证<\/p> <\/div> <\/div> <\/div>",methods:{
+			email_bind: {template:"<div> <h3>绑定邮箱账号<\/h3> <div class=\"alert-danger alert\" v-if=\"data.error\">{{data.error}}<\/div> <div class=\"alert-success alert\" v-if=\"data.success\">{{data.success}}<\/div> <div v-if=\"data.email!=null\"> <blockquote> <p>当前邮箱: <code>{{data.email}}<\/code><\/p> <p v-if=\"data.new_email_set_on_no_bind\" class=\"text-warning\">新的邮箱: <code>{{data.new_email_set_on_no_bind}}<\/code><\/p> <p>状态: <span class=\"label label-success\" v-if=\"data.email_status==1\">已验证<\/span> <span class=\"label label-warning\" v-if=\"data.email_status==0\">未验证<\/span> <\/p> <div v-if=\"data.email_status==1\" class=\"form-inline\"> <button class=\"btn btn-danger btn-sm\" v-on=\"click: bind_change_btn\">更换新邮箱<\/button> <button class=\"btn btn-warning btn-sm\" v-on=\"click: bind_change_btn_have_code\">已有验证码<\/button> <\/div> <div v-if=\"data.email_status==0\" class=\"form-inline\"> <div class=\"form-group\"> <label for=\"InputCaptcha\">验证码:<\/label> <input type=\"text\" v-model=\"data.captcha\" class=\"form-control\" id=\"InputCaptcha\"\/> <button class=\"btn btn-primary\" v-on=\"click: submit_unbind\">验证<\/button> <\/div> <\/div> <\/blockquote> <div v-if=\"data.email_status==1\"> <div v-if=\"data.set_new_email\" class=\"form-inline\"> <p> <label for=\"InputNewBindEmail\">输入新的邮箱:<\/label> 该操作会发送两封邮件分别到你的邮箱，<span class=\"text-danger\">如果旧邮箱无法验证，请联系老师。<\/span> <\/p> <div class=\"form-group\"> <input type=\"email\" v-model=\"data.new_email\" class=\"form-control\" id=\"InputNewBindEmail\"\/> <button class=\"btn btn-primary\" v-on=\"click: bind_change_with_email\">确认<\/button> <\/div> <\/div> <\/div> <div v-if=\"data.email_status==1 && data.input_new_bind_captcha\" class=\"form-inline\"> <div class=\"form-group\"> <p><label for=\"InputOldEmailCaptcha\">输入原邮箱验证码：<\/label> <input type=\"email\" v-model=\"data.captcha\" class=\"form-control\" id=\"InputOldEmailCaptcha\"\/> <\/p> <p> <label for=\"InputNewEmailCaptcha\">输入新邮箱验证码：<\/label> <input type=\"email\" v-model=\"data.captcha_new\" class=\"form-control\" id=\"InputNewEmailCaptcha\"\/> <\/p> <button class=\"btn btn-primary\" v-on=\"click: bind_captcha\">确认<\/button> <\/div> <\/div> <div v-if=\"data.email_status==0\"> <div v-if=\"data.set_new_email\" class=\"form-inline\"> <div class=\"form-group\"> <label for=\"InputNewEmail\">新邮箱:<\/label> <input type=\"email\" v-model=\"data.new_email\" class=\"form-control\" id=\"InputNewEmail\"\/> <button class=\"btn btn-primary\" v-on=\"click: no_bind_change\">确认<\/button> <\/div> <\/div> <div v-if=\"!data.set_new_email\"> <h5>无法发送接收到邮件么？ <a href=\"#\" v-on=\"click: send_email_again\" v-class=\"data.email_send_status?('btn-'+data.email_send_status):'btn-warning'\" class=\"btn btn-sm\"> {{data.email_send_notice?data.email_send_notice:\"再次发送邮件\"}} <\/a> <\/h5> <h5>还是邮箱地址不正确？<a href=\"#\" v-on=\"click: edit_email\" class=\"btn btn-sm btn-danger\">修改邮件地址<\/a> <\/h5> <\/div> <p class=\"help-block\"><strong class=\"text-danger\">提示：<\/strong>验证码有效期仅为当前浏览器有效期内，请尽快通过验证<\/p> <\/div> <\/div> <\/div>",methods:{
 	send_email_again: function (event) {
 		event.preventDefault();
 		var obj = this;
-		obj.error = "";
-		if (obj.ajax_lock) {
-			obj.error = "请等待当前操作结束";
+		obj.data.error = "";
+		if (obj.data.ajax_lock) {
+			obj.data.error = "请等待当前操作结束";
 			return false;
 		}
-		if (obj.timer > 0) {
-			obj.error = "必须等待“" + obj.timer + "”后才能重新发送邮件";
+		if (obj.data.timer > 0) {
+			obj.data.error = "必须等待“" + obj.data.timer + "”后才能重新发送邮件";
 			return false;
 		}
-		obj.error = "";
-		obj.email_send_notice = "邮件发送中，请稍等....";
-		obj.email_send_status = "danger";
-		obj.ajax_lock = true;
+		obj.data.error = "";
+		obj.data.email_send_notice = "邮件发送中，请稍等....";
+		obj.data.email_send_status = "danger";
+		obj.data.ajax_lock = true;
 		FUNC.ajax(CONFIG.api.user.email_send, "POST", {type: "old_send_again"}, function (result) {
-			obj.error = "";
-			obj.ajax_lock = false;
-			obj.email_send_notice = "";
+			obj.data.error = "";
+			obj.data.ajax_lock = false;
+			obj.data.email_send_notice = "";
 			if (result.status) {
 				obj.timer_on_send_again();
 			} else {
-				obj.error = result.msg;
+				obj.data.error = result.msg;
 			}
 		});
 		return false;
 	},
 	timer_on_send_again: function () {
 		var obj = this;
-		obj.timer = 59;
+		obj.data.timer = 59;
 		var timer_hand;
 		var timer_call = function () {
 			if (obj == null || obj.$data == null) {
@@ -2531,33 +2674,33 @@ Page.home = function () {
 				return;
 			}
 			if (obj != null && --obj.timer > 0) {
-				obj.email_send_status = "success";
-				obj.email_send_notice = obj.timer + " 秒后可重试";
+				obj.data.email_send_status = "success";
+				obj.data.email_send_notice = obj.data.timer + " 秒后可重试";
 				timer_hand = setTimeout(timer_call, 1000);
 			} else {
-				obj.email_send_status = "";
-				obj.email_send_notice = "";
+				obj.data.email_send_status = "";
+				obj.data.email_send_notice = "";
 			}
 		};
 		timer_hand = setTimeout(timer_call, 0);
 	},
 	edit_email: function (event) {
 		event.preventDefault();
-		this.set_new_email = true;
+		this.data.set_new_email = true;
 		return false;
 	},
 	check_the_email: function () {
 		var obj = this;
-		if (obj.new_email == "") {
-			obj.error = "新邮箱不允许为空";
+		if (obj.data.new_email == "") {
+			obj.data.error = "新邮箱不允许为空";
 			return false;
 		}
-		if (!FUNC.verify.email(obj.new_email)) {
-			obj.error = "请输入正确的邮箱";
+		if (!FUNC.verify.email(obj.data.new_email)) {
+			obj.data.error = "请输入正确的邮箱";
 			return false;
 		}
-		if (obj.new_email == obj.email) {
-			obj.error = "新旧邮箱不允许相同";
+		if (obj.data.new_email == obj.data.email) {
+			obj.data.error = "新旧邮箱不允许相同";
 			return false;
 		}
 		return true;
@@ -2565,93 +2708,93 @@ Page.home = function () {
 	no_bind_change: function (event) {
 		event.preventDefault();
 		var obj = this;
-		obj.error = "";
-		if (obj.ajax_lock) {
-			obj.error = "请等待当前操作结束";
+		obj.data.error = "";
+		if (obj.data.ajax_lock) {
+			obj.data.error = "请等待当前操作结束";
 			return false;
 		}
 		if (!this.check_the_email()) {
 			return false;
 		}
 		FUNC.targetSet(event.target, "修改中....");
-		obj.ajax_lock = true;
-		FUNC.ajax(CONFIG.api.user.email_new, "post", {email: obj.new_email}, function (result) {
-			obj.ajax_lock = false;
-			obj.error = "";
+		obj.data.ajax_lock = true;
+		FUNC.ajax(CONFIG.api.user.email_new, "post", {email: obj.data.new_email}, function (result) {
+			obj.data.ajax_lock = false;
+			obj.data.error = "";
 			if (result.status) {
 				FUNC.targetSet(event.target, "修改成功");
-				obj.success = "更新成功，邮件已发送，注意查收";
-				obj.email = obj.new_email;
-				obj.set_new_email = false;
-				obj.new_email = "";
-				obj.email_status = false;
+				obj.data.success = "更新成功，邮件已发送，注意查收";
+				obj.data.email = obj.data.new_email;
+				obj.data.set_new_email = false;
+				obj.data.new_email = "";
+				obj.data.email_status = false;
 				setTimeout(function () {
-					obj.success = "";
+					obj.data.success = "";
 				}, 2000);
 				obj.timer_on_send_again();
 			} else {
 				FUNC.targetSet(event.target, "重试");
-				obj.error = result.msg;
+				obj.data.error = result.msg;
 			}
 		});
 		return false;
 	},
 	bind_change_btn: function () {
-		this.set_new_email = true;
-		this.input_new_bind_captcha = false;
+		this.data.set_new_email = true;
+		this.data.input_new_bind_captcha = false;
 	},
 	bind_change_with_email: function (event) {
 		var obj = this;
-		obj.error = "";
-		if (obj.ajax_lock) {
-			obj.error = "请等待当前操作结束";
+		obj.data.error = "";
+		if (obj.data.ajax_lock) {
+			obj.data.error = "请等待当前操作结束";
 			return false;
 		}
 		if (!this.check_the_email()) {
 			return false;
 		}
 		FUNC.targetSet(event.target, "请求提交中,请稍等....");
-		obj.ajax_lock = true;
-		FUNC.ajax(CONFIG.api.user.email_unbind, "post", {new_email: obj.new_email}, function (result) {
-			obj.error = "";
-			obj.ajax_lock = false;
+		obj.data.ajax_lock = true;
+		FUNC.ajax(CONFIG.api.user.email_unbind, "post", {new_email: obj.data.new_email}, function (result) {
+			obj.data.error = "";
+			obj.data.ajax_lock = false;
 			if (result.status) {
 				FUNC.targetSet(event.target, "提交请求成功");
-				obj.success = "更新成功，两封邮件已发送，注意查收";
-				obj.new_email_set_on_no_bind = obj.new_email;//设置需要显示的新邮箱
-				obj.new_email = "";
-				obj.set_new_email = false;
+				obj.data.success = "更新成功，两封邮件已发送，注意查收";
+				obj.data.new_email_set_on_no_bind = obj.data.new_email;//设置需要显示的新邮箱
+				obj.data.new_email = "";
+				obj.data.set_new_email = false;
 				setTimeout(function () {
-					obj.success = "";
+					obj.data.success = "";
 				}, 4000);
-				obj.input_new_bind_captcha = true;
+				obj.data.input_new_bind_captcha = true;
 			} else {
 				FUNC.targetSet(event.target, "重试");
-				obj.error = result.msg;
+				obj.data.error = result.msg;
 			}
 		});
 		return false;
 	},
 	bind_captcha: function (event) {
 		var obj = this;
-		obj.error = "";
-		if (obj.captcha == "" || obj.captcha_new == "") {
-			obj.error = "验证码均不能为空";
+		obj.data.error = "";
+		if (obj.data.captcha == "" || obj.data.captcha_new == "") {
+			obj.data.error = "验证码均不能为空";
 			return;
 		}
 		FUNC.ajax(CONFIG.api.user.email_unbind_confirm, "post", {
-			new_captcha: obj.captcha_new,
-			old_captcha: obj.captcha
+			new_captcha: obj.data.captcha_new,
+			old_captcha: obj.data.captcha
 		}, function (result) {
 			if (result.status) {
-				obj.error = "";
-				obj.input_new_bind_captcha = false;
-				obj.success = "邮箱更换成功，页面即将刷新";
+				obj.data.error = "";
+				obj.data.input_new_bind_captcha = false;
+				obj.data.success = "邮箱更换成功，页面即将刷新";
 				setTimeout(function () {
 					window.location.reload();
 				}, 1500);
 			} else {
-				obj.error = result.msg;
+				obj.data.error = result.msg;
 			}
 		});
 	},
@@ -2660,24 +2803,26 @@ Page.home = function () {
 	 */
 	submit_unbind: function () {
 		var obj = this;
-		obj.error = "";
-		if (obj.captcha == "") {
-			obj.error = "当前验证码不能为空";
+		obj.data.error = "";
+		if (obj.data.captcha == "") {
+			obj.data.error = "当前验证码不能为空";
 			return;
 		}
-		FUNC.ajax(CONFIG.api.user.email_bind, "post", {captcha: obj.captcha}, function (result) {
-			obj.error = "";
+		FUNC.ajax(CONFIG.api.user.email_bind, "post", {captcha: obj.data.captcha}, function (result) {
+			obj.data.error = "";
 			if (result.status) {
-				obj.captcha = "";
-				obj.email_status = 1;
+				obj.data.captcha = "";
+				obj.data.email_status = 1;
 			} else {
-				obj.error = result.msg;
+				obj.data.error = result.msg;
 			}
 		});
 	},
 	bind_change_btn_have_code: function () {
-		this.input_new_bind_captcha = true;
+		this.data.input_new_bind_captcha = true;
 	}
+},props:{
+	data: Object
 }}
 		}
 	});
@@ -2844,96 +2989,51 @@ Page.manager_quiz = function () {
 			},
 			m_all: function () {
 				this.result = {
-					course_list: null,
-					course_list_empty: false,
-					loading: true,
-					error1: "",
-					error2: "",
-					quiz_list: null,
-					quiz_list_empty: false,
-					model: {
-						course: 0,
-						status: -1
-					},
-					map: {status: CONST_MAP.course_status}
+					call: function (_ob) {
+						_ob.load();
+					}
 				};
 				this.currentView = "all";
-				FUNC.findVueChild(this, "all").load();
 			},
 			m_add: function (course, table) {
 				if (typeof table == "undefined" || table < 1) {
 					table = -1;
 				}
 				this.result = {
-					course_list: null,
-					course_list_empty: false,
-					quiz_empty: true,
-					error: "",
-					success: "",
-					is_force_load: false,
-					loading: true,
-					courseTableId: table,
-					courseTableInfo: null,//强制加载的课程信息
-					model: {
-						status: -1,
-						course: (typeof course == "undefined" ? -1 : course),
-						add_my_course: "1",
-						quiz: {
-							title: "",
-							options: [],
-							correct: [],
-							desc: "",
-							index: ''
-						},
-						quiz_name: []
-					},
-					map: {status: CONST_MAP.course_status}
+					call: function (_ob) {
+						_ob.courseTableId = table;
+						_ob.model.course = (typeof course == "undefined" ? -1 : course);
+						_ob.model.status = -1;
+						_ob.model.add_my_course = "1";
+						if (typeof course != "undefined" && course > 0 && table > 0) {
+							_ob.forceLoad();
+						} else {
+							_ob.load();
+						}
+					}
 				};
 				this.currentView = "add";
-				this.result.model.status = -1;
-				this.result.model.add_my_course = "1";
-				if (typeof course != "undefined" && course > 0 && table > 0) {
-					FUNC.findVueChild(this, "add").forceLoad();
-				} else {
-					FUNC.findVueChild(this, "add").load();
-				}
 			},
 			m_share: function () {
 				this.result = {
-					quiz_list: [],
-					teacher_id: Member.id,
-					error2: "",
-					course_search: {
-						is_init: true,
-						search: '',
-						title: '共享的测验',
-						course: -1,
-						courseName: "",
-						error: "",
-						course_list_empty: false,
-						course_list: [],
-						callback: null
+					call: function (ob) {
+						ob.init();
 					}
 				};
 				this.currentView = "share";
-				FUNC.findVueChild(this, "share").init();
 			},
 			m_bind: function (table) {
 				this.result = {
-					courseTableInfo: null,
-					bindQuiz: null,
-					unbindQuiz: null,
-					shareQuiz: null,
-					course_table: table,
-					teacher_id: Member.id,
-					error: ""
+					call: function (ob) {
+						ob.course_table = table;
+						ob.load(table);
+					}
 				};
 				this.currentView = "bind";
-				FUNC.findVueChild(this, "bind").load(table);
 			}
 		},
 		components: {
-			my: {template:"<p class=\"alert alert-danger\" v-if=\"error\">{{error}}<\/p> <div class=\"alert alert-warning\" v-if=\"list.length==0\"> 当前开课列表为空，请先添加课程 <\/div> <div class=\"course-table\" v-if=\"list.length>0\"> <table class=\"table\"> <thead> <tr> <th>课程名称<\/th> <th>班级<\/th> <th>专业年级<\/th> <th>操作<\/th> <\/tr> <\/thead> <tbody v-repeat=\"list\"> <tr> <td>{{course.courseName}}<\/td> <td> <span v-repeat=\"classes_info\" class=\"btn-block\">{{className}}<\/span> <\/td> <td>{{course.deptName}}<br>{{course.enrolYear}}级<\/td> <td> <p> <a class=\"btn btn-success btn-sm\" href=\"#\/add\/{{course.courseID}}\/table\/{{course.courseTableID}}\">添加新测验到课程<\/a> <a class=\"btn btn-primary btn-sm\" href=\"#\/bind\/{{course.courseTableID}}\">关联已有测验<\/a> <button class=\"btn btn-info btn-sm\">做题记录<\/button> <\/p> <p> <button class=\"btn btn-success btn-sm\">管理列表<\/button> <button class=\"btn btn-primary btn-sm\">发布学生测验<\/button> <button class=\"btn btn-success btn-sm\">学生测验记录<\/button> <\/p> <\/td> <\/tr> <\/tbody> <\/table> <\/div>"},
+			my: {template:"<p class=\"alert alert-danger\" v-if=\"data.error\">{{data.error}}<\/p> <div class=\"alert alert-warning\" v-if=\"data.list.length==0\"> 当前开课列表为空，请先添加课程 <\/div> <div class=\"course-table\" v-if=\"data.list.length>0\"> <table class=\"table\"> <thead> <tr> <th>课程名称<\/th> <th>班级<\/th> <th>专业年级<\/th> <th>操作<\/th> <\/tr> <\/thead> <tbody v-repeat=\"data.list\"> <tr> <td><a target=\"_blank\" href=\"course_teacher.html#\/course_table\/{{course.courseTableID}}\">{{course.courseName}}<\/a><\/td> <td> <span v-repeat=\"classes_info\" class=\"btn-block\">{{className}}<\/span> <\/td> <td>{{course.deptName}}<br>{{course.enrolYear}}级<\/td> <td> <p> <a class=\"btn btn-success btn-sm\" href=\"#\/add\/{{course.courseID}}\/table\/{{course.courseTableID}}\">添加新测验到课程<\/a> <a class=\"btn btn-primary btn-sm\" href=\"#\/bind\/{{course.courseTableID}}\">关联已有测验<\/a> <button class=\"btn btn-info btn-sm\">做题记录<\/button> <\/p> <p> <button class=\"btn btn-success btn-sm\">管理列表<\/button> <button class=\"btn btn-primary btn-sm\">发布学生测验<\/button> <button class=\"btn btn-success btn-sm\">学生测验记录<\/button> <\/p> <\/td> <\/tr> <\/tbody> <\/table> <\/div>",props:['data']},
 			bind: {template:"<h3>绑定课程测验<\/h3> <p class=\"alert alert-danger\" v-if=\"error\">{{error}}<\/p> <div class=\"alert alert-info\"> <p v-if=\"courseTableInfo==null\" class=\"alert alert-warning\">加载中.....<\/p> <p v-if=\"courseTableInfo!=null\"><strong>课程：<\/strong>{{courseTableInfo.course.courseName}}, {{courseTableInfo.course.deptName}}, {{courseTableInfo.course.enrolYear}}级<\/p> <\/div> <ul class=\"nav nav-tabs\" role=\"tablist\"> <li role=\"presentation\" class=\"active\"> <a href=\"#bind\" aria-controls=\"bind\" v-on=\"click: t_bind\" role=\"tab\" data-toggle=\"tab\">已绑定<\/a> <\/li> <li role=\"presentation\"> <a href=\"#unbind\" aria-controls=\"unbind\" v-on=\"click: t_unbind\" role=\"tab\" data-toggle=\"tab\">未绑定<\/a> <\/li> <li role=\"presentation\"> <a href=\"#share\" aria-controls=\"share\" v-on=\"click: t_share\" role=\"tab\" data-toggle=\"tab\">共享的<\/a> <\/li> <\/ul> <div class=\"tab-content\"> <div class=\"tab-pane active\" id=\"bind\"> <div v-if=\"bindQuiz==null\" class=\"alert alert-info\">加载中......<\/div> <div v-if=\"bindQuiz!==null && bindQuiz.length==0\" class=\"alert alert-warning\">数据为空<\/div> <div v-if=\"bindQuiz!==null && bindQuiz.length>0\"> <div class=\"panel-group\" id=\"accordion_bind\" role=\"tablist\" aria-multiselectable=\"true\"> <div v-repeat=\"bindQuiz\" class=\"panel panel-default\"> <div class=\"panel-heading\" role=\"tab\" id=\"Heading_bind_{{$index}}\"> <h4 class=\"panel-title\"> <a data-toggle=\"collapse\" data-parent=\"#accordion_bind\" href=\"#collapse_bind_{{$index}}\" aria-expanded=\"true\" aria-controls=\"#collapse_bind_{{$index}}\"> <i>{{quiz.index}}<\/i>&nbsp;&nbsp;{{quiz.title}} <\/a> <span class=\"pull-right\" aria-hidden=\"true\"> <span class=\"label label-info\" aria-hidden=\"true\" v-if=\"teacher_id!=quiz.teacherID\">共享<\/span> <button type=\"button\" v-on=\"click: onCancelBind($index)\" class=\" panel-title-button btn btn-sm btn-warning\"> 解绑 <\/button> <\/span> <\/h4> <\/div> <div id=\"collapse_bind_{{$index}}\" class=\"panel-collapse collapse{{$index==0?' in':''}}\" aria-labelledby=\"Heading_bind_{{$index}}\"> <div class=\"panel-body\" v-with=\"bindQuiz[$index]\" v-component=\"quiz-item\"><\/div> <\/div> <\/div> <\/div> <\/div> <\/div> <div class=\"tab-pane\" id=\"unbind\"> <div v-if=\"unbindQuiz==null\" class=\"alert alert-info\">加载中......<\/div> <div v-if=\"unbindQuiz!==null && unbindQuiz.length==0\" class=\"alert alert-warning\">数据为空<\/div> <div v-if=\"unbindQuiz!==null && unbindQuiz.length>0\"> <div class=\"panel-group\" id=\"accordion_unbind\" role=\"tablist\" aria-multiselectable=\"true\"> <div v-repeat=\"unbindQuiz\" class=\"panel panel-default\"> <div class=\"panel-heading\" role=\"tab\" id=\"Heading_unbind_{{$index}}\"> <h4 class=\"panel-title\"> <a data-toggle=\"collapse\" data-parent=\"#accordion_unbind\" href=\"#collapse_unbind_{{$index}}\" aria-expanded=\"true\" aria-controls=\"#collapse_unbind_{{$index}}\"> <i>{{quiz.index}}<\/i>&nbsp;&nbsp;{{quiz.title}} <\/a> <span class=\"pull-right\" aria-hidden=\"true\"> <button type=\"button\" v-on=\"click: onBind($index)\" class=\" panel-title-button btn btn-sm btn-success\"> 绑定 <\/button> <\/span> <\/h4> <\/div> <div id=\"collapse_unbind_{{$index}}\" class=\"panel-collapse collapse{{$index==0?' in':''}}\" aria-labelledby=\"Heading_unbind_{{$index}}\"> <div class=\"panel-body\" v-with=\"unbindQuiz[$index]\" v-component=\"quiz-item\"><\/div> <\/div> <\/div> <\/div> <\/div> <\/div> <div class=\"tab-pane\" id=\"share\"> <div v-if=\"shareQuiz==null\" class=\"alert alert-info\">加载中......<\/div> <div v-if=\"shareQuiz!==null && shareQuiz.length==0\" class=\"alert alert-warning\">数据为空<\/div> <div v-if=\"shareQuiz!==null && shareQuiz.length>0\"> <div class=\"panel-group\" id=\"accordion_share\" role=\"tablist\" aria-multiselectable=\"true\"> <div v-repeat=\"shareQuiz\" class=\"panel panel-default\"> <div class=\"panel-heading\" role=\"tab\" id=\"Heading_share_{{$index}}\"> <h4 class=\"panel-title\"> <a data-toggle=\"collapse\" data-parent=\"#accordion_share\" href=\"#collapse_share_{{$index}}\" aria-expanded=\"true\" aria-controls=\"#collapse_share_{{$index}}\"> <i>{{quiz.index}}<\/i>&nbsp;&nbsp;{{quiz.title}} <\/a> <span class=\"pull-right\" aria-hidden=\"true\"> <button type=\"button\" v-on=\"click: onShareBind($index)\" class=\" panel-title-button btn btn-sm btn-success\"> 绑定 <\/button> <\/span> <\/h4> <\/div> <div id=\"collapse_share_{{$index}}\" class=\"panel-collapse collapse{{$index==0?' in':''}}\" aria-labelledby=\"Heading_share_{{$index}}\"> <div class=\"panel-body\" v-with=\"shareQuiz[$index]\" v-component=\"quiz-item\"><\/div> <\/div> <\/div> <\/div> <\/div> <\/div> <\/div>",methods:{
 	load: function (curseTable) {
 		var obj = this;
@@ -3025,8 +3125,20 @@ Page.manager_quiz = function () {
 			}
 		});
 	}
+},data:function () {
+	return {
+		courseTableInfo: null,
+		bindQuiz: null,
+		unbindQuiz: null,
+		shareQuiz: null,
+		course_table: undefined,//Unload
+		teacher_id: Member.id,
+		error: ""
+	};
+},props:['data'],created:function () {
+	this.data.call(this);
 }},
-			all: {template:"<div class=\"panel panel-primary\"> <div class=\"panel-heading form-inline form-group-sm\">选择你的课程 <select v-on=\"change: onCourseChange\" v-model=\"model.status\" class=\"form-control\"> <option v-repeat=\"map.status\" value=\"{{id}}\">{{status}}<\/option> <\/select><\/div> <div class=\"panel-body\"> <p class=\"alert-danger alert\" v-if=\"error1\">{{error1}}<\/p> <p v-if=\"loading\" class=\"alert alert-info\">加载中。。。。。<\/p> <p v-if=\"course_list_empty\" class=\"alert alert-warning\">无任何课程数据<\/p> <button v-repeat=\"course_list\" class=\"btn\" v-class=\"model.course==$key?'btn-success':'btn-default'\" type=\"button\" v-on=\"click: onCourseClick($key)\" data-id=\"{{$key}}\"> {{$value}} <\/button> <\/div> <\/div> <div v-if=\"model.course>0\" class=\"panel panel-primary\"> <div class=\"panel-heading\"> <strong>{{course_list[model.course]}}<\/strong> <\/div> <div class=\"panel-body\"> <p class=\"alert-danger alert\" v-if=\"error2\">{{error2}}<\/p> <p v-if=\"quiz_list_empty\" class=\"alert alert-warning\">课程数据为空<\/p> <div v-if=\"quiz_list!==null && quiz_list.length>0\"> <div class=\"panel-group\" id=\"accordion\" role=\"tablist\" aria-multiselectable=\"true\"> <div v-repeat=\"quiz_list\" class=\"panel panel-default\"> <div class=\"panel-heading\" role=\"tab\" id=\"Heading_{{$index}}\"> <h4 class=\"panel-title\"> <a data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#collapse_{{$index}}\" aria-expanded=\"true\" aria-controls=\"#collapse_{{$index}}\"> <i>{{quiz.index}}<\/i>&nbsp;&nbsp;{{quiz.title}} <\/a> <span class=\"pull-right\" aria-hidden=\"true\"> <span class=\"glyphicon glyphicon-edit text-warning\"><\/span> <span class=\"glyphicon glyphicon-remove-circle text-danger\" style=\"margin-left: 5px;margin-right: 5px\"><\/span> <button type=\"button\" v-on=\"click: onShare($index)\" v-class=\"quiz.status?'btn-warning':'btn-info'\" class=\" panel-title-button btn btn-sm\"> {{quiz.status?'取消共享':'共享测验'}} <\/button> <\/span> <\/h4> <\/div> <div id=\"collapse_{{$index}}\" class=\"panel-collapse collapse{{$index==0?' in':''}}\" role=\"tabpane\" aria-labelledby=\"Heading_{{$index}}\"> <div class=\"panel-body\" v-with=\"quiz_list[$index]\" v-component=\"quiz-item\"><\/div> <\/div> <\/div> <\/div> <\/div> <\/div> <\/div>",methods:{
+			all: {template:"<div class=\"panel panel-primary\"> <div class=\"panel-heading form-inline form-group-sm\">选择你的课程 <select v-on=\"change: onCourseChange\" v-model=\"model.status\" class=\"form-control\"> <option v-repeat=\"map.status\" value=\"{{id}}\">{{status}}<\/option> <\/select><\/div> <div class=\"panel-body\"> <p class=\"alert-danger alert\" v-if=\"error1\">{{error1}}<\/p> <p v-if=\"loading\" class=\"alert alert-info\">加载中。。。。。<\/p> <p v-if=\"course_list_empty\" class=\"alert alert-warning\">无任何课程数据<\/p> <button v-repeat=\"course_list\" class=\"btn\" v-class=\"model.course==$key?'btn-success':'btn-default'\" type=\"button\" v-on=\"click: onCourseClick($key)\" data-id=\"{{$key}}\"> {{$value}} <\/button> <\/div> <\/div> <div v-if=\"model.course>0\" class=\"panel panel-primary\"> <div class=\"panel-heading\"> <strong>{{course_list[model.course]}}<\/strong> <\/div> <div class=\"panel-body\"> <p class=\"alert-danger alert\" v-if=\"error2\">{{error2}}<\/p> <p v-if=\"quiz_list_empty\" class=\"alert alert-warning\">课程数据为空<\/p> <div v-if=\"quiz_list!==null && quiz_list.length>0\"> <div class=\"panel-group\" id=\"accordion\" role=\"tablist\" aria-multiselectable=\"true\"> <div v-repeat=\"quiz_list\" class=\"panel panel-default\"> <div class=\"panel-heading\" role=\"tab\" id=\"Heading_{{$index}}\"> <h4 class=\"panel-title\"> <a data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#collapse_{{$index}}\" aria-expanded=\"true\" aria-controls=\"#collapse_{{$index}}\"> <i>{{quiz.index}}<\/i>&nbsp;&nbsp;{{quiz.title}} <\/a> <span class=\"pull-right\" aria-hidden=\"true\"> <span class=\"glyphicon glyphicon-edit text-warning\"><\/span> <span class=\"glyphicon glyphicon-remove-circle text-danger\" style=\"margin-left: 5px;margin-right: 5px\"><\/span> <button type=\"button\" v-on=\"click: onShare($index)\" v-class=\"quiz.status?'btn-warning':'btn-info'\" class=\" panel-title-button btn btn-sm\"> {{quiz.status?'取消共享':'共享测验'}} <\/button> <\/span> <\/h4> <\/div> <div id=\"collapse_{{$index}}\" class=\"panel-collapse collapse{{$index==0?' in':''}}\" role=\"tabpane\" aria-labelledby=\"Heading_{{$index}}\"> <component class=\"panel-body\" item=\"{{quiz_list[$index]}}\" is=\"quiz-item\"><\/component> <\/div> <\/div> <\/div> <\/div> <\/div> <\/div>",methods:{
 	load: function () {
 		this.loadCourseList();
 	},
@@ -3092,6 +3204,23 @@ Page.manager_quiz = function () {
 			});
 		}
 	}
+},data:function () {
+	return {
+		course_list: null,
+		course_list_empty: false,
+		loading: true,
+		error1: "",
+		error2: "",
+		quiz_list: null,
+		quiz_list_empty: false,
+		model: {
+			course: 0,
+			status: -1
+		},
+		map: {status: CONST_MAP.course_status}
+	};
+},props:['data'],created:function () {
+	this.data.call(this);
 }},
 			add: {template:"<h3>添加课程测验<\/h3> <div class=\"panel panel-primary\" v-if=\"!is_force_load\"> <div class=\"panel-heading form-inline form-group-sm\">选择你的课程 <select v-on=\"change: onCourseChange\" v-model=\"model.status\" class=\"form-control\"> <option v-repeat=\"map.status\" value=\"{{id}}\">{{status}}<\/option> <\/select><\/div> <div class=\"panel-body\"> <p class=\"alert-danger alert\" v-if=\"error && model.course==-1\">{{error}}<\/p> <p v-if=\"loading\" class=\"alert alert-info\">加载中。。。。。<\/p> <p v-if=\"course_list_empty\" class=\"alert alert-warning\">无任何课程数据<\/p> <button v-repeat=\"course_list\" class=\"btn\" v-class=\"model.course==$key?'btn-success':'btn-default'\" type=\"button\" v-on=\"click: onCourseClick($key)\" data-id=\"{{$key}}\"> {{$value}} <\/button> <\/div> <\/div> <div v-if=\"is_force_load\" class=\"alert alert-info\"> <p v-if=\"courseTableInfo==null\" class=\"alert alert-warning\">加载中.....<\/p> <p v-if=\"courseTableInfo!=null\"><strong>课程：<\/strong>{{courseTableInfo.course.courseName}}, {{courseTableInfo.course.deptName}}, {{courseTableInfo.course.enrolYear}}级<\/p> <\/div> <div v-if=\"model.course>-1 || !quiz_empty\" class=\"panel panel-primary\"> <div class=\"panel-heading\">测试内容<\/div> <div class=\"panel-body\"> <p class=\"alert-danger alert\" v-if=\"error\">{{error}}<\/p> <p class=\"alert-success alert\" v-if=\"success\"> <span>{{success}},<\/span> <button type=\"button\" class=\"btn btn-success\" v-on=\"click:onAddNewQuiz\">添加新的测验<\/button> <\/p> <div class=\"form-group\"> <h4><label for=\"InputTitle\">测试的标题<\/label><\/h4> <textarea v-model=\"model.quiz.title\" id=\"InputTitle\" class=\"form-control\" placeholder=\"输入测试的标题，多选指定答案请使用__A__，否则多选不要知道顺序，正确选项字符前两下划线\" rows=\"2\"> <\/textarea> <\/div> <div class=\"form-group input-group\" v-repeat=\"model.quiz_name\"> <span class=\"input-group-addon\"> <label style=\"margin-bottom: 0\" for=\"InputValue_{{key}}\">{{key}}<\/label> <\/span> <input v-model=\"model.quiz.options[$index]\" type=\"text\" class=\"form-control\" placeholder=\"选项{{key}}\" id=\"InputValue_{{key}}\"> <\/div> <div class=\"form-group\"> <p> <span class=\"glyphicon glyphicon-ok text-primary\">正确选项<\/span>， <span class=\"text-warning glyphicon glyphicon-warning-sign\">如果只选择一个将作为单选题<\/span> <\/p> <button v-repeat=\"model.quiz_name\" v-on=\"click:onSetCorrect($index)\" class=\"btn\" v-class=\"correct?'btn-success':'btn-default'\" type=\"button\">{{key}} <\/button> <button class=\"btn btn-primary\" v-on=\"click:onQuizAdd\" type=\"button\">添加<\/button> <button class=\"btn btn-danger\" v-on=\"click:onQuizRemove\" type=\"button\">移除<\/button> <\/div> <div class=\"form-group\"> <label for=\"Desc\">答题解析：<\/label> <textarea name=\"desc\" v-model=\"model.quiz.desc\" id=\"Desc\" class=\"form-control\" rows=\"4\"><\/textarea> <\/div> <div class=\"form-group form-inline\"> <div class=\"input-group\" style=\"margin-right: 20px\"> <span class=\"input-group-addon\"> <label style=\"margin-bottom: 0\" for=\"InputValue_index\">章节索引<\/label> <\/span> <input type=\"text\" v-model=\"model.quiz.index\" class=\"form-control\" placeholder=\"如：2.5, 等，0开头为综合测试\" id=\"InputValue_index\"> <\/div> <label v-if=\"!courseTableInfo\"><input type=\"checkbox\" v-model=\"model.add_my_course\" value=\"1\">&nbsp;添加到我当前的课程<\/label> <\/div> <div class=\"form-group\"> <button class=\"btn btn-block btn-primary\" type=\"button\" v-on=\"click:onSubmit\">添加测试题<\/button> <\/div> <\/div> <\/div>",methods:{
 	/**
@@ -3281,8 +3410,36 @@ Page.manager_quiz = function () {
 	onAddNewQuiz: function () {
 		this.initQuiz();
 	}
+},data:function () {
+	return {
+		course_list: null,
+		course_list_empty: false,
+		quiz_empty: true,
+		error: "",
+		success: "",
+		is_force_load: false,
+		loading: true,
+		courseTableId: undefined,//Unload
+		courseTableInfo: null,//强制加载的课程信息
+		model: {
+			status: -1,
+			course: undefined,//unload
+			add_my_course: "1",
+			quiz: {
+				title: "",
+				options: [],
+				correct: [],
+				desc: "",
+				index: ''
+			},
+			quiz_name: []
+		},
+		map: {status: CONST_MAP.course_status}
+	};
+},props:['data'],created:function () {
+	this.data.call(this);
 }},
-			share: {template:"<div v-with=\"course_search\" v-component=\"course-search\"><\/div> <div v-if=\"course_search.courseName\" class=\"panel panel-primary\"> <div class=\"panel-heading\">{{course_search.courseName}}<\/div> <div class=\"panel-body\"> <p class=\"alert-danger alert\" v-if=\"error2\">{{error2}}<\/p> <div v-if=\"!error2 && quiz_list.length==0\" class=\"alert alert-warning\">该课程无共享的课程<\/div> <div v-if=\"quiz_list!==null && quiz_list.length>0\"> <div class=\"panel-group\" id=\"accordion\" role=\"tablist\" aria-multiselectable=\"true\"> <div v-repeat=\"quiz_list\" class=\"panel panel-default\"> <div class=\"panel-heading\" role=\"tab\" id=\"Heading_{{$index}}\"> <h4 class=\"panel-title\"> <a data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#collapse_{{$index}}\" aria-expanded=\"true\" aria-controls=\"#collapse_{{$index}}\"> <i>{{quiz.index}}<\/i>&nbsp;&nbsp;{{quiz.title}} <\/a> <span class=\"pull-right\" aria-hidden=\"true\"> <button v-if=\"quiz.teacherID==teacher_id\" type=\"button\" v-on=\"click: onShare($index)\" v-class=\"quiz.status?'btn-warning':'btn-info'\" class=\"panel-title-button btn btn-sm\"> {{quiz.status?'取消共享':'共享测验'}} <\/button> <\/span> <\/h4> <\/div> <div id=\"collapse_{{$index}}\" class=\"panel-collapse collapse{{$index==0?' in':''}}\" role=\"tabpane\" aria-labelledby=\"Heading_{{$index}}\"> <div class=\"panel-body\" v-with=\"quiz_list[$index]\" v-component=\"quiz-item\"><\/div> <\/div> <\/div> <\/div> <\/div> <\/div> <\/div>",methods:{
+			share: {template:"<component data=\"{{course_search}}\" is=\"course-search\"><\/component> <div v-if=\"course_search.courseName\" class=\"panel panel-primary\"> <div class=\"panel-heading\">{{course_search.courseName}}<\/div> <div class=\"panel-body\"> <p class=\"alert-danger alert\" v-if=\"error2\">{{error2}}<\/p> <div v-if=\"!error2 && quiz_list.length==0\" class=\"alert alert-warning\">该课程无共享的课程<\/div> <div v-if=\"quiz_list!==null && quiz_list.length>0\"> <div class=\"panel-group\" id=\"accordion\" role=\"tablist\" aria-multiselectable=\"true\"> <div v-repeat=\"quiz_list\" class=\"panel panel-default\"> <div class=\"panel-heading\" role=\"tab\" id=\"Heading_{{$index}}\"> <h4 class=\"panel-title\"> <a data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#collapse_{{$index}}\" aria-expanded=\"true\" aria-controls=\"#collapse_{{$index}}\"> <i>{{quiz.index}}<\/i>&nbsp;&nbsp;{{quiz.title}} <\/a> <span class=\"pull-right\" aria-hidden=\"true\"> <button v-if=\"quiz.teacherID==teacher_id\" type=\"button\" v-on=\"click: onShare($index)\" v-class=\"quiz.status?'btn-warning':'btn-info'\" class=\"panel-title-button btn btn-sm\"> {{quiz.status?'取消共享':'共享测验'}} <\/button> <\/span> <\/h4> <\/div> <div id=\"collapse_{{$index}}\" class=\"panel-collapse collapse{{$index==0?' in':''}}\" role=\"tabpane\" aria-labelledby=\"Heading_{{$index}}\"> <component class=\"panel-body\" item=\"{{quiz_list[$index]}}\" is=\"quiz-item\"><\/component> <\/div> <\/div> <\/div> <\/div> <\/div> <\/div>",methods:{
 	init: function () {
 		this.course_search.callback = this.load_course;
 	},
@@ -3326,6 +3483,25 @@ Page.manager_quiz = function () {
 			});
 		}
 	}
+},data:function () {
+	return {
+		quiz_list: [],
+		teacher_id: Member.id,
+		error2: "",
+		course_search: {
+			is_init: true,
+			search: '',
+			title: '共享的测验',
+			course: -1,
+			courseName: "",
+			error: "",
+			course_list_empty: false,
+			course_list: [],
+			callback: null
+		}
+	};
+},props:['data'],created:function () {
+	this.data.call(this);
 }}
 		}
 	});
@@ -3396,7 +3572,10 @@ Page.quiz = function () {
 				ct_history: {url: '', name: '课程测验记录', active: false},
 				history: {url: '#/history', name: '做题记录', active: false},
 				open_test: {url: '#/open_test', name: '开放性测验', active: false}
-			}
+			},
+			history_obj: null,//测验历史记录组件的实例
+			open_test_obj: null,//开放测验组件的实例
+			course_table_history_obj: null//某一课测验程组件实例
 		},
 		methods: {
 			my: function (data) {
@@ -3420,98 +3599,80 @@ Page.quiz = function () {
 			},
 			do_test: function (id) {
 				this.result = {
-					id: id,
-					index: 0,
-					error: '',
-					warning: '',
-					test_obj: null
+					call: function (ob) {
+						ob.id = id;
+						var parse_id = parseInt(id);
+						if (isNaN(parse_id) || parse_id < 1 || ("" + parse_id) != id) {
+							ob.error = "ID参数解析错误";
+						} else {
+							ob.load_course_table();
+						}
+					}
 				};
-				var parse_id = parseInt(id);
-				if (isNaN(parse_id) || parse_id < 1 || ("" + parse_id) != id) {
-					this.result.error = "ID参数解析错误";
-				}
 				this.currentView = "do_test";
-				if (!this.result.error) {
-					FUNC.findVueChild(this, "do_test").load_course_table();
-				}
 			},
 			history: function (is_correct) {
+				var obj = this;
 				if (this.currentView != "history") {
 					//如果视图修改
 					this.result = {
-						execs: null,
-						quiz_obj: {},
-						error: '',
-						is_correct: is_correct,
-						correct_map: CONST_MAP.history_answer_correct,
-						course_search: {
-							is_init: true,
-							search: '',
-							title: '指定测验课程',
-							course: -1,
-							courseName: "",
-							error: "",
-							course_list_empty: false,
-							course_list: [],
-							callback: null
+						call: function (ob) {
+							ob.is_correct = is_correct;
+							obj.history_obj = ob;
+							ob.load_all();
 						}
 					};
 					this.currentView = "history";
 				} else {
-					this.result.is_correct = is_correct;
+					if (obj.history_obj !== null && obj.history_obj.hasOwnProperty('is_correct')) {
+						obj.history_obj.is_correct = is_correct;
+						obj.history_obj.load_all();
+					}
 				}
-				FUNC.findVueChild(this, "history").load_all();
 			},
 			course_table_history: function (is_correct, courseTableId) {
+				var obj = this;
 				var flag = this.currentView == "ct_history"
-					&& (typeof this.result.course_table_id != "undefined")
-					&& courseTableId == this.result.course_table_id;
+					&& (typeof obj.course_table_history_obj.course_table_id != "undefined")
+					&& courseTableId == obj.course_table_history_obj.course_table_id;
 				if (!flag) {
 					this.result = {
-						correct_map: CONST_MAP.history_answer_correct,
-						loading: true,
-						course_info: null,
-						is_correct: null,
-						course_table_id: courseTableId,
-						execs: null,
-						quiz_obj: {},
-						ct_info: null,
-						error1: "",
-						error2: ""
+						call: function (ob) {
+							obj.course_table_history_obj = ob;
+							ob.course_table_id = courseTableId;
+							ob.init();
+							ob.set_correct(+is_correct);
+						}
 					};
 					this.currentView = "ct_history";
+				} else {
+					obj.course_table_history_obj.set_correct(+is_correct);
 				}
-				var child = FUNC.findVueChild(this, "ct_history");
-				if (!flag) {
-					child.init();
-				}
-				child.set_correct(+is_correct);
 			},
 			open_test: function (id) {
+				var obj = this;
 				if (this.currentView != "open_test") {
 					this.result = {
-						error: '',
-						warning: '',
-						test_obj: null,
-						course_search: {
-							is_init: true,
-							search: '',
-							title: '搜索课程的名称',
-							course: -1,
-							courseName: "",
-							error: "",
-							course_list_empty: false,
-							course_list: [],
-							callback: null
+						call: function (ob) {
+							obj.open_test_obj = ob;
+							ob.course_search.init_call = (function (open_test) {
+								return function (search_obj) {
+									open_test.course_search_obj = search_obj;
+									if (id != "") {
+										open_test.init_search(id);
+									}
+								};
+							})(ob);
+							ob.search(id);
 						}
 					};
 					this.currentView = "open_test";
+				} else {
+					if (id > 0 && id != obj.open_test_obj.course_search.course) {
+						obj.open_test_obj.init_search(id);
+					}
+					obj.open_test_obj.search(id);
 				}
-				var child = FUNC.findVueChild(this, "open_test");
-				if (id > 0 && id != this.result.course_search.course) {
-					child.init_search(id);
-				}
-				child.search(id);
 			},
 			quiz_history: function (is_correct) {
 				this.currentView = "quiz_history";
@@ -3521,8 +3682,8 @@ Page.quiz = function () {
 			}
 		},
 		components: {
-			course_table_list: {template:"<p class=\"alert alert-danger\" v-if=\"error\">{{error}}<\/p> <div class=\"alert alert-warning\" v-if=\"course_table!=null && course_table.length==0\"> 当前开课列表为空，请先添加课程 <\/div> <div class=\"course-table\" v-if=\"course_table!=null && course_table.length>0\"> <table class=\"table\"> <thead> <tr> <th>课程名称<\/th> <th>老师<\/th> <th>操作<\/th> <\/tr> <\/thead> <tbody v-repeat=\"course_table\"> <tr> <td>{{course.courseName}}<\/td> <td>{{course.teacherName}}<\/td> <td> <a class=\"btn btn-success btn-sm\" href=\"#\/do\/{{course.courseTableID}}\">做题<\/a> <a class=\"btn btn-primary btn-sm\" href=\"#\/see\/{{course.courseTableID}}\">看题<\/a> <a class=\"btn btn-info btn-sm\" href=\"#\/ct_history\/all\/{{course.courseTableID}}\">记录<\/a> <\/td> <\/tr> <\/tbody> <\/table> <\/div>"},
-			ct_history: {template:"<p class=\"alert alert-danger\" v-if=\"error1\">{{error1}}<\/p> <p v-if=\"loading\" class=\"alert alert-info\">加载中......<\/p> <div v-if=\"!loading\" class=\"alert alert-info\"> <p v-if=\"ct_info!=null\"><strong>课程：<\/strong>{{ct_info.course.courseName}}, {{ct_info.course.deptName}}, {{ct_info.course.enrolYear}}级<\/p> <\/div> <div v-if=\"!loading\" class=\"panel panel-primary\"> <div class=\"panel-heading\"> <a v-repeat=\"correct:correct_map\" class=\"btn-sm\" v-class=\"correct.id==is_correct?'btn-success':'btn-default'\" href=\"#\/ct_history\/{{correct.url}}\/{{course_table_id}}\">{{correct.name}}<\/a> <\/div> <div class=\"panel-body\"> <p class=\"alert alert-danger\" v-if=\"error2\">{{error2}}<\/p> <p v-if=\"execs===null\" class=\"alert alert-info\">加载中<\/p> <p v-if=\"execs!=null && execs.length==0\" class=\"alert alert-warning\">无任何做题记录<\/p> <div v-if=\"execs!=null && execs.length>0\" class=\"panel-group\" id=\"accordion\" role=\"tablist\" aria-multiselectable=\"true\"> <div v-repeat=\"answer:execs\" class=\"panel panel-default\"> <div class=\"panel-heading\" role=\"tab\" id=\"Heading_{{$index}}\"> <h4 class=\"panel-title\"> <a data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#collapse_{{$index}}\" aria-expanded=\"true\" aria-controls=\"#collapse_{{$index}}\"> <i>{{quiz_obj[answer.quizID].quiz.index}}<\/i>&nbsp;&nbsp; {{quiz_obj[answer.quizID].quiz.title|quiz_title_to_test_title}} <\/a> <span class=\"pull-right\" aria-hidden=\"true\"> <span>{{answer.time|timestamp_to_date}}<\/span> <button type=\"button\" class=\"panel-title-button btn btn-sm\" v-class=\"answer.isCorrect?'btn-success':'btn-danger'\"> <span class=\"glyphicon\" v-class=\"answer.isCorrect?'glyphicon-ok':'glyphicon-remove'\"> <\/span> <\/button> <\/span> <\/h4> <\/div> <div id=\"collapse_{{$index}}\" class=\"panel-collapse collapse\" role=\"tabpane\" aria-labelledby=\"Heading_{{$index}}\"> <div class=\"panel-body\"> <div v-with=\"answer:answer,quiz: quiz_obj[answer.quizID]\" v-component=\"answer-item\"><\/div> <div v-with=\"quiz_obj[answer.quizID]\" v-component=\"quiz-item\"><\/div> <\/div> <\/div> <\/div> <\/div> <\/div> <\/div>",methods:{
+			course_table_list: {template:"<p class=\"alert alert-danger\" v-if=\"data.error\">{{data.error}}<\/p> <div class=\"alert alert-warning\" v-if=\"data.course_table!=null && data.course_table.length==0\"> 当前开课列表为空，请先添加课程 <\/div> <div class=\"course-table\" v-if=\"data.course_table!=null && data.course_table.length>0\"> <table class=\"table\"> <thead> <tr> <th>课程名称<\/th> <th>老师<\/th> <th>操作<\/th> <\/tr> <\/thead> <tbody v-repeat=\"data.course_table\"> <tr> <td><a target=\"_blank\" href=\"course_student.html#\/course_table\/{{course.courseTableID}}\">{{course.courseName}}<\/a><\/td> <td>{{course.teacherName}}<\/td> <td> <a class=\"btn btn-success btn-sm\" href=\"#\/do\/{{course.courseTableID}}\">做题<\/a> <a class=\"btn btn-primary btn-sm\" href=\"#\/see\/{{course.courseTableID}}\">看题<\/a> <a class=\"btn btn-info btn-sm\" href=\"#\/ct_history\/all\/{{course.courseTableID}}\">记录<\/a> <\/td> <\/tr> <\/tbody> <\/table> <\/div>",props:['data']},
+			ct_history: {template:"<p class=\"alert alert-danger\" v-if=\"error1\">{{error1}}<\/p> <p v-if=\"loading\" class=\"alert alert-info\">加载中......<\/p> <div v-if=\"!loading\" class=\"alert alert-info\"> <p v-if=\"ct_info!=null\"><strong>课程：<\/strong>{{ct_info.course.courseName}}, {{ct_info.course.deptName}}, {{ct_info.course.enrolYear}}级<\/p> <\/div> <div v-if=\"!loading\" class=\"panel panel-primary\"> <div class=\"panel-heading\"> <a v-repeat=\"correct:correct_map\" class=\"btn-sm\" v-class=\"correct.id==is_correct?'btn-success':'btn-default'\" href=\"#\/ct_history\/{{correct.url}}\/{{course_table_id}}\">{{correct.name}}<\/a> <\/div> <div class=\"panel-body\"> <p class=\"alert alert-danger\" v-if=\"error2\">{{error2}}<\/p> <p v-if=\"execs===null\" class=\"alert alert-info\">加载中<\/p> <p v-if=\"execs!=null && execs.length==0\" class=\"alert alert-warning\">无任何做题记录<\/p> <div v-if=\"execs!=null && execs.length>0\" class=\"panel-group\" id=\"accordion\" role=\"tablist\" aria-multiselectable=\"true\"> <div v-repeat=\"answer:execs\" class=\"panel panel-default\"> <div class=\"panel-heading\" role=\"tab\" id=\"Heading_{{$index}}\"> <h4 class=\"panel-title\"> <a data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#collapse_{{$index}}\" aria-expanded=\"true\" aria-controls=\"#collapse_{{$index}}\"> <i>{{quiz_obj[answer.quizID].quiz.index}}<\/i>&nbsp;&nbsp; {{quiz_obj[answer.quizID].quiz.title|quiz_title_to_test_title}} <\/a> <span class=\"pull-right\" aria-hidden=\"true\"> <span>{{answer.time|timestamp_to_date}}<\/span> <button type=\"button\" class=\"panel-title-button btn btn-sm\" v-class=\"answer.isCorrect?'btn-success':'btn-danger'\"> <span class=\"glyphicon\" v-class=\"answer.isCorrect?'glyphicon-ok':'glyphicon-remove'\"> <\/span> <\/button> <\/span> <\/h4> <\/div> <div id=\"collapse_{{$index}}\" class=\"panel-collapse collapse\" role=\"tabpane\" aria-labelledby=\"Heading_{{$index}}\"> <div class=\"panel-body\"> <component answer=\"{{answer}}\" quiz=\"{{quiz_obj[answer.quizID]}}\" is=\"answer-item\"><\/component> <component item=\"{{quiz_obj[answer.quizID]}}\" is=\"quiz-item\"><\/component> <\/div> <\/div> <\/div> <\/div> <\/div> <\/div>",methods:{
 	init: function () {
 		var obj = this;
 		obj.error1 = "";
@@ -3558,8 +3719,23 @@ Page.quiz = function () {
 			}
 		});
 	}
+},data:function () {
+	return {
+		correct_map: CONST_MAP.history_answer_correct,
+		loading: true,
+		course_info: null,
+		is_correct: null,
+		course_table_id: undefined,//courseTableId,unload
+		execs: null,
+		quiz_obj: {},
+		ct_info: null,
+		error1: "",
+		error2: ""
+	};
+},props:['data'],created:function () {
+	this.data.call(this);
 }},
-			history: {template:"<p class=\"alert alert-danger\" v-if=\"error\">{{error}}<\/p> <div v-with=\"course_search\" v-component=\"course-search\"><\/div> <div class=\"panel panel-primary\"> <div class=\"panel-heading\"> <span v-if=\"course_search.courseName\">有关<strong>{{course_search.courseName}}<\/strong>的测验&nbsp;&nbsp;<\/span> <strong v-if=\"!course_search.courseName\">全部测验&nbsp;&nbsp;<\/strong> <a v-repeat=\"correct:correct_map\" class=\"btn-sm\" v-class=\"correct.id==is_correct?'btn-success':'btn-default'\" href=\"#\/history\/{{correct.url}}\">{{correct.name}}<\/a> <\/div> <div class=\"panel-body\"> <p v-if=\"execs===null\" class=\"alert alert-info\">加载中<\/p> <p v-if=\"execs!=null && execs.length==0\" class=\"alert alert-warning\">无任何做题记录<\/p> <div v-if=\"execs!=null && execs.length>0\" class=\"panel-group\" id=\"accordion\" role=\"tablist\" aria-multiselectable=\"true\"> <div v-repeat=\"answer:execs\" class=\"panel panel-default\"> <div class=\"panel-heading\" role=\"tab\" id=\"Heading_{{$index}}\"> <h4 class=\"panel-title\"> <a data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#collapse_{{$index}}\" aria-expanded=\"true\" aria-controls=\"#collapse_{{$index}}\"> <i>{{quiz_obj[answer.quizID].quiz.index}}<\/i>&nbsp;&nbsp; {{quiz_obj[answer.quizID].quiz.title|quiz_title_to_test_title}} <\/a> <span class=\"pull-right\" aria-hidden=\"true\"> <span>{{answer.time|timestamp_to_date}}<\/span> <button type=\"button\" class=\"panel-title-button btn btn-sm\" v-class=\"answer.isCorrect?'btn-success':'btn-danger'\"> <span class=\"glyphicon\" v-class=\"answer.isCorrect?'glyphicon-ok':'glyphicon-remove'\"> <\/span> <\/button> <\/span> <\/h4> <\/div> <div id=\"collapse_{{$index}}\" class=\"panel-collapse collapse\" role=\"tabpane\" aria-labelledby=\"Heading_{{$index}}\"> <div class=\"panel-body\"> <div v-with=\"answer:answer,quiz: quiz_obj[answer.quizID]\" v-component=\"answer-item\"><\/div> <div v-with=\"quiz_obj[answer.quizID]\" v-component=\"quiz-item\"><\/div> <\/div> <\/div> <\/div> <\/div> <\/div> <\/div>",methods:{
+			history: {template:"<p class=\"alert alert-danger\" v-if=\"error\">{{error}}<\/p> <component data=\"{{course_search}}\" is=\"course-search\"><\/component> <div class=\"panel panel-primary\"> <div class=\"panel-heading\"> <span v-if=\"course_search.courseName\">有关<strong>{{course_search.courseName}}<\/strong>的测验&nbsp;&nbsp;<\/span> <strong v-if=\"!course_search.courseName\">全部测验&nbsp;&nbsp;<\/strong> <a v-repeat=\"correct:correct_map\" class=\"btn-sm\" v-class=\"correct.id==is_correct?'btn-success':'btn-default'\" href=\"#\/history\/{{correct.url}}\">{{correct.name}}<\/a> <\/div> <div class=\"panel-body\"> <p v-if=\"execs===null\" class=\"alert alert-info\">加载中<\/p> <p v-if=\"execs!=null && execs.length==0\" class=\"alert alert-warning\">无任何做题记录<\/p> <div v-if=\"execs!=null && execs.length>0\" class=\"panel-group\" id=\"accordion\" role=\"tablist\" aria-multiselectable=\"true\"> <div v-repeat=\"answer:execs\" class=\"panel panel-default\"> <div class=\"panel-heading\" role=\"tab\" id=\"Heading_{{$index}}\"> <h4 class=\"panel-title\"> <a data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#collapse_{{$index}}\" aria-expanded=\"true\" aria-controls=\"#collapse_{{$index}}\"> <i>{{quiz_obj[answer.quizID].quiz.index}}<\/i>&nbsp;&nbsp; {{quiz_obj[answer.quizID].quiz.title|quiz_title_to_test_title}} <\/a> <span class=\"pull-right\" aria-hidden=\"true\"> <span>{{answer.time|timestamp_to_date}}<\/span> <button type=\"button\" class=\"panel-title-button btn btn-sm\" v-class=\"answer.isCorrect?'btn-success':'btn-danger'\"> <span class=\"glyphicon\" v-class=\"answer.isCorrect?'glyphicon-ok':'glyphicon-remove'\"> <\/span> <\/button> <\/span> <\/h4> <\/div> <div id=\"collapse_{{$index}}\" class=\"panel-collapse collapse\" role=\"tabpane\" aria-labelledby=\"Heading_{{$index}}\"> <div class=\"panel-body\"> <component answer=\"{{answer}}\" quiz=\"{{quiz_obj[answer.quizID]}}\" is=\"answer-item\"><\/component> <component item=\"{{quiz_obj[answer.quizID]}}\" is=\"quiz-item\"><\/component> <\/div> <\/div> <\/div> <\/div> <\/div> <\/div>",methods:{
 	load_all: function () {
 		this.course_search.callback = this.change_course;
 		this.search();
@@ -3584,9 +3760,30 @@ Page.quiz = function () {
 	change_course: function (courseId) {
 		this.search();
 	}
+},data:function () {
+	return {
+		execs: null,
+		quiz_obj: {},
+		error: '',
+		is_correct: undefined,//unload
+		correct_map: CONST_MAP.history_answer_correct,
+		course_search: {
+			is_init: true,
+			search: '',
+			title: '指定测验课程',
+			course: -1,
+			courseName: "",
+			error: "",
+			course_list_empty: false,
+			course_list: [],
+			callback: null
+		}
+	};
+},props:['data'],created:function () {
+	this.data.call(this);
 }},
 			quiz_history: {template:"<h4>测验记录<\/h4> <p class=\"alert alert-warning\">等待教师测验完成<\/p>"},
-			do_test: {template:"<h3 class=\"bg-success bg-padding\">开始答题<\/h3> <p v-if=\"error\" class=\"alert alert-danger\">{{error}}<\/p> <p v-if=\"warning\" class=\"alert alert-warning\">{{warning}}<\/p> <p v-if=\"test_obj==null && !warning && !error\" class=\"alert alert-info\">加载中<\/p> <div v-if=\"test_obj!=null\" v-with=\"test_obj\" v-component=\"test-list\"><\/div>",methods:{
+			do_test: {template:"<h3 class=\"bg-success bg-padding\">开始答题<\/h3> <p v-if=\"error\" class=\"alert alert-danger\">{{error}}<\/p> <p v-if=\"warning\" class=\"alert alert-warning\">{{warning}}<\/p> <p v-if=\"test_obj==null && !warning && !error\" class=\"alert alert-info\">加载中<\/p> <component v-if=\"test_obj!=null\" answer=\"{{test_obj.answer}}\" list=\"{{test_obj.list}}\" is=\"test-list\"><\/component>",methods:{
 	load_course_table: function () {
 		var obj = this;
 		FUNC.ajax(CONFIG.api.quiz_student.get_test_list, "get",
@@ -3605,16 +3802,26 @@ Page.quiz = function () {
 			}
 		);
 	}
+},data:function () {
+	return {
+		id: undefined,//unload
+		index: 0,
+		error: '',
+		warning: '',
+		test_obj: null
+	};
+},props:['data'],created:function () {
+	this.data.call(this);
 }},
-			open_test: {template:"<div v-with=\"course_search\" v-component=\"course-search\"><\/div> <p v-if=\"error\" class=\"alert alert-danger\">{{error}}<\/p> <p v-if=\"warning\" class=\"alert alert-warning\">{{warning}}<\/p> <p v-if=\"test_obj==null && !warning && !error && course_search.course>0\" class=\"alert alert-info\">加载中<\/p> <div v-if=\"test_obj!=null\" v-with=\"test_obj\" v-component=\"test-list\"><\/div>",methods:{
+			open_test: {template:"<component data=\"{{course_search}}\" is=\"course-search\"><\/component> <p v-if=\"error\" class=\"alert alert-danger\">{{error}}<\/p> <p v-if=\"warning\" class=\"alert alert-warning\">{{warning}}<\/p> <p v-if=\"test_obj==null && !warning && !error && course_search.course>0\" class=\"alert alert-info\">加载中<\/p> <component v-if=\"test_obj!=null\" data=\"{{test_obj.answer}}\" list=\"{{test_obj.list}}\" is=\"test-list\"><\/component>",methods:{
 	init_search: function (id) {
-		var child = FUNC.findVueChild(this, "course-search");
-		if (child.course == id) {
+		var child = this.course_search_obj;
+		if (child.data.course == id) {
 			//不动态修改
 			return;
 		}
 		if (child) {
-			child.search = id;
+			child.data.search = id;
 			child.onSearch(null, function (obj) {
 				obj.onCourseClick(id);
 			});
@@ -3647,6 +3854,27 @@ Page.quiz = function () {
 			}
 		);
 	}
+},data:function () {
+	return {
+		error: '',
+		warning: '',
+		test_obj: null,
+		course_search_obj: null,
+		course_search: {
+			is_init: true,
+			search: '',
+			title: '搜索课程的名称',
+			course: -1,
+			courseName: "",
+			error: "",
+			course_list_empty: false,
+			course_list: [],
+			callback: null,
+			init_call: null
+		}
+	};
+},props:['data'],created:function () {
+	this.data.call(this);
 }}
 		}
 	});
@@ -3814,33 +4042,27 @@ Page.sign_student = function () {
 		methods: {
 			history: function () {
 				this.result = {
-					loading: true,
-					error: null,
-					list: null,
-					now_time: Math.floor((new Date()).getTime() / 1000)
+					call: function (_ob) {
+						_ob.load();
+					}
 				};
 				this.currentView = "history";
-				FUNC.findVueChild(this, "history").load();
 			},
 			new_sign: function () {
 				this.result = {
-					loading: true,
-					error: null,
-					list: null,
-					success_obj: null
+					call: function (_ob) {
+						_ob.load();
+					}
 				};
 				this.currentView = "new_sign";
-				FUNC.findVueChild(this, "new_sign").load();
 			},
 			sign_detail: function (id) {
 				this.result = {
-					loading: true,
-					error: null,
-					sign: null,
-					now_time: Math.floor((new Date()).getTime() / 1000)
+					call: function (_ob) {
+						_ob.load(id);
+					}
 				};
 				this.currentView = "sign_detail";
-				FUNC.findVueChild(this, "sign_detail").load(id);
 			}
 		},
 		components: {
@@ -3877,6 +4099,15 @@ Page.sign_student = function () {
 		});
 
 	}
+},data:function () {
+	return {
+		loading: true,
+		error: null,
+		list: null,
+		now_time: Math.floor((new Date()).getTime() / 1000)
+	};
+},props:['data'],created:function () {
+	this.data.call(this);
 }},
 			sign_detail: {template:"<p v-if=\"loading\" class=\"alert alert-info\">加载中<\/p> <p v-if=\"error\" class=\"alert alert-danger\">{{error}}<\/p> <div v-if=\"sign!==null\" class=\"student-sign-detail\"> <h3 class=\"s-name\">{{sign.name}}<\/h3> <p class=\"s-detail\" v-if=\"sign.detail\">{{sign.detail}}<\/p> <p class=\"sign-status\">签到状态： <label class=\"label label-warning\" v-if=\"sign.logStatus===0 && sign.expireTime<=now_time\">过期<\/label> <label class=\"label label-success\" v-if=\"sign.logStatus===1\">完成<\/label> <label class=\"label label-danger\" v-if=\"sign.logStatus===2\">失败<\/label> <label class=\"label label-danger\" v-if=\"sign.logStatus===3\">异常<\/label> <\/p> <p class=\"s-time\"> 我的签到时间：<span>{{sign.beginTime|timestamp_to_date}}<\/span>&nbsp; 完成时间：<span v-if=\"sign.endTime>0\">{{sign.endTime|timestamp_to_date}}<\/span> <span v-if=\"sign.endTime<1\" class=\"label label-warning\">任务未完成<\/span>&nbsp; <\/p> <p class=\"s-time\"> 签到任务开始：<span>{{sign.taskTime|timestamp_to_date}}<\/span>&nbsp; 签到过期：<span>{{sign.expireTime|timestamp_to_date}}<\/span>&nbsp; <\/p> <p> <span class=\"count\">共<span>{{sign.count}}<\/span>人签到<\/span> <a href=\"course_student.html#\/course_table\/{{sign.courseTableID}}\" class=\"btn btn-info btn-sm\">查看课程<\/a>&nbsp; <\/p> <div class=\"append\" v-if=\"sign.append!=null && sign.append.length>0\"> <h4 class=\"help-block\">附加信息：<\/h4> <dl v-repeat=\"sign.append\"> <dt>{{time|timestamp_to_date}}<\/dt> <dd>{{content}}<\/dd> <\/dl> <\/div> <\/div> ",methods:{
 	load: function (id) {
@@ -3892,6 +4123,15 @@ Page.sign_student = function () {
 			obj.loading = false;
 		})
 	}
+},data:function () {
+	return {
+		loading: true,
+		error: null,
+		sign: null,
+		now_time: Math.floor((new Date()).getTime() / 1000)
+	};
+},props:['data'],created:function () {
+	this.data.call(this);
 }},
 			new_sign: {template:"<p v-if=\"loading\" class=\"alert alert-info\">加载中.....<\/p> <p v-if=\"error\" class=\"alert alert-danger\">{{error}}<\/p> <p v-if=\"success_obj\" class=\"alert alert-success\">已提交签到请求，请前往签到历史页面完成签到任务<\/p> <div v-if=\"!loading\" class=\"sign-history\"> <p v-if=\"!list || list.length<1\" class=\"alert-warning alert\">没有新的签到任务<\/p> <ul v-if=\"list && list.length>0\" class=\"list-group\"> <li v-repeat=\"list\" class=\"list-group-item\"> <span class=\"badge\" v-if=\"count\">已有 {{count}} 人<\/span> <h4 class=\"s-name\"> <button class=\"btn btn-danger btn-sm\" v-on=\"click: e_sign_now($index)\">立即签到<\/button> <a href=\"#\" title=\"查看详情\">{{name}}<\/a><\/h4> <p class=\"s-detail\" v-if=\"detail\">{{detail}}<\/p> <p class=\"s-desc\"> 时间:<span>{{time|timestamp_to_offset}}<\/span>&nbsp; 过期:<span>{{expireTime|timestamp_to_offset}}<\/span>&nbsp; <a href=\"#{{courseTableID}}\" class=\"btn btn-info btn-sm\">查看课程<\/a>&nbsp; <\/p> <\/li> <\/ul> <\/div>",methods:{
 	load: function () {
@@ -3928,6 +4168,15 @@ Page.sign_student = function () {
 			}
 		});
 	}
+},data:function () {
+	return {
+		loading: true,
+		error: null,
+		list: null,
+		success_obj: null
+	};
+},props:['data'],created:function () {
+	this.data.call(this);
 }}
 		}
 	});
@@ -3988,22 +4237,27 @@ Page.sign_teacher = function () {
 		},
 		methods: {
 			history: function () {
-				this.result = {loading: true, list: null, error: null};
+				this.result = {
+					call: function (_ob) {
+						_ob.load_history();
+					}
+				};
 				this.currentView = "history";
-				var obj = FUNC.findVueChild(vm, "history");
-				obj.load_history();
 			},
 			/**
 			 * 查看一个签到的详情
 			 * @param id
 			 */
 			sign_detail: function (id) {
-				this.result = {loading: true, sign: null, error: null, form: {detail: null, append: null}};
+				this.result = {
+					call: function (_ob) {
+						_ob.load(id);
+					}
+				};
 				this.currentView = "sign_detail";
 				var obj = FUNC.findVueChild(vm, "sign_detail");
-				obj.load(id);
 			},
-			report:function(id){
+			report: function (id) {
 				this.currentView = "report";
 			}
 		},
@@ -4021,6 +4275,12 @@ Page.sign_teacher = function () {
 			obj.loading = false;
 		})
 	}
+},data:function () {
+	return {
+		loading: true, list: null, error: null
+	};
+},props:['data'],created:function () {
+	this.data.call(this);
 }},
 			sign_detail: {template:"<p v-if=\"loading\" class=\"alert alert-info\">加载中<\/p> <p v-if=\"error\" class=\"alert alert-danger\">{{error}}<\/p> <div v-if=\"sign!==null\" class=\"sign-detail\"> <h3 class=\"s-name\">{{sign.name}}<\/h3> <p class=\"s-detail\" v-if=\"sign.detail\">{{sign.detail}}<\/p> <p class=\"s-time\"> 时间:<span>{{sign.time|timestamp_to_date}}<\/span>&nbsp; 过期:<span>{{sign.expireTime|timestamp_to_date}}<\/span>&nbsp; <\/p> <p class=\"count-sign\"> <span class=\"count\">共<span>{{sign.count}}<\/span>人签到<\/span> <a href=\"course_teacher.html#\/course_table\/{{sign.courseTableID}}\" class=\"btn btn-info btn-sm\">查看课程<\/a>&nbsp; <a href=\"#\/report\/{{sign.signID}}\" class=\"btn btn-success btn-sm\">汇总<\/a> <\/p> <div v-if=\"!sign.detail\"> <div class=\"form-group\"> <label for=\"SignDetail\">更新描述：<\/label> <button class=\"btn btn-primary btn-sm\" v-on=\"click:up_detail\">更新<\/button> <textarea id=\"SignDetail\" v-model=\"form.detail\" class=\"form-control\"><\/textarea> <\/div> <\/div> <div class=\"append\" v-if=\"sign.append!=null && sign.append.length>0\"> <p class=\"help-block\">附加信息：<\/p> <dl v-repeat=\"sign.append\"> <dt>{{time|timestamp_to_date}}<\/dt> <dd>{{content}}<\/dd> <\/dl> <\/div> <div v-if=\"sign.append==null || sign.append.length<10\"> <div class=\"form-group\"> <label for=\"SignAppend\">添加附加记录：<\/label> <button class=\"btn btn-primary btn-sm\" v-on=\"click:add_append\">添加<\/button> <textarea id=\"SignAppend\" v-model=\"form.append\" class=\"form-control\"><\/textarea> <\/div> <\/div> <\/div>",methods:{
 	load: function (id) {
@@ -4079,6 +4339,12 @@ Page.sign_teacher = function () {
 			}
 		});
 	}
+},data:function () {
+	return {
+		loading: true, sign: null, error: null, form: {detail: null, append: null}
+	};
+},props:['data'],created:function () {
+	this.data.call(this);
 }},
 			report: {template:"<h3 class='alert alert-danger'>模板未找到！！！<\/h3>"}
 		}

@@ -1,28 +1,32 @@
 _methods_ = {
 	load: function (id) {
-		this.data = {
-			error: "",
-			list: null,
-			loading: true,
-			allowComment: false,
-			allowReply: false
-		};
 		var obj = this;
-		FUNC.ajax(CONFIG.api.review.list, "get", {course_table_id: id, show_reply: 1}, function (result) {
+		FUNC.ajax(CONFIG.api.review.list, "get", {course_table_id: id, show_reply: 1, show_user: 1}, function (result) {
 			if (result.status) {
-				obj.data.list = result.data.list;
-				obj.data.allowComment = result.data.allowComment && Member.is_student();
-				obj.data.allowReply = result.data.allowReply && Member.is_teacher();
+				obj.list = result.data.list;
+				obj.users = result.data.users;
+				obj.allowComment = result.data.allowComment && Member.is_student();
+				obj.allowReply = result.data.allowReply && Member.is_teacher();
 			} else {
-				obj.data.error = result.msg;
+				obj.error = result.msg;
 			}
-			obj.data.loading = false;
+			obj.loading = false;
 		});
 	}
 };//_methods_
 
+_data_ = function(){
+	return {
+		error: "",
+		loading: true,
+		list: null,
+		users: null,
+		allowComment: false,
+		allowReply: false
+	};
+};//_data_
+
 _props_ = {
-	data: Object,
 	call: Function
 };//_props_
 
