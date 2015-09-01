@@ -9,7 +9,7 @@
 		</ul>
 	</nav>
 </div>
-<div class="alert alert-warning" v-if="!data.has_course">
+<div class="alert alert-warning" v-if="!data.error && !data.has_course">
 	<p>本周没有任何课程, 第<strong>{{data.week_current}}</strong>周</p>
 </div>
 <table v-if="data.has_course" class="table student-course-table">
