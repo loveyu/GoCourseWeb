@@ -208,13 +208,13 @@ Vue.filter('course_term', function (index) {
 });
 
 Vue.filter('course_status_label', function (index) {
-	for (var i in CONST_MAP.course_status) {
+	for (var i = 0; i < CONST_MAP.course_status.length; i++) {
 		var obj = CONST_MAP.course_status[i];
 		if (obj.id != index) {
 			continue;
 		}
-		var class_map = {'-1': 'default', '0': 'success', '1': 'info', '2': 'warning'}
-		if (index < 0 || index > 0) {
+		var class_map = {'-1': 'default', '0': 'success', '1': 'info', '2': 'warning'};
+		if (index < 0 || index > 2) {
 			break;
 		}
 		return "<label class='label label-" + class_map[index] + "'>" + obj.status + "</label>";
