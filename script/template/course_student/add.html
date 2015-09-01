@@ -1,7 +1,7 @@
 <h3>添加课表</h3>
 <p class="alert-danger alert" v-if="data.error">{{data.error}}</p>
 <p class="alert-warning alert" v-if="data.warning">{{data.warning}}</p>
-<div class="course-table">
+<div class="course-table" v-if="data.list.length>0">
 	<table class="table">
 		<thead>
 		<tr>
